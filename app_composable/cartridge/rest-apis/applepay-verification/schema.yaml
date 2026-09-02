@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Applepay verification
+components:
+  securitySchemes:
+    ShopperToken:
+      type: https
+      scheme: bearer
+      flows:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_applepay_r: get applepay info
+paths:
+  /applepayVerification:
+    post:
+      summary: Gets the applepay payment session
+      operationId: applepayVerification
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+            'application/json':
+             schema:
+              type: object
+              required:
+                - validationURL 
+              properties:
+               validationURL:
+                type: string
+                minLength: 1
+      responses:
+        "200":
+          description: Session established
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tier:
+                    type: string
+                  points:
+                    type: integer
+        "404":
+          description: Failed to connect to applepay
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "Apple pay Error",
+                    }
+security:
+  - ShopperToken: ["c_applepay_r"]

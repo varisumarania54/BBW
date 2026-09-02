@@ -1,0 +1,169 @@
+
+<isinclude template="callcenter/cc_header.isml">
+   
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Customer Details</P>
+
+<Br>
+
+<isif condition="${pdict.Customer != null}">
+
+<TABLE class=report_table>
+  <TBODY>
+  <TR> 
+     <TD class=report_title colSpan=8>&nbsp;Customer Details</TD></TR>
+  <Tr>
+     <Td class=report_cell width="80" align="left">&nbsp;<B>First Name:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.firstName}"></Td>
+  
+     <Td class=report_cell width="80">&nbsp;<B>Last Name:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.lastName}"> </Td>
+  </Tr>   
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>Login:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.credentials.login}"></Td>
+  
+     <Td class=report_cell align="left">&nbsp;<B>Email:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.email}"> </Td>
+  </Tr>
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>Phone:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.phoneHome}"></Td>
+  
+     <Td class=report_cell>&nbsp;<B>Date of Birth:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.birthday}"> </Td>
+  </Tr>
+  </TBODY>
+ </TABLE>
+
+<Br>
+
+<TABLE class=report_table border="1">
+  <TBODY>
+  <TR> 
+     <TD class=report_title colSpan=8>&nbsp;Customer Address</TD></TR>
+  
+ <Tr>
+     <Td class=report_cell align="left" width="100">&nbsp;<B>Address1:</B></td>
+     <Td class=report_cell align="left" width="300"> 
+     <isif condition="${ pdict.Customer.profile != null && pdict.Customer.profile.addressBook != null && pdict.Customer.profile.addressBook.preferredAddress != null}">
+        <isprint value="${pdict.Customer.profile.addressBook.preferredAddress.address1}">
+     </isif>
+     </Td>
+  
+     <Td class=report_cell align="left" width="50">&nbsp;<B>Address2:</B></td>
+     <td class=report_cell align="left" width="300">
+     <isif condition="${ pdict.Customer.profile != null && pdict.Customer.profile.addressBook != null && pdict.Customer.profile.addressBook.preferredAddress != null}">
+         <isprint value="${pdict.Customer.profile.addressBook.preferredAddress.address2}"> </Td>
+     </isif>
+  </Tr>
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>City:</B></td>
+     <Td class=report_cell align="left"> 
+     <isif condition="${ pdict.Customer.profile != null && pdict.Customer.profile.addressBook != null && pdict.Customer.profile.addressBook.preferredAddress != null}">
+        <isprint value="${pdict.Customer.profile.addressBook.preferredAddress.city}"></Td>
+     </isif>
+     <Td class=report_cell>&nbsp;<B>State:</B></td>
+     <td class=report_cell align="left">
+     <isif condition="${ pdict.Customer.profile != null && pdict.Customer.profile.addressBook != null && pdict.Customer.profile.addressBook.preferredAddress != null}">
+        <isprint value="${pdict.Customer.profile.addressBook.preferredAddress.stateCode}"> 
+     </isif>
+     </Td>
+  </Tr>
+  <Tr>
+     <Td class=report_cell>&nbsp;<B>Postal Code:</B></td>
+     <td class=report_cell align="left">
+     <isif condition="${ pdict.Customer.profile != null && pdict.Customer.profile.addressBook != null && pdict.Customer.profile.addressBook.preferredAddress != null}">
+        <isprint value="${pdict.Customer.profile.addressBook.preferredAddress.postalCode}">
+     </isif>   
+         </Td>
+     <Td class=report_cell align="left">&nbsp;<B>Country:</B></td>
+     <Td class=report_cell align="left">  
+     <isif condition="${ pdict.Customer.profile != null && pdict.Customer.profile.addressBook != null && pdict.Customer.profile.addressBook.preferredAddress != null}">
+        <isprint value="${pdict.Customer.profile.addressBook.preferredAddress.countryCode}">
+     </isif>   
+        </Td>
+  </Tr>
+
+  </TBODY>
+ </TABLE>
+
+<Br>
+
+
+
+<TABLE class=report_table >
+  <TBODY>
+  
+  <isif condition="${pdict.OrderPagingModel.count > 0}">
+          
+  <TR> 
+    <TD class=report_title colSpan=3>
+       Orders <isprint value="${pdict.OrderPagingModel.start+1}" formatter="#"> - <isprint value="${pdict.OrderPagingModel.end+1}" formatter="#">
+          of 
+          <isprint value="${pdict.OrderPagingModel.count}" formatter="#">    
+          <isscript> pdict.pagingmodel = pdict.OrderPagingModel </isscript>   
+
+       <span align="right"><ispagingbar pageurl="${URLUtils.url('CC_Customer-Orders','Login',pdict.Customer.profile.credentials.login)}" pagingmodel="${pdict.OrderPagingModel}"></span>
+    &nbsp;</TD>
+  </TR> 
+  <TR>
+    <TD class=report_header1>&nbsp;Order #'#'#</TD>
+    <TD class=report_header1>Order Date</TD>
+    <TD class=report_header1>Select</TD>
+  </TR>
+<iselse>
+          
+  <TR> 
+    <TD class=report_title colSpan=8>&nbsp;No Orders Found</TD>
+  </TR>  
+</isif>
+
+
+
+<isif condition="${pdict.OrderPagingModel.empty}">
+     
+     <TR onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+        <TD class=report_cell colspan="8"><Br><Br>&nbsp;No Orders have been found for this customer. 
+        <Br><Br>
+        <Br></TD>
+     </TR>
+	
+<iselse>
+
+<isloop iterator="${pdict.OrderPagingModel.pageElements}" alias="Orders" status="loopstate">
+ 
+
+   
+  <TR onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+    <TD class=report_cell>&nbsp;<a href="${URLUtils.url('CC_Customer-OrderDetail','OrderNumber',Orders.orderNo,'Login',pdict.Customer.profile.credentials.login)}">${Orders.orderNo}</A></TD>
+    <TD class=report_cell><isprint value="${Orders.creationDate}" formatter="dd/MM/yyyy"></TD>
+    <TD class=report_cell><a href="${URLUtils.url('CC_Customer-OrderDetail','OrderNumber',Orders.orderNo,'Login',pdict.Customer.profile.credentials.login)}">Select</a></TD>
+  </TR>
+  
+</isloop>
+
+</isif>
+
+</TBODY>  
+</TABLE>
+ 
+ 
+
+<Br>
+  
+ <table>
+    <Tr>
+      <Td>
+       <form method="post"  method="post" action="${URLUtils.url('CC_Customer-Details')}">
+          <input type="hidden" name="Login" value="<isprint value="${pdict.Customer.profile.credentials.login}">">
+          <input type="submit" name="btnSubmit" class="submit_button_customerdetails" value="Customer Details" />
+          &nbsp;&nbsp;
+       </form>
+      </Td>
+  
+ 
+    </Tr>
+</isif> 
+</DIV>
+

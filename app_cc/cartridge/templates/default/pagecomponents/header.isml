@@ -1,0 +1,97 @@
+<iscontent type="text/html" charset="UTF-8" compact="true">
+
+<!-- Start: pagecomponents/header -->
+
+<!--- This template creates the page header with all its components. --->
+
+<isinclude template="util/modules">
+
+<!-- BEGIN Added to support Order on Behalf Call Center functionality -->
+<isinclude template="callcenter/cc_storefront_header.isml">
+<hr color="black">
+
+<!-- END Added to support Order on Behalf Call Center functionality -->
+
+<div id="header">
+	<div id="user">
+		<!--- headertopline.isml contains personal information, do not cache --->
+		<isinclude url="${URLUtils.url('Home-IncludeTopline')}">
+		
+		<div class="clear"><!-- W3C float clearing recommendation --></div>
+		
+		<!--- minicart include, do not cache --->
+		<isinclude url="${URLUtils.url('Cart-MiniCart')}">	
+	</div><!-- END:user -->
+	
+	<div id="headerNav">
+		<div class="navigation">
+		<ul>
+			<li>
+				<a title="${Resource.msg('pagecomponents.header.001','pagecomponents',null)}" href="${URLUtils.https('Customer-Account')}">
+				${Resource.msg('pagecomponents.header.002','pagecomponents',null)}</a>
+				<span class="divider">${Resource.msg('global.symbol.separator','global',null)}</span>
+			</li>
+			<!--- LINK TO TRACK ORDERS --->
+			<!---  <li>
+				<a title="${Resource.msg('pagecomponents.header.004','pagecomponents',null)}" href="${URLUtils.https('Order-Track')}">
+				${Resource.msg('pagecomponents.header.005','pagecomponents',null)}</a>
+				<span class="divider">${Resource.msg('global.symbol.separator','global',null)}</span>
+			</li> --->
+			<li>
+				<a title="${Resource.msg('pagecomponents.header.007','pagecomponents',null)}" href="${URLUtils.https('Wishlist-Show')}">
+				${Resource.msg('pagecomponents.header.008','pagecomponents',null)}</a>
+				<span class="divider">${Resource.msg('global.symbol.separator','global',null)}</span>
+			</li>
+			<li>
+				<a title="${Resource.msg('pagecomponents.header.010','pagecomponents',null)}" href="${URLUtils.https('GiftRegistryOwner-Start')}">
+				${Resource.msg('pagecomponents.header.011','pagecomponents',null)}</a>
+				<span class="divider">${Resource.msg('global.symbol.separator','global',null)}</span>
+			</li>
+			<li>
+				<a title="${Resource.msg('category.departments.004','category',null)}" href="${URLUtils.url('GiftCert-Purchase')}">
+				${Resource.msg('category.departments.005','category',null)}</a>
+				<span class="divider">${Resource.msg('global.symbol.separator','global',null)}</span>
+			</li>
+			<!--- LINK TO COMPARE PAGE --->
+			<!---  <li>
+				<a title="${Resource.msg('pagecomponents.header.013','pagecomponents',null)}" href="javascript:ProductCompare.openPopup('${URLUtils.https('Compare-Show')}');">
+				${Resource.msg('pagecomponents.header.014','pagecomponents',null)}</a>
+				<span class="divider">${Resource.msg('global.symbol.separator','global',null)}</span>
+			</li> --->
+			<li>
+				<a title="${Resource.msg('pagecomponents.header.016','pagecomponents',null)}" href="${URLUtils.https('Stores-Find')}">
+				${Resource.msg('pagecomponents.header.017','pagecomponents',null)}</a>
+			</li>	
+		</ul>
+		</div><!-- END:navigation -->
+
+		<!--- ADD Content Asset Header , to appear below search box
+		TO MUCH HEIGHT WILL EXPAND HEADER HEIGHT, WIDTH FROM LOGO TO LOGIN --->
+		<div class="contentasset"><!--- ADD HEADER CONTENT ASSET HERE ---></div><!-- END:contentasset -->
+	</div><!-- END:headerNav -->
+
+    <!---
+    	Just the logo. The image itself is set via CSS as background image.
+    	It will be applied to the anchor that is set to block and its size
+    	fits the background image size. With this trick we have a clickable
+        area with the size of the background image. This makes any editing
+        here unnecessary if we change only the logo.
+    	The span can be used to put text on top of the image, but is by default
+    	set to display: none
+    --->
+    
+    <div id="logo">  
+    	<a href="${URLUtils.https('Home-Show')}" title="${Resource.msg('pagecomponents.header.018','pagecomponents',null)}">
+    	<span>${Resource.msg('pagecomponents.header.019','pagecomponents',null)}</span></a> 	
+    </div><!-- END:logo -->
+    
+    <div id="categoryNavigation"> 
+    	<div class="categorystyle" id="categorymenu">
+    		<!-- include the list of categories into the header, can be cached -->
+			<!-- 2.6 Did it this way isinclude url="${URLUtils.url('Category-IncludeDepartments')}" -->
+    		<isinclude template="category/departments">
+		</div><!-- END:categorymenu -->
+	</div><!-- END:categoryNavigation -->
+    
+</div><!-- END:header -->
+<!-- End: pagecomponents/header -->

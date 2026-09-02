@@ -1,0 +1,26 @@
+/**
+* Remove all exists basket before start new on behalf session
+*/
+
+
+function execute( args : PipelineDictionary ) : Number
+{
+    var baskets = dw.order.BasketMgr.baskets;
+    if(baskets && baskets.length > 0){
+    	dw.system.Transaction.wrap(function(){
+	    	for each(var basket in baskets){
+	            dw.order.BasketMgr.deleteBasket(basket);
+	    	}
+    	});
+    }
+    
+    var currentBasket : dw.order.Basket = dw.order.BasketMgr.getCurrentBasket();
+    
+    if(currentBasket){
+        dw.system.Transaction.wrap(function(){
+            dw.order.BasketMgr.deleteBasket(currentBasket);
+        });
+    }
+    
+    return PIPELET_NEXT;
+}

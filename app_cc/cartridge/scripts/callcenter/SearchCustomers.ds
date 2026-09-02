@@ -1,0 +1,158 @@
+/*************************************************************************************  
+* Name: SearchSystemObject.ds
+* Description: 
+*   This pipelet will search Order,Profile or custom objects with the specified 
+*   search expression and query parameters. 
+*
+* Pipelet parameters:
+*	@input ecsLogger         : Object
+*   @input SearchExpression  : String
+*   @input ObjectType		 : String - ORDER,PROFILE, or name of custom object
+*   @input SortExpression    : String - null if no sorting necessary
+*   @input sparam0			 : String 
+*   @input sparam1			 : String 
+*   @input sparam2			 : String 
+*   @input sparam3			 : String 
+*   @input sparam4			 : String 
+*   @input iparam5			 : Number 
+*   @input iparam6			 : Number 
+*   @input iparam7			 : Number 
+*   @input iparam8			 : Number 
+*   @input iparam9			 : Number 
+*
+*	@output ecsLogger        : Object
+*   @output ecsError         : Object
+*   @output SearchResult	 : dw.util.Iterator
+**************************************************************************************/
+
+importPackage( dw.system );
+importPackage( dw.util );
+importPackage( dw.io );
+importPackage( dw.order );
+importPackage( dw.customer );
+importPackage( dw.object );
+
+
+function execute( pdict : PipelineDictionary ) : Number
+{    
+    var PIPELET_NAME : String  = "SearchSystemObject.ds";
+    var context = new Context(PIPELET_NAME);
+    
+    var _searchExpression = pdict.SearchExpression;
+    var _sortExpression = pdict.SortExpression;
+	var _objectType = pdict.ObjectType;
+	
+	var s_param_0 = pdict.sparam0;
+	var s_param_1 = pdict.sparam1;
+	var s_param_2 = pdict.sparam2;
+	var s_param_3 = pdict.sparam3;
+	var s_param_4 = pdict.sparam4;
+	var i_param_5 = pdict.iparam5;
+	var i_param_6 = pdict.iparam6;
+	var i_param_7 = pdict.iparam7;
+	var i_param_8 = pdict.iparam8;
+	var i_param_9 = pdict.iparam9;
+    
+    var log : Log = Log.getLogger(pdict);
+    log.debug(context,"Start pipelet");
+    
+    /////////////////////////////////////////////////////////////
+	//	Piplet input Validation. 
+	/////////////////////////////////////////////////////////////
+    try 
+    {
+   	
+        // Test input variables
+        try 
+        {
+    	    // Test input vars exist and in correct format
+    	    Validator.IsString(_searchExpression,"_searchExpression");
+    	    Validator.IsString(_objectType,"_objectType");
+       }
+        catch (e) 
+        {
+            // Call into error handler re-wrap excpeption
+            log.error(context,e.message);
+            throw new EcsException(context,"Input validation failed",e);
+	    }
+	    
+	    /////////////////////////////////////////////////////////////
+	    //	Start Pipelet Logic
+	    /////////////////////////////////////////////////////////////
+	    //Check return values from Import Routines
+	    var iterator = null;
+	    var sw = _objectType.toUpperCase();
+	    var func = null;
+	    var method = null;
+	    switch(sw)
+	    {
+	    	case "ORDER":
+	    		func = OrderMgr;
+	    		method = "queryOrders";
+	    		iterator = func[method](_searchExpression,_sortExpression,s_param_0,s_param_1,s_param_2,s_param_3,s_param_4,i_param_5,i_param_6,i_param_7,i_param_8,i_param_9);	    		
+	    		break;
+	    	case "PROFILE":
+	    		func = CustomerMgr;
+	    		method = "queryProfiles";	
+	    		iterator = func[method](_searchExpression,_sortExpression,s_param_0,s_param_1,s_param_2,s_param_3,s_param_4,i_param_5,i_param_6,i_param_7,i_param_8,i_param_9);	    		
+	    		break;
+	    	default:
+	    		try
+	    		{
+	    			CustomObjectMgr.describe(_objectType); 
+	    		}
+	    		catch(e)
+	    		{
+	    			throw new EcsException(context,"Unknown object type to query: " + _objectType);
+	    		}
+	    		iterator = CustomObjectMgr.queryCustomObjects(_objectType,_searchExpression,_sortExpression,s_param_0,s_param_1,s_param_2,s_param_3,s_param_4,i_param_5,i_param_6,i_param_7,i_param_8,i_param_9);
+	    		break;	    		
+	    }
+	    if(log.getLevel() <= Log.INFO)
+	    {
+		    var str = "";
+		    if(TypeCheck.IsString(s_param_0))
+		    	str += ("s_param_0: " + s_param_0);
+			if(TypeCheck.IsString(s_param_1))
+				str += (" s_param_1: " + s_param_1);
+			if(TypeCheck.IsString(s_param_2))
+				str += (" s_param_2: " + s_param_2);
+			if(TypeCheck.IsString(s_param_3))
+				str += (" s_param_3: " + s_param_3);
+			if(TypeCheck.IsString(s_param_4))
+				str += (" s_param_4: " + s_param_4);
+			if(TypeCheck.IsNumeric(i_param_5))
+				str += (" i_param_5: " + i_param_5);
+			if(TypeCheck.IsNumeric(i_param_6))
+				str += (" i_param_6: " + i_param_6);
+			if(TypeCheck.IsNumeric(i_param_7))
+				str += (" i_param_7: " + i_param_7);
+			if(TypeCheck.IsNumeric(i_param_8))
+				str += (" i_param_8: " + i_param_8);
+			if(TypeCheck.IsNumeric(i_param_9))
+				str += (" i_param_9: " + i_param_9);
+		    log.info(context,StringUtils.format("Found {0} items when searching {1} with the search expression of [{2}],\nand the following parameters: {3}",iterator.getCount(),_objectType,_searchExpression,str));
+		}
+	    pdict.SearchResult = iterator;
+	    return PIPELET_NEXT;
+	    
+	    /////////////////////////////////////////////////////////////
+	    //	End Pipelet Logic
+	    /////////////////////////////////////////////////////////////
+  	} 
+    catch (e) 
+    {
+        // Call into error handler
+        log.debug(context,"Got an error");
+        log.error(context,e.message);
+		var err = new EcsException(context,"Error in execute",e);
+		pdict.ecsError = err;
+	  	return PIPELET_ERROR;
+	}
+	finally
+	{
+		log.debug(context,"End pipelet");
+	}
+
+    return PIPELET_NEXT;
+}

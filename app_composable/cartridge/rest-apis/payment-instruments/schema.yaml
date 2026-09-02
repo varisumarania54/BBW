@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Update Customer Payment Instrument API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_updatePayment_r: Update Customer Payment API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_updatePayment_r: Update Customer Payment API
+paths:
+  /updatePayment:
+    post:
+      summary: Update Customer Payment Instrument API
+      operationId: updatePayment
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - c_paymentInstrumentId
+              properties:
+                c_paymentInstrumentId:
+                  type: string
+                  minLength: 1
+                c_billingAddressId:
+                  type: string
+                c_defaultCard:
+                  type: boolean
+                  description: Set this payment method as the default
+      responses:
+        '200':
+          description: Update Payment was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '404':
+          description: Update Payment failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+security:
+  - ShopperToken:
+      - c_updatePayment_r

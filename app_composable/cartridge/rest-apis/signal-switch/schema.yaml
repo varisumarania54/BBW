@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Custom Headers API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_SignalSwitch_r: Read Custom Header override mappings for FE
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_SignalSwitch_r: Read Custom Header override mappings for FE
+paths:
+  /switches:
+    get:
+      summary: Returns the list of FE-HEADER-OVERRIDES entries — the custom request headers the frontend can send to override groups of site preferences
+      operationId: switches
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_source
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of header name / preference-id mappings from the FE-HEADER-OVERRIDES custom object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        header:
+                          type: string
+                          description: The custom header name without the leading c_ prefix (e.g. featureflags → c_featureflags)
+        "500":
+          description: configuration was not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/custom-object-not-found"
+                    }
+security:
+  - ShopperToken: ["c_SignalSwitch_r"]

@@ -1,0 +1,106 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Customer Care</title>
+    <link rel="stylesheet" type="text/css" href="${URLUtils.staticURL('/css/login.css')}" />
+</head>
+<body>
+
+<table border="0" width="100%" id="table1" height="100%" cellspacing="0" cellpadding="0">
+
+	<tr>
+		<td height="33%">&nbsp;</td>
+		<td width="375">
+
+		<table border="0" width="500" id="table2" cellspacing="0" cellpadding="5" style="border: 1px ridge #000000">
+			
+			<tr>
+				<td colspan="2" bgcolor="#f0efef" style="border-top: 0px ridge #000000; border-bottom: 1px ridge #000000"><font face="Verdana" size="1">
+				<B>Customer Care Login</B>
+                 </font></td>
+			</tr>
+			<tr>
+				<td colspan="2" style="padding: 10px; background-color: #6699cb; ">
+				
+ <form method="post" action="${URLUtils.url('CC_Login-Process')}">
+ 
+ 
+  <table width="100%">
+   <tr>
+    <td>
+    
+    
+   <isif condition="${pdict.ErrorAgentLogin != null}"> 
+   	 <table align="center" cellpadding="2" style="margin-top: 5px">
+   
+    <tr>
+       <td>&nbsp; </td>
+       <td><p><b><font color="White" face="Verdana" size="2">
+            <isprint value="${pdict.ErrorAgentLogin}">
+		<Br>
+          </font></b></p></td>
+    </tr>
+    	</table>			
+   </isif>          
+
+  <table align="center" cellpadding="2" style="margin-top: 10px">
+   
+
+    <tr>
+       <td><font face="Verdana" size="2" color="white">Username:&nbsp; </font></td>
+       <td><input type="text" name="Login" value="" class="input" style="border: 1px solid #808080; width: 180px" /></td>
+    </tr>
+    <tr>
+       <td><font face="Verdana" size="2" color="white">Password: </font></td>
+       <td><input type="password" name="Password" class="input" style="border: 1px solid #808080; width: 180px" /></td>
+    </tr>
+    <tr>
+       <td></td>
+       <td><p><input type="submit" name="btnLogin" value="Login >" class="submit_button" border="0"/></p></td>
+    </tr>
+
+ 
+  </table>
+
+
+</td>
+    <td >
+
+
+</td>
+   </tr>
+
+
+  </table>
+
+  </form>	
+
+				</td>
+			</tr>
+
+
+			<tr>
+				<td bgcolor="#FFFFFF" colspan="2" style="height:0px;border-top: 1px ridge #000000;">
+				
+	
+				
+				</td>
+			</tr>
+		</table>
+		
+		
+		
+		</td>
+		<td height="33%">&nbsp;</td>
+	</tr>
+	<tr>
+		<td height="33%">&nbsp;</td>
+		<td height="33%">&nbsp;</td>
+		<td height="33%">&nbsp;</td>
+	</tr>
+</table>
+
+
+      
+</body>
+</html>

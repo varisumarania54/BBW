@@ -1,0 +1,20 @@
+ 
+ a:link	       {color: #3366CC; }
+ a:visited     {color: #3366CC; }
+ a:hover       {color: #336699; }
+ a:active	   {color: #336699; }
+
+ body          {background-color: #e5e5e5; margin: 0px; }
+ p             {font: 0.8em Verdana; color: #4C4C4C; letter-spacing: .03em; line-height: 1.4em; }
+ td            {font: 0.8em Verdana; color: #4C4C4C; letter-spacing: .03em; line-height: 1.4em; }
+ h1            {font: 1.0em Verdana; color: #4C4C4C; letter-spacing: .03em; line-height: 1.4em; font-weight:bold }
+ h3            {font: 0.9em Verdana; color: #4C4C4C; letter-spacing: .03em; line-height: 1.4em; font-weight:bold }
+ li            {font: 0.8em Verdana; color: #4C4C4C; letter-spacing: .03em; line-height: 1.4em; }
+
+ INPUT.submit_button {
+	BORDER-RIGHT: #666666 1px solid; PADDING-RIGHT: 2px; BORDER-TOP: #666666 1px solid; PADDING-LEFT: 2px; FONT-SIZE: 12px; BACKGROUND: #e8e8e8; PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: #666666 1px solid; WIDTH: 82px; CURSOR: hand; COLOR: #666666; PADDING-TOP: 0px; BORDER-BOTTOM: #666666 1px solid; FONT-FAMILY: sans-serif; HEIGHT: 22px; TEXT-DECORATION: none
+}
+
+
+
+ input.input     {font: 0.8em Verdana; color: #4C4C4C; letter-spacing: .04em; line-height: 1.4em; padding: 2px; text-align: left; height: 20px}

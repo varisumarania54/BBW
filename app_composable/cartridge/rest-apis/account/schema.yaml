@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  version: "1.0.1"
+  title: Check Account API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_account_r: account
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_account_r: account
+paths:
+  /checkAccount:
+    get:
+      summary: Check Account API
+      operationId: checkAccount
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_email
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_recaptcha_token
+          required: false
+          schema:
+            type: string
+            minLength: 0
+      responses:
+        "200":
+          description: Custom check account
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  alreadyRegistered:
+                    type: boolean
+                  loyaltyCustomer:
+                    type: boolean
+                  posRegistered:
+                    type: boolean
+        "404":
+          description: Check Account API Account Not found Error
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/request-error",
+                      "message": "Bad Request"
+                    }
+        "500":
+          description: Server issue
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/server-error",
+                      "message": "Server issue"
+                    }
+  /getAccountInfo:
+    get:
+      summary: Custom get account API
+      operationId: getAccountInfo
+      parameters:
+        - in: query
+          name: c_emailToken
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Custom check account
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Shows that account not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/account-not-found",
+                    }
+security:
+  - ShopperToken:
+    - "c_account_r"

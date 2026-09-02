@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Express Pay Endpoints
+components:
+  securitySchemes:
+    ShopperToken:
+      type: https
+      scheme: bearer
+      flows:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_expressPay_rw: Express Pay Scope
+paths:
+  /paypal:
+    post:
+      summary: Preforms the desired action with radial paypal
+      operationId: paypal
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+            'application/json':
+             schema:
+              type: object
+              required:
+                - action
+                - page_context
+              properties:
+               action:
+                type: string
+                minimum: 1
+               page_context:
+                type: string
+                minimum: 1
+               buttonId:
+                type: string
+                minimum: 1
+      responses:
+        "200":
+          description: OK
+          content:
+        "404":
+          description: Error with paypal
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/basket-not-found",
+                    }
+security:
+  - ShopperToken: ["c_expressPay_rw"]

@@ -1,0 +1,83 @@
+<tr>
+	<td style="${printStyles(footerwrapper)}">
+		<table cellpadding="0" cellspacing="0" style="${printStyles(footertable)}">
+			<tr>
+				<td align="center" style="border-top: 1px solid #9E9E9E; padding-bottom: 30px"></td>
+			</tr>
+			<tr>
+				<td align="center"
+					style="${printStyles(footercell)} padding-bottom: 18px; font-size: 18px; line-height: 22px; font-weight: 700;">
+					${Resource.msg('footer.thankyou', 'mail', null)}
+				</td>
+			</tr>
+			<tr>
+				<td align="center" style="${printStyles(shopnowFootercell)} padding: 20px 0px;">
+					<a href="${URLUtils.https('Home-Show')}" title="${Resource.msg('footer.shopnow', 'mail', null)}"
+						style="${printStyles(shopnowlink)}">
+						${Resource.msg('footer.shopnow', 'mail', null)}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" style="${printStyles(footercell)} padding: 20px 0px;">
+					<table cellpadding="0" cellspacing="0" style="${printStyles(footertable)}" border="0" width="100%">
+						<isset name="cc_footerlink_1"
+						value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-footer-links1')}" scope="page" />
+						<isif condition="${cc_footerlink_1 != null}">
+							<isprint value="${cc_footerlink_1.custom.body}" encoding="off" />
+						</isif>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" style="${printStyles(footercell)} padding-bottom: 24px;">
+					<isset name="cc_return_policy"
+						value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-cc-return-policy')}" scope="page" />
+					<isif condition="${cc_return_policy != null}">
+						<isprint value="${cc_return_policy.custom.body}" encoding="off" />
+					</isif>
+				</td>
+			</tr>
+			<tr>
+				<isset name="social_links" value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-social-links')}"
+					scope="page" />
+				<isif condition="${social_links != null}">
+					<isprint value="${social_links.custom.body}" encoding="off" />
+				</isif>
+			</tr>
+			<tr>
+				<td align="center" style="${printStyles(footercell)} padding-bottom: 40px;">
+					<table border="0" cellpadding="0" cellspacing="0" width="${Resource.msg('footer.links.width', 'mail', null)}%">
+						<isset name="cc_footerlink_2"
+						value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-footer-links2')}" scope="page" />
+						<isif condition="${cc_footerlink_2 != null}">
+							<isprint value="${cc_footerlink_2.custom.body}" encoding="off" />
+						</isif>
+					</table>
+				</td>
+			</tr>
+
+			<isset name="mail_email_closing" value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-closing')}"
+				scope="page" />
+			<isif condition="${mail_email_closing != null}">
+				<tr>
+					<td align="center" style="${printStyles(footercell)}">
+						<isif condition="${'body' in mail_email_closing.custom && mail_email_closing.custom.body != null}">
+							<isprint value="${mail_email_closing.custom.body}" encoding="off" />
+						</isif>
+					</td>
+				</tr>
+			</isif>
+			
+			<isset name="footer_image" value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-footer-image')}"
+				scope="page" />
+			<isif condition="${footer_image != null}">
+			 	<tr>
+					<td align="center" style="${printStyles(footercell)} padding-top: 24px;">
+						<isprint value="${footer_image.custom.body}" encoding="off" />
+					</td>
+				</tr>
+			</isif>
+		</table>
+	</td>
+</tr>

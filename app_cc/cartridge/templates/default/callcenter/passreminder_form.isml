@@ -1,0 +1,51 @@
+
+<isinclude template="callcenter/cc_header.isml">
+
+
+
+
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Email Reminder</P>
+
+<Br>
+<form  method="post" action="${URLUtils.url('CC_PasswordReminder-Process')}" STYLE="display: inline;margin: 0px; padding: 0px;">
+<input type="hidden" name="Login" value="${pdict.CurrentHttpParameterMap.Login.value}">
+
+<TABLE class=report_table width="800">
+  <TBODY>
+  <TR> 
+    <TD class=report_title> 
+      Generate and Send Customer Password
+    </td>
+    </tr>
+  </tr>
+  <Tr>
+    <Td  >
+
+<table cellpadding="3">
+
+  <tr>
+     <td colspan="2">
+        <Br><p>Click "send" to generate and email a new password to 
+        
+        <B><isprint value="${pdict.Customer.profile.firstName}"> <isprint value="${pdict.Customer.profile.lastName}"></b> at <b><isprint value="${pdict.Customer.profile.email}"></b>.</p><Br>
+     </td>
+      </tr>
+  <tr>
+     
+     <td>
+        &nbsp;<input type="submit" name="btnSubmitPass" class="submit_button_search" value="Cancel" />
+        &nbsp;&nbsp;
+        <input type="submit" name="btnSubmitPassSend" class="submit_button_search" value="Send" />
+   <Br><Br>
+     </td>
+  </tr>
+</table>
+</form>
+
+</TD>
+</tr>
+</table>
+</DIV>
+

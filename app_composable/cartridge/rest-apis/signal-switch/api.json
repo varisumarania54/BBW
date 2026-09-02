@@ -1,0 +1,5 @@
+{
+    "endpoints": [
+      {"endpoint": "switches", "schema": "schema.yaml", "implementation": "script"}
+    ]
+  }

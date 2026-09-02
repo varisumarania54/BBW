@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+      {
+        "endpoint": "internationalRedirect", 
+        "schema": "schema.yaml", 
+        "implementation": "script"
+      }
+    ]
+}

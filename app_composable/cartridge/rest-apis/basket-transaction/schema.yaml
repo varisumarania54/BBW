@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Get Basket as Transaction
+components:
+  securitySchemes:
+    ShopperToken:
+      type: https
+      scheme: bearer
+      flows:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_getbasket_rw: Get basket as a transaction
+paths:
+  /getbasket:
+    post:
+      summary: Get basket as a transaction
+      operationId: getbaskettransaction
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+            'application/json':
+             schema:
+              type: object
+              required:
+                - c_token
+                - c_pageID
+              properties:
+               c_token:
+                type: string
+                minimum: 1
+               c_pageID:
+                type: string
+                minimum: 1
+               c_storeID:
+                 type: string
+                 minimum: 1
+               c_usid:
+                 type: string
+                 minimum: 1
+      responses:
+        "200":
+          description: Basket Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tier:
+                    type: string
+                  points:
+                    type: integer
+        "404":
+          description: No basket found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/basket-not-found",
+                    }
+security:
+  - ShopperToken: ["c_getbasket_rw"]

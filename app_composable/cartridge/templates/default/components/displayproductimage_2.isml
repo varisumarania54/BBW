@@ -1,0 +1,44 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<isscript>
+    var imageryUtil = require('int_dis/cartridge/scripts/utils/ImageryUtil.ds');
+</isscript>
+<iscomment>
+	Creates the image tag for the product.
+	p_productli : the product line item to render
+	p_email : a boolean that indicates this is used inside an email template
+				if true, display absolute url for image, otherwise use relative
+	p_size : size of image, example: "small", "medium", "large", etc... - default: "medium"
+</iscomment>
+
+<iscomment>Create page variable representing the product line item</iscomment>
+<isset name="p_productli" value="${pdict.p_productli}" scope="page"/>
+<iscomment>Create page variable representing if this is used in an email template</iscomment>
+<isset name="p_email" value="${pdict.p_email}" scope="page"/>
+
+<isif condition="${p_productli.describe().ID == 'GiftCertificateLineItem'}">
+	<img src="${URLUtils.absStatic('/images/gift_cert.gif')}" alt="${Resource.msg('global.giftcertificate','confirmationEmails',null)}" />
+<iselse/>
+	<isif condition="${p_productli.product != null}">
+		<isset name="imageSize" value="${(empty(pdict.p_size) ? 'hires' : pdict.p_size)}" scope="page" />
+        <isset name="image" value="${imageryUtil.getImagery(p_productli.product, imageSize).getImage('jact', 0)}" scope="page" />
+		<isif condition="${!empty(image)}" >
+            <isset name="imageURL" value="${image.getURL()}" scope="page"/>
+		</isif>
+		<isif condition="${!empty(image)}">
+		  	<isset name="thumbnailUrl" value="${imageURL}" scope="page"/>
+		  	<isset name="imageAlt" value="${image.alt}" scope="page"/>
+		 	<isset name="imageTitle" value="${image.title}" scope="page"/>
+      	<iselse/>
+      		<isset name="thumbnailUrl" value="${URLUtils.staticURL('/images/noimagelarge.png')}" scope="page"/>
+		 	<isset name="imageTitle" value="${p_productli.product.name}" scope="page"/>
+		  	<isset name="imageAlt" value="${p_productli.product.name}" scope="page"/>
+		</isif>
+		<isif condition="${p_email != null && p_email}">
+		  <img src="${thumbnailUrl}" alt="${imageAlt}" title="${imageTitle}" style="border:0; vertical-align: top;" width="119"/>
+        <iselse/>
+            <img src="${thumbnailUrl}" alt="${imageAlt}" title="${imageTitle}"/>
+        </isif>
+	<iselse/>
+		<img src="${URLUtils.staticURL('/images/noimagesmall.png')}" alt="${Resource.msg('global.allnotavailable','locale',null)}" title="${Resource.msg('global.allnotavailable','locale',null)}"/>
+	</isif>
+</isif>

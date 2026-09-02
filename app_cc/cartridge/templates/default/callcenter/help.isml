@@ -1,0 +1,31 @@
+
+<isinclude template="callcenter/cc_header.isml">
+
+
+
+
+    
+
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Call Center</A> / Help</P>
+
+<Br>
+
+
+<TABLE class=report_table>
+  <TBODY>
+  <TR> 
+    <TD class=report_title colSpan=8>
+       Call Center Help
+    </TD></TR>
+
+  <TR>
+    <TD class=report_cell><Br>&nbsp;Help Text Here</TD>
+  </TR>
+  </TBODY>
+</TABLE>
+
+
+</DIV>
+

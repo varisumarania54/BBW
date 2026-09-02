@@ -1,0 +1,84 @@
+
+<isinclude template="callcenter/cc_header.isml">
+
+
+
+
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / e-Voucher</P>
+
+<Br>
+<form method="post"  method="post" action="${URLUtils.url('CC_Voucher-Process')}" STYLE="display: inline;margin: 0px; padding: 0px;">
+<input type="hidden" name="Login" value="${pdict.CurrentHttpParameterMap.Login.value}">
+   
+<TABLE class=report_table width="800">
+  <TBODY>
+  <TR> 
+    <TD class=report_title>
+      Create and Send e-Voucher
+    </td>
+    </tr>
+  </tr>
+  <Tr>
+    <Td  >
+
+<table cellpadding="3">
+
+<isif condition="${pdict.Status != null && pdict.Status.code != null}">
+  <tr>
+     <td colspan="2" valign="top"><b><p class=PageTitle><isprint value="${ pdict.Status.code }"><Br></p></b></td>
+  </tr>
+</isif>
+
+<isscript>
+   var amount = "";
+   var email = "";
+   var emailConf = "";
+   var notes = "";
+   
+   if(pdict.CurrentHttpParameterMap.Amount.value != null){ amount = pdict.CurrentHttpParameterMap.Amount.value;}
+   if(pdict.CurrentHttpParameterMap.Email.value != null){ 
+      email = pdict.CurrentHttpParameterMap.Email.value;
+   }else{
+      email = pdict.Customer.profile.email;
+      emailConf = pdict.Customer.profile.email;
+   }
+   if(pdict.CurrentHttpParameterMap.EmailConf.value != null){ emailConf = pdict.CurrentHttpParameterMap.EmailConf.value;}
+   if(pdict.CurrentHttpParameterMap.Notes.value != null){ notes = pdict.CurrentHttpParameterMap.Notes.value;}
+
+</isscript>
+
+  <tr>
+     <td><p><b>Amount:</b></p></td>
+     <td><input type="text" name="Amount" class="input" style="width: 200px" value="<isprint value="${ amount }">" /></td>
+  </tr>
+
+  <tr>
+     <td><p><b>Email Address:</b></p></td>
+     <td><input type="text" name="Email" class="input" style="width: 200px" value="<isprint value="${ email }">" /></td>
+  </tr>
+  <tr>
+     <td><p><b>Confirm Email Address:</b></p></td>
+     <td><input type="text" name="EmailConf" class="input" style="width: 200px" value="${ emailConf }" /></td>
+  </tr>
+   <tr>
+     <td><p><b>Notes:</b></p></td>
+     <td><textarea  name="Notes" class="input" value="" style="width: 400px;height:100px" ><isprint value="${ notes }"></textarea></td>
+  </tr>
+  <tr>
+     <td><p><b>&nbsp;</b></p></td>
+     <td>
+        <input type="submit" name="btnSubmitVoucherCancel" class="submit_button_search" value="Cancel" />
+        &nbsp;&nbsp;
+        <input type="submit" name="btnSubmitVoucherCreate" class="submit_button_search" value="Create" />
+     </td>
+  </tr>
+</table>
+</form>
+
+</TD>
+</tr>
+</table>
+</DIV>
+

@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Custom Aurus Session API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: https
+      scheme: bearer
+      flows:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_aurussession_rw: Aurus Session API
+paths:
+  /aurusSession:
+    post:
+      summary: Aurus Session API
+      operationId: aurusSession
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+            'application/json':
+             schema:
+              type: object
+              properties:
+               payload:
+                 type: object
+                 description: Payload data for the Aurus session request
+      responses:
+        "200":
+          description: Aurus Session Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                  message:
+                    type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                bad_request:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Missing required field: payload"
+                    }
+        "500":
+          description: Server Error
+          content:
+            application/json:
+              examples:
+                server_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/server-error",
+                      "title": "Server Error",
+                      "detail": "An unexpected error occurred"
+                    }
+security:
+  - ShopperToken: ["c_aurussession_rw"]

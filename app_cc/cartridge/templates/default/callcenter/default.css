@@ -1,0 +1,230 @@
+BODY {
+	BACKGROUND-IMAGE: url(../../images/background.jpg); MARGIN: 0px; BACKGROUND-REPEAT: repeat-y; BACKGROUND-COLOR: #ffffff
+}
+P {
+	MARGIN: 0px; FONT: 11px/16px Verdana; COLOR: #4c4c4c
+}
+LI {
+	FONT: 11px/16px Verdana; COLOR: #4c4c4c
+}
+A:link {
+	COLOR: #3366cc
+}
+A:visited {
+	COLOR: #3366cc
+}
+A:hover {
+	COLOR: #336699
+}
+A:active {
+	COLOR: #336699
+}
+TABLE.MenuHeader {
+	WIDTH: 950px; BACKGROUND-COLOR: #003063
+}
+TABLE.MenuTitle {
+	WIDTH: 198px; BACKGROUND-COLOR: #003063
+}
+TD.MenuTitle {
+	PADDING-LEFT: 22px; BACKGROUND-IMAGE: url(../../images/bar_header.jpg); HEIGHT: 22px
+}
+A.MenuTitle {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.MenuTitle:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.MenuTitle:hover {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+TABLE.MenuItem {
+	DISPLAY: none; WIDTH: 198px; BACKGROUND-COLOR: #003063
+}
+TD.MenuItem {
+	PADDING-LEFT: 32px; BACKGROUND-IMAGE: url(../../images/bar_menu.jpg); WIDTH: 198px; HEIGHT: 22px
+}
+A.MenuItem {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.MenuItem:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.MenuItem:hover {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+TABLE.MenuSearch {
+	MARGIN-TOP: 20px; MARGIN-BOTTOM: 20px; MARGIN-LEFT: 20px
+}
+INPUT.MenuSearchTxt {
+	BORDER-RIGHT: #666666 1px solid; PADDING-RIGHT: 4px; BORDER-TOP: #666666 1px solid; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; MARGIN: 0px 3px 0px 0px; FONT: 10px Verdana; BORDER-LEFT: #666666 1px solid; WIDTH: 90px; COLOR: #4c4c4c; PADDING-TOP: 4px; BORDER-BOTTOM: #666666 1px solid; HEIGHT: 12px
+}
+INPUT.MenuSearchBtn {
+	BORDER-RIGHT: #666666 1px solid; PADDING-RIGHT: 2px; BORDER-TOP: #666666 1px solid; PADDING-LEFT: 2px; BACKGROUND: #e8e8e8; PADDING-BOTTOM: 2px; MARGIN: 0px; FONT: 10px Verdana; BORDER-LEFT: #666666 1px solid; WIDTH: 52px; COLOR: #4c4c4c; PADDING-TOP: 2px; BORDER-BOTTOM: #666666 1px solid; HEIGHT: 22px
+}
+TABLE.MenuUser {
+	MARGIN-TOP: 5px; MARGIN-LEFT: 20px
+}
+DIV.MainScreen {
+	LEFT: 15px; POSITION: absolute; TOP: 60px
+}
+P.PageTitle {
+	FONT-WEIGHT: bold
+}
+P.IntroMsg {
+	MARGIN-TOP: 10px; WIDTH: 740px; TEXT-ALIGN: justify
+}
+TABLE.HomeIcons {
+	MARGIN-BOTTOM: 20px
+}
+TD.HomeIcons {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; VERTICAL-ALIGN: top; PADDING-TOP: 4px; border-spacing: 0px
+}
+IMG.HomeIcons {
+	MARGIN-BOTTOM: 18px; MARGIN-RIGHT: 15px
+}
+TABLE.PageIcons {
+	MARGIN-BOTTOM: 10px; WIDTH: 740px
+}
+TD.PageIcons {
+	PADDING-RIGHT: 15px; PADDING-LEFT: 15px; PADDING-BOTTOM: 15px; PADDING-TOP: 15px
+}
+TABLE.HomeTable {
+	MARGIN-BOTTOM: 20px; WIDTH: 492px; BORDER-COLLAPSE: collapse
+}
+TD.HomeTitle {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; FONT-WEIGHT: bold; PADDING-BOTTOM: 6px; COLOR: #4c4c4c; PADDING-TOP: 6px; BACKGROUND-COLOR: #e7e7e7
+}
+TD.HomeCell1 {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; PADDING-BOTTOM: 6px; VERTICAL-ALIGN: top; WIDTH: 60px; PADDING-TOP: 6px; BORDER-BOTTOM: #c0c0c0 1px dotted
+}
+TD.HomeCell2 {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; PADDING-BOTTOM: 6px; VERTICAL-ALIGN: top; PADDING-TOP: 6px; BORDER-BOTTOM: #c0c0c0 1px dotted
+}
+TABLE.ReportTable {
+	MARGIN-BOTTOM: 20px; WIDTH: 740px; BORDER-COLLAPSE: collapse
+}
+TD.ReportTitle {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; PADDING-TOP: 4px; BACKGROUND-COLOR: #003063
+}
+P.ReportTitle {
+	COLOR: #ffffff
+}
+TD.ReportHeader1 {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; COLOR: #000000; PADDING-TOP: 4px; BACKGROUND-COLOR: #e7e7e7
+}
+TD.ReportCell {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; PADDING-TOP: 4px; BORDER-BOTTOM: #c0c0c0 1px dotted
+}
+TABLE.report_table {
+	BORDER-RIGHT: #c0c0c0 1px solid; BORDER-LEFT: #c0c0c0 1px solid; WIDTH: 98%; BORDER-BOTTOM: #c0c0c0 1px solid; BORDER-COLLAPSE: collapse
+}
+TD.report_title {
+	PADDING-RIGHT: 3px; PADDING-LEFT: 3px; PADDING-BOTTOM: 3px; FONT: bold 0.65em/1.5em Verdana; COLOR: #ffffff; PADDING-TOP: 3px; BACKGROUND-COLOR: #003063
+}
+TD.report_header1 {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.65em/1.5em Verdana; COLOR: #000000; PADDING-TOP: 2px; BACKGROUND-COLOR: #e7e7e7
+}
+TD.report_cell {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.65em/1.5em Verdana; PADDING-TOP: 2px; BORDER-BOTTOM: #c0c0c0 1px dotted
+}
+TD.caseViewer {
+	FONT: 15px Verdana
+}
+caseViewerInput.input {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.6em Verdana; COLOR: #4c4c4c; PADDING-TOP: 2px; HEIGHT: 20px; TEXT-ALIGN: left
+}
+LI.ReleaseNotes {
+	FONT: 0.6em Verdana; COLOR: #4c4c4c
+}
+P.ReleaseNotes {
+	FONT: 0.6em Verdana; COLOR: #4c4c4c
+}
+P.case_print_headerI {
+	FONT: bold 1.5em Verdana; COLOR: red
+}
+P.case_print_headerC {
+	FONT: bold 1.5em Verdana; COLOR: black
+}
+P.FootNote {
+	FONT: italic 0.7em Verdana
+}
+TABLE.report_table2 {
+	BORDER-RIGHT: #c0c0c0 1px solid; BORDER-LEFT: #c0c0c0 1px solid; BORDER-BOTTOM: #c0c0c0 1px solid; BORDER-COLLAPSE: collapse
+}
+TD.report_title2 {
+	PADDING-RIGHT: 3px; PADDING-LEFT: 3px; PADDING-BOTTOM: 3px; FONT: 0.65em/1.5em Verdana; PADDING-TOP: 3px; BACKGROUND-COLOR: #ffffff
+}
+TD.report_header2 {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.65em/1.5em Verdana; COLOR: #000000; PADDING-TOP: 2px; BACKGROUND-COLOR: #eaeaea
+}
+TD.report_header3 {
+	PADDING-RIGHT: 2px; BORDER-TOP: #c0c0c0 1px solid; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.65em/1.5em Verdana; COLOR: #000000; PADDING-TOP: 2px; BACKGROUND-COLOR: #e7e7e7
+}
+TD.report_cell_nodash {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.65em/1.5em Verdana; PADDING-TOP: 2px
+}
+TD.report_footer {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.65em/1.5em Verdana; COLOR: #000000; PADDING-TOP: 2px; BORDER-BOTTOM: #c0c0c0 1px solid; BACKGROUND-COLOR: #eeeeee
+}
+A.report_link {
+	COLOR: black
+}
+A.report_link:visited {
+	COLOR: black
+}
+A.report_link:hover {
+	COLOR: black
+}
+INPUT.input {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.8em Verdana; COLOR: #4c4c4c; PADDING-TOP: 2px; HEIGHT: 20px; TEXT-ALIGN: left
+}
+SELECT.input {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.8em Verdana; COLOR: #4c4c4c; PADDING-TOP: 2px; TEXT-ALIGN: left
+}
+TEXTAREA.input {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.8em Verdana; COLOR: #4c4c4c; PADDING-TOP: 2px; TEXT-ALIGN: left
+}
+INPUT.timesheet {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 1em Verdana; VERTICAL-ALIGN: top; WIDTH: 33px; COLOR: #4c4c4c; PADDING-TOP: 2px; TEXT-ALIGN: left
+}
+SELECT.timesheet {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 1em Verdana; VERTICAL-ALIGN: top; WIDTH: 250px; COLOR: #4c4c4c; PADDING-TOP: 2px; TEXT-ALIGN: left
+}
+TABLE.dashboard_header {
+	BORDER-RIGHT: #c0c0c0 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #c0c0c0 1px solid; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; BORDER-LEFT: #c0c0c0 1px solid; WIDTH: 265px; PADDING-TOP: 0px; BORDER-COLLAPSE: collapse; border-spacing: 0px
+}
+TD.dashboard_title2 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; FONT: bold 0.7em Verdana; COLOR: #ffffff; PADDING-TOP: 0px; HEIGHT: 25px; BACKGROUND-COLOR: #003063
+}
+TABLE.dashboard {
+	BORDER-RIGHT: #c0c0c0 1px solid; BORDER-LEFT: #c0c0c0 1px solid; WIDTH: 265px; BORDER-BOTTOM: #c0c0c0 1px solid; BORDER-COLLAPSE: collapse
+}
+TD.dashboard_title {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; PADDING-BOTTOM: 4px; FONT: bold 0.7em Verdana; COLOR: #ffffff; PADDING-TOP: 4px; BACKGROUND-COLOR: #e7e7e7
+}
+TD.dashboard_header {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; BACKGROUND-IMAGE: url(../images/silver.jpg); PADDING-BOTTOM: 2px; FONT: 0.7em Verdana; COLOR: #000000; PADDING-TOP: 2px; BACKGROUND-COLOR: #eeeeee
+}
+TD.dashboard_header2 {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.7em Verdana; COLOR: #000000; PADDING-TOP: 2px; BACKGROUND-COLOR: #eaeaea
+}
+TD.dashboard_footer {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.7em Verdana; COLOR: #000000; PADDING-TOP: 2px; BORDER-BOTTOM: #c0c0c0 1px solid; BACKGROUND-COLOR: #eeeeee
+}
+TD.dashboard_cell {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.7em Verdana; PADDING-TOP: 2px; BORDER-BOTTOM: #c0c0c0 1px dotted
+}
+TD.dashboard_header_highlight {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.7em Verdana; COLOR: #000000; PADDING-TOP: 2px; BACKGROUND-COLOR: #b9ffdc
+}
+TD.dashboard_cell_highlight {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; FONT: 0.7em Verdana; PADDING-TOP: 2px; BORDER-BOTTOM: #c0c0c0 1px dotted; BACKGROUND-COLOR: #e1fff0
+}
+INPUT.submit_button {
+	BORDER-RIGHT: #666666 1px solid; PADDING-RIGHT: 2px; BORDER-TOP: #666666 1px solid; PADDING-LEFT: 2px; FONT-SIZE: 10px; BACKGROUND: #e8e8e8; PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: #666666 1px solid; WIDTH: 82px; CURSOR: hand; COLOR: #666666; PADDING-TOP: 0px; BORDER-BOTTOM: #666666 1px solid; FONT-FAMILY: sans-serif; HEIGHT: 19px; TEXT-DECORATION: none
+
+}
+INPUT.submit_button2 {
+	BORDER-RIGHT: #666666 1px solid; PADDING-RIGHT: 2px; BORDER-TOP: #666666 1px solid; PADDING-LEFT: 2px; FONT-SIZE: 10px; BACKGROUND: #e8e8e8; PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: #666666 1px solid; CURSOR: hand; COLOR: #666666; PADDING-TOP: 0px; BORDER-BOTTOM: #666666 1px solid; FONT-FAMILY: sans-serif; HEIGHT: 19px; TEXT-DECORATION: none
+
+}

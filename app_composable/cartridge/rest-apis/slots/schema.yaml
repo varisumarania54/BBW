@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  version: "1.0.1"
+  title: Custom ContentSlot API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customContent_r: Content Slot API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customContent_r: Content Slot API
+paths:
+  /slots:
+    get:
+      summary: Content Slot API
+      operationId: getSlots
+      parameters:
+        - in: query
+          name: c_id
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_categoryId
+          required: false
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_productId
+          required: false
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Content Slot Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  slot_id:
+                    type: string
+                  template:
+                    type: string
+                  contentAssets:
+                    type: array
+                    items:
+                      type: object
+                  products:
+                    type: object
+                    properties:
+                      limit:
+                        type: number
+                      data:
+                        type: array
+                        items:
+                          type: object
+                      total:
+                        type: integer
+        "404":
+          description: Shows that one or more content slots are not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value: '{"type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/customer-not-found"}'
+security:
+  - ShopperToken: ["c_customContent_r"]

@@ -1,0 +1,9 @@
+{
+  "endpoints": [
+    {
+      "endpoint": "resetSuccess",
+      "schema": "schema.yaml",
+      "implementation": "script"
+    }
+  ]
+}

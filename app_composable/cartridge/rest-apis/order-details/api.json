@@ -1,0 +1,5 @@
+{
+    "endpoints": [
+      {"endpoint": "orderDetails", "schema": "schema.yaml", "implementation": "script"}
+    ]
+  }

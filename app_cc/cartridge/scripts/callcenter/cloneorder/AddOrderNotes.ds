@@ -1,0 +1,23 @@
+/**
+*   @input lineItemCtnr : dw.order.LineItemCtnr
+*   @input Note : String
+*   @input currentUsername : String
+*
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	try{
+		var basket : LineItemCtnr= args.lineItemCtnr;
+		if(basket.agentBasket == true || args.currentUsername != 'storefront'){
+			var	note = args.Note.replace(/([\W]+)/g,' ');
+			basket.addNote('Customer Service Note', note);
+		}
+	}catch(e){
+		var error = e;
+		Logger.error(e);
+	}
+	return PIPELET_NEXT;
+}

@@ -1,0 +1,172 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom product search API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_productSearch_r: Custom product search API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_productSearch_r: Custom product search API
+paths:
+  /productSearch:
+    get:
+      summary: Custom product search API
+      operationId: productSearch
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_cgid
+          required: false
+          description: >
+            The category group ID to browse. Used as the Constructor.io group_id
+            filter and as the SFCC categoryID fallback.
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_q
+          required: false
+          description: >
+            search term
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_storeId
+          required: false
+          description: >
+            The store ID to use for inventory searches
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_limit
+          required: false
+          description: >
+            Maximum number of products to return. Defaults to 24.
+          schema:
+            type: integer
+            minimum: 1
+            default: 24
+        - in: query
+          name: c_filters
+          required: false
+          description: >
+            Pipe-delimited list of refinement filters, each in the format "attributeId=value"
+            (e.g. "c_color=Red|c_size=Large|price=(10..50)").
+          schema:
+            type: string
+        - in: query
+          name: c_sort
+          required: false
+          description: >
+            The ID of the sorting option to apply. When omitted the default sort
+            for the category / search is used. Available IDs are returned in
+            c_sortingOptions in every response. For the SFCC path this is a
+            SortingRule ID (e.g. "best-matches"). For the Constructor path this
+            is the sort_by value with an optional ":sort_order" suffix
+            (e.g. "price:ascending").
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_i
+          required: false
+          description: >
+            Constructor.io client ID — a globally unique browser/app instance
+            identifier used for user tracking and personalization. Only used
+            when Constructor is enabled.
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_s
+          required: false
+          description: >
+            Constructor.io session number — starts at 1, increments after
+            30 minutes of inactivity.
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: c_offset
+          required: false
+          description: >
+            Zero-based index of the first product to return. Use the c_nextProduct value
+            from the previous response to fetch the next page.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        "200":
+          description: Custom product search
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  c_nextProduct:
+                    type: integer
+                    description: >
+                      Index of the first product to request on the next page. Calculated as
+                      (number of products skipped by validation) + (current page limit).
+                      Pass this value as the next request's offset to resume pagination
+                      without re-fetching already-seen products.
+                  c_results:
+                    type: array
+                    description: >
+                      Array of SCAPI remote include handles, one per product,
+                      resolved server-side into product data objects.
+                    items:
+                      type: object
+                  c_sortingOptions:
+                    type: array
+                    description: >
+                      Sorted array of available sorting options. Always returned.
+                      Matches the standard SCAPI productSearch sortingOptions shape.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Sorting option identifier. Pass as c_sort to apply.
+                        label:
+                          type: string
+                          description: Human-readable label for the sorting option.
+                  c_selectedSortingOption:
+                    type: string
+                    description: >
+                      The ID of the currently applied sorting option. Matches one of
+                      the id values in c_sortingOptions. Defaults to the first option
+                      if no c_sort was requested.
+                  c_productsAvailability:
+                    type: object
+                    description: >
+                      The availability status of the products.
+        "404":
+          description: Shows that account not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/order-not-found",
+                    }
+security:
+  - ShopperToken: ["c_productSearch_r"]

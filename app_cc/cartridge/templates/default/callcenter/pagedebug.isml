@@ -1,0 +1,407 @@
+<iscontent type="text/html" charset="UTF-8" compact="true">
+
+  <isscript>
+
+	    /*
+	     * This function will recursively examine the supplied 
+	     * object unitl the supplied depth and list all properties
+	     * and values. If the object contains other Arrays, Objects
+	     * or Maps it will recurse into the structure to check what
+	     * is there. When it hits the Max traversal depth then it will
+	     * simply print "Max Depth Reached". The output will be a HTML
+	     * string with nested tables to show the composition. 
+	     *
+	     * inTraverseObj: the object to traverse
+	     * inMaxDepth: The maximum depth to recurse to. Note anything past 6 will be big. 	     
+	     * inDepth: the inital depth (could create a neat wrapper) used to control the 
+	     *          depth of the recursion.
+	     */
+	    function getObjectData(inTraverseObj, inMaxDepth, inDepth)
+        {
+            // copy input vars to make local stack copy for recursion
+            var traverseObj = inTraverseObj;
+            var depth = inDepth;
+        
+            // Protect the function from looping too deep into 
+            // object compositions that may be circular
+            if (depth == null)
+            {
+                depth = 0;
+            }
+            
+            if (inMaxDepth == null)
+            {
+                depth = 5;
+            }            
+            
+            // depth gets incremented on each recursive entry
+            depth = depth + 1;
+            
+            if (depth == inMaxDepth)
+            {
+                return "<pre>Max Traversal Depth Reached ( Max = " + inMaxDepth + ")</pre>";
+            }
+            
+            // Iterate over the object supplied to find all the properties, functions
+            // and other composite objects. Build the data into a HTML table.
+            
+            var propTable = "<table><tr><th colspan=2 class=tableClassHeader> Object: ";
+            propTable = propTable + traverseObj + "</th></tr><tr><th class=tableHeader>Attribute</th><th class=tableHeader>Value</th></tr>"; 
+              
+            var functList = "<b>Available Functions for " + traverseObj + " : </b> ";
+
+            
+            // Loop over all properties in the supplied object
+	        for (property in traverseObj) 
+	        {
+	           try
+	           {
+	              // If the property represents a function on the supplied
+	              // object then add it to the functions list.
+	              if (isFunction(traverseObj[property]))
+	              {
+	                 // Simply list functions in a simple string
+	                 functList = functList + property + ", ";
+	              }
+	              // Otherwise examine the property further to get the value. 
+	              else
+	              {
+                    // Create a row entry for this property
+                    propTable = propTable + "<tr><td class=tableDataTitle><pre>" + property + "</pre></td>";
+                 
+                    // If the object is another object and is traversable then 
+                    // recursively call this function to examine it. Otherwise just print the value
+                    if (isTraversable(traverseObj[property]))
+                    // if (traverseObj.propertyIsEnumerable(property))
+                    {
+                        var childData = getObjectData(traverseObj[property], inMaxDepth, depth);
+                        propTable = propTable + "<td>" + childData + "</td></tr>";
+                    }            
+                    else
+                    { 
+                        propTable = propTable + "<td class=tableDataValue><pre>" + traverseObj[property] + "</pre></td></tr>"; 
+                    }
+                  } 
+               }
+               catch(e) 
+               { 
+                   propTable = propTable + "<td class=tableDataTitle><pre>Permission Denied</pre></td><td>Permission Denied</td></tr>";
+               }
+            }
+   
+            return propTable + "</table></br>" + functList;
+        }       
+
+        /* 
+         * Test if the supplied property is a function. 
+         *
+         * toTest: object to test if it is a function
+         * return: true if this is a fucntion
+         */
+        function isFunction(toTest) {
+          return typeof( toTest ) == 'function';
+        }   
+        
+        /* 
+         * Test if the supplied property is a traversable object. If it is 
+         * traversable the string representation will start with
+         * a brace ([) although some objects which start with [ are class
+         * names which start with [JavaClass in which case they are ignored. 
+         *
+         * toTest: object to test if it is traversable
+         * return: true if this object can be traversed         
+         */
+        function isTraversable(toTest) 
+        {
+          // incoming var an object so "toString" it by concat
+          var strVer = toTest + " ";  
+          // only want to look for the inital brace so get first char
+          var criterion = strVer.substr(0,1);
+          
+          if (criterion == '[')
+          {
+              // Object looks to be traversable. 
+              // Just check it is not a class def or custom attributes
+              return ( strVer.indexOf('ExtensibleObjectAttributes') == -1 
+              		&& strVer.indexOf('JavaClass') == -1);
+          }
+          
+          return false;
+          
+        }        
+
+   	</isscript>
+
+
+  <style type="text/css">
+    /* Div used for main debug show/hide */
+    div.pagedebuginfo {
+      position: relative;
+      padding: 0px;
+      color: black;
+      display: none;
+    }
+
+    /* Div used for page dictionary show/hide */
+    div.pagedictionary {
+      position: relative;
+      padding: 0px;
+      color: black;
+      display: none;
+    }
+
+    /* Header bar for Debug Page - not in table */
+    .header {
+      padding: 2px;
+      background: #CCCCFF;
+      font-weight: bold;
+      font-size: 16px;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      border: solid;
+      border-width: 1;
+      border-color: gray;
+    }
+
+    /* Sub Header bar for Debug Page - not in table */
+    .subheader {
+      padding: 2px;
+      background: #DDDDDD;
+      font-weight: none;
+      font-size: 14px;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      border: solid;
+      border-width: 1;
+      border-color: gray;
+    }
+
+    /* In generated tables - orange class name block */
+    .tableClassHeader {
+      padding: 0px;
+      background: #FFCC66;
+      font-weight: none;
+      border: solid;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      border-width: 1px;
+      border-color: black;
+    }
+
+    /* In pdict table - purple class name block */
+    .majorTableHeader {
+      padding: 0px;
+      background: #EEBBFF;
+      font-weight: none;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      border: solid;
+      border-width: 1px;
+      border-color: black;
+    }
+
+    /* In generated table - attribute/value heading */
+    .tableHeader {
+      padding: 0px;
+      background: #CCCCFF;
+      font-weight: none;
+      border: solid;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      border-width: 1px;
+      border-color: black;
+    }
+
+    /* In generated table - the grey attribute names as rows */
+    .tableDataTitle {
+      padding: 0px;
+      background: #DDDDDD;
+      font-weight: none;
+      border: solid;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      border-width: 1px;
+      border-color: black;
+    }
+
+    /* In generated table - the whote attribute value as rows */
+    .tableDataValue {
+      padding: 0px;
+      background: #FFFFFF;
+      font-weight: none;
+      border: solid;
+     	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      border-width: 1px;
+      border-color: black;
+    }
+
+    .page_div_links {
+     	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      color: #666666;
+      padding-right: 6px;
+      padding-left: 6px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+
+    .LOG_INFO {
+      background-color: #99bbff;
+    }
+
+    .LOG_DEBUG {
+      background-color: #ccff99;
+
+    }
+
+    .LOG_ERROR {
+      background-color: #ff9966;
+
+    }
+
+    .LOG_CRITICAL {
+      background-color: #ff9966;
+
+    }
+
+    .LOG_WARN {
+      background-color: #ffcc66;
+    }
+  </style>
+
+  <script language="JavaScript">
+  /* Hide and show the divs for the debug and dictionary. Just changes div style vis */
+  function setVisibility(id, visibility) {
+    document.getElementById(id).style.display = visibility;
+  }
+</script>
+
+  <br>
+<a href="#showDebug" class="page_div_links" name="showDebug" onclick="setVisibility('pagedebuginfo', 'inline');"> Show Debug</a>&nbsp;/&nbsp;
+<a href="#hideDebug" class="page_div_links"name="hideDebug" onclick="setVisibility('pagedebuginfo', 'none');"> Hide Debug </a> &nbsp;/&nbsp;
+<a href="<isprint value="${pdict.CurrentRequest.httpPath}" encoding="off">" class="page_div_links" name="reloadPage"> Reload Page </a>
+  <br>&nbsp;
+
+  <div class="pagedebuginfo" id="pagedebuginfo">
+    <div class="header"> Page Debug </div>
+    </br>&nbsp;</br>&nbsp;
+    <div class="subheader"> Basic Page Data </div>
+    </br>&nbsp;
+    <table width="100%">
+      <tr>
+        <td class="tableDataTitle">Last Page Submission</td>
+        <td class="tableDataValue"><pre><isprint value="${new Date().toString()}"></pre></td>
+      </tr>
+
+      <tr>
+        <td class="tableDataTitle">Current Pipeline Name</td>
+        <td class="tableDataValue">
+          <pre><isprint value="${pdict.CurrentPipelineName}" encoding="off"></pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="tableDataTitle">Current Host</td>
+        <td class="tableDataValue">
+          <pre><isprint value="${pdict.CurrentRequest.httpHost}" encoding="off"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td class="tableDataTitle">Current HTTP Path</td>
+        <td class="tableDataValue">
+          <pre><isprint value="${pdict.CurrentRequest.httpPath}" encoding="off"></pre>
+        </td>
+      </tr>
+      <tr>
+        <td class="tableDataTitle">HTTP Request Params</td>
+        <td class="tableDataValue">
+          <isscript>objvals = getObjectData(pdict.CurrentHttpParameterMap);</isscript>
+          <isprint value="${objvals}" encoding="off">
+        </td>
+      </tr>
+    </table>
+
+    </br>&nbsp;</br>&nbsp;
+    <div class="subheader"> Error and Tracing Information </div>
+    </br>&nbsp;
+
+    <table width="100%">
+      <tr>
+        <td class="tableDataTitle">Error Text</td>
+        <td class="tableDataValue"><pre>
+          <isprint value="${pdict.ErrorText}" encoding="off"></pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="tableDataTitle">Error Code</td>
+        <td class="tableDataValue">
+          <pre><isprint value="${pdict.ErrorCode}" encoding="off"></pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="tableDataTitle">Current Msg</td>
+        <td class="tableDataValue">
+          <pre><isprint value="${pdict.ErrorMsg}" encoding="off"></pre>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="tableDataTitle">Log Messages</td>
+        <td class="tableDataValue">
+          <table width="100%">
+            <tr>
+              <td colspan=3 class="tableClassHeader"><b>Logging Class Output </b></td>
+            <tr>
+              <td class="tableHeader"><b>Status</b></td>
+              <td class="tableHeader"><b>Context</b></td>
+              <td class="tableHeader"><b>Message</b></td>
+            </tr>
+            <isif condition="${pdict.ecsLogger != null}">
+              <isloop iterator="${pdict.ecsLogger.getLogMessageArray()}" alias="logentry">
+                <tr>
+	              <td class="LOG_<isprint value = "${logentry.getLevel()}"> tableDataValue"><pre><isprint value = "${logentry.getLevel()}"></pre></td>
+	              <td class="tableDataValue"><pre><isprint value = "${logentry.getContext().getContext()}"></pre></td>
+	              <td class="tableDataValue"><pre><isprint value = "${logentry.getMessage()}"></pre></td>
+                </tr>
+              </isloop>
+              <iselse>
+                <tr>
+                  <td class="tableDataValue">N/A</td>
+                  <td class="tableDataValue">N/A</td>
+                  <td class="tableDataValue">No Logging information available for this request</td>
+                </tr>
+            </isif>
+          </table>
+        </td>
+      </tr>
+
+
+    </table>
+
+    <br>&nbsp;
+    <div class="subheader">Page Dictionary </div>
+    &nbsp;<br>
+
+  <a href="#showPdict" class="page_div_links" name="showPdict" onclick="setVisibility('pagedictionary', 'inline');"> Show PDICT</a>&nbsp;/&nbsp;
+  <a href="#hidePdict" class="page_div_links" name="hidePdict" onclick="setVisibility('pagedictionary', 'none');"> Hide PDICT </a>
+
+    <br>&nbsp;<br>&nbsp;
+    <div class="pagedictionary" id="pagedictionary">
+      <table>
+        <tr>
+          <td colspan=2 class=majorTableHeader align=center><b>Page Dictionary Values</b></td>
+        </tr>
+        <tr>
+          <td colspan=2>
+            <!--  Change the inMaxDepth below to optimise the page loading. Creates alot of data -->
+            <isscript>objvals = getObjectData(pdict,6,0);</isscript>
+            <isprint value="${objvals}" encoding="off">
+          </td>
+        </tr>
+      </table>
+
+  </div> <!--- pagedictionary --->
+
+</div> <!--- pagedebuginfo --->

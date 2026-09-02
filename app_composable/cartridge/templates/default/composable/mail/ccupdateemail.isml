@@ -1,0 +1,64 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<subject>${pdict.subject}</subject>
+<from>
+    <isprint value="${Resource.msgf("contact.fromname","mail", null, pdict.fromEmail)}" encoding="off"/>
+</from>
+<html>
+<head>
+    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=10.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>${pdict.subject}</title>
+    <style type="text/css">
+        body,
+        table,
+        td {
+           font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;
+        }
+    </style>
+</head>
+<body>
+<isinclude template="composable/mail/mailstyles"/>
+<table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td align="center" style="${printStyles(container)}">
+            <center>
+                <table cellpadding="0" cellspacing="0" style="${printStyles(containertable)}">
+
+                    <isinclude template="composable/mail/mailheader"/>
+
+                    <tr>
+                        <td style="${printStyles(contentwrapper)}">
+                            
+                            <h1 style="margin: 0 0 25px; font-size: 28px; font-weight: normal; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+                                ${Resource.msgf("paymentInstruments.greeting","paymentInstruments", null, pdict.firstName)}
+                            </h1>
+
+                            <p style="font-family: 'HelveticaNeue-Regular', 'Helvetica Neue Regular', 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif; font-size: 16px; line-height: 24px; margin: 0 0 20px; padding: 0; text-align: left;">
+                                ${pdict.message}
+                            </p>
+                            
+                            <p style="font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px; line-height: 18px;margin: 0 0 20px;padding:0;">
+                                <isprint value="${Resource.msgf('paymentInstruments.email.message1','paymentInstruments', null, URLUtils.https(pdict.redirect).toString())}" encoding="off"/>
+                            </p>
+                            
+                            <p style="font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px; line-height: 18px;margin: 0 0 5px;padding:0;">
+                                ${Resource.msg('paymentInstruments.email.message2','paymentInstruments',null)}
+                            </p>
+                            <p style="font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 14px; line-height: 18px;margin: 0 0 20px;padding:0;">
+                                <isprint value="${Resource.msgf('paymentInstruments.email.message3','paymentInstruments',null, pdict.ccHomePage, pdict.ccHomePage) }" encoding="off"/>                            
+                            </p>
+                           
+                        </td>
+                    </tr>
+                    
+                    <isinclude template="composable/mail/mailfooter"/>
+
+                </table>                        
+            </center>
+        </td>
+    </tr>
+</table>    
+</body>
+</html>

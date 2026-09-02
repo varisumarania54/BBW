@@ -1,0 +1,67 @@
+/**
+*   @input OrderDetails : Object order details object received from Radial API
+*	@output Location : String
+*	@output Shoper : dw.customer.Customer
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+importPackage( dw.customer );
+function execute( args : PipelineDictionary ) : Number
+{
+    try{
+    	removeBaskets();
+		var GiftCardService = require('app_radial/cartridge/scripts/giftcard/GiftCardService.js').GiftCardService;
+    	var basketData = args.OrderDetails,
+    		basket : Basket = BasketMgr.createAgentBasket(),
+    		shoper = CustomerMgr.getCustomerByLogin(basketData.billing.email);
+        if(!empty(shoper)){
+       		AgentUserMgr.loginOnBehalfOfCustomer(shoper);
+        }
+    	
+		for each(var shipment in basketData.shipments){
+    		/**
+    		 * Setup shipping method
+    		 */
+    		basket.defaultShipment.setShippingMethod(getShippingMethod(shipment.shipMethod));
+    		
+    		for each(var pli in shipment.items.values()){
+    			var pid = new String(pli.id);
+    			var product = dw.catalog.ProductMgr.getProduct(pid);
+    			if(!empty(product)){
+    				if('isGiftCard' in product.custom && !empty(product.custom.isGiftCard) && product.custom.isGiftCard == true){
+    					var gci : GiftCertificateLineItem = basket.createGiftCertificateLineItem(pli.price.value,  basketData.billing.email);
+    					gci.giftCertificateID = pid;
+    					gci.setLineItemText(product.name);
+    					gci.custom.productImage =  GiftCardService.getGCImageUrl(product, 'crop');
+    				} else {
+		    			var productLineItem : ProductLineItem = basket.createProductLineItem(pid, basket.defaultShipment);
+			    		productLineItem.quantityValue = new Number(pli.qty);
+    				}
+    			}
+    		}
+    	}
+    	
+       args.Location = dw.web.URLUtils.https('Cart-Show').toString();
+       
+    }catch(e){
+    	var error = e;
+        Logger.error(e);
+    }
+    return PIPELET_NEXT;
+}
+
+function getShippingMethod(methodID){
+	var method = ShippingMgr.getDefaultShippingMethod();
+	for each(var shippingMethod in ShippingMgr.allShippingMethods){
+		if(shippingMethod.ID == methodID){
+			return shippingMethod;
+		}
+	}
+	return method;
+}
+
+function removeBaskets(){
+	for each(var basket in BasketMgr.getBaskets()){
+		BasketMgr.deleteBasket(basket);
+	}
+}

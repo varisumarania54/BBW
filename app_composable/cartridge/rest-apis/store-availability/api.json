@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+      {
+        "endpoint": "getStoreAvailability", 
+        "schema": "schema.yaml", 
+        "implementation": "script"
+      }
+    ]
+  }

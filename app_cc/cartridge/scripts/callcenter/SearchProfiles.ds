@@ -1,0 +1,57 @@
+/**
+* Script file for use in the Script pipelet node.
+* To define input and output parameters, create entries of the form:
+*
+* @<paramUsageType> <paramName> : <paramDataType> [<paramComment>]
+*
+* where
+*   <paramUsageType> can be either 'input' or 'output'
+*   <paramName> can be any valid parameter name
+*   <paramDataType> identifies the type of the parameter
+*   <paramComment> is an optional comment
+*
+*	@input FirstName        : java.lang.String
+*	@input LastName         : java.lang.String
+*	@input Email            : java.lang.String
+*	@input CustomerNumber   : java.lang.String
+*	@output CustomerUnpagedResult : dw.util.SeekableIterator
+*	@output CustomerUnpagedResultCount : java.lang.Number
+*
+*/
+
+
+function execute( args : PipelineDictionary ) : Number
+{
+     var queryString : String='';
+     if(!empty(args.FirstName)){
+    	 queryString = queryString+"firstName ILIKE {0}";
+     }
+     if(!empty(args.LastName)){
+     	 if(empty(queryString)){
+     	 	queryString = queryString+"lastName ILIKE {1}";
+    	 }else{
+    	 	queryString = queryString+" AND lastName ILIKE {1}";
+    	 }
+     	  
+     }
+      if(!empty(args.Email)){
+     	  if(empty(queryString)){
+     	 	queryString = "email ILIKE {2}";
+    	 }else{
+    	 	queryString = queryString+" AND email ILIKE {2}";
+    	 }
+     	  
+     }
+      if(!empty(args.CustomerNumber)){
+     	if(empty(queryString)){
+     	 	queryString = "customerNo ILIKE {3}";
+    	 }else{
+    	 	queryString = queryString+" AND customerNo ILIKE {3}";
+    	 }
+     	
+     }
+     var searchProfiles :  SeekableIterator = dw.customer.CustomerMgr.searchProfiles(queryString, "creationDate desc",args.FirstName,args.LastName,args.Email,args.CustomerNumber);
+     args.CustomerUnpagedResult = searchProfiles;
+     args.CustomerUnpagedResultCount = searchProfiles != null ? searchProfiles.count : 0;
+     return PIPELET_NEXT;
+}

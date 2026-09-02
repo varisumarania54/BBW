@@ -1,0 +1,93 @@
+/**
+*  This script writes the UserID, Username and Timestamp of an agent login to the 
+*  TrackAgentLogin.log file located in the 
+*
+* @input CurrentRequest : dw.system.Request
+* @input AgentPassword :  java.lang.String
+*
+* @output Status : dw.system.Status;
+* 
+*/    
+   
+    
+importPackage( dw.system );
+importPackage( dw.value );
+importPackage( dw.util );
+importPackage( dw.io );
+ 
+importScript( "/callcenter/libDateParser.ds" );
+ 
+function execute( pdict : PipelineDictionary ) : Number
+{
+    
+    var currRequest = pdict.CurrentRequest;
+
+    var httpHost = currRequest.httpHost;
+
+	/*
+    var fileName = "TrackAgentLogins.txt";    
+    var rootDirectory = File.TEMP;          
+    var filePath = rootDirectory + File.SEPARATOR + fileName;          
+	*/          
+	               
+    // Get Agent Parameters
+   
+    var loginName = session.userName;      
+    var password  = pdict.AgentPassword;
+        
+	pdict.Status = new Status(Status.OK);
+	/*       
+    var datetime = DateUtils.nowForSite();
+    var sdatetime = formatDate(datetime,"MM-dd-yyyy HH:mm:ss");       
+	             
+	
+    var file : File = new File(filePath); 
+
+    // Check if log file exists. If not, create it
+  
+    var fileExists = file.exists();
+  
+    if(!fileExists)
+	{
+	   if(!file.createNewFile())
+   	   {
+		throw new Error("Unable to create new file: " + filePath + " for agent tracking.");
+	   }
+	}
+    
+    
+  try{
+  
+    
+    // Open Log File as append
+    
+    var fw : FileWriter = new FileWriter(file,true);
+ 
+ 
+    // If file did not exsist, add column headers
+    
+    if(!fileExists){
+     
+       fw.writeLine("Site Domain,Agent User Name,Timestamp");
+       fw.writeLine("\r\n");
+ 
+    }
+     
+       fw.writeLine(httpHost +","+loginName + "," + sdatetime);
+ 
+       fw.close();
+      
+     
+   }catch(ex){
+   
+      pdict.Status = new Status(Status.ERROR,"Could not write to log file: " + filePath + " : " + ex.toString() );	
+	       
+      return PIPELET_ERROR;
+   }
+  */
+    return PIPELET_NEXT;
+}
+
+
+
+

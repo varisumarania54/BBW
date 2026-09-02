@@ -1,0 +1,129 @@
+
+
+	<table style="width:700px" class="report_table_orders" border="0">
+		<!--- header --->
+		<tbody>
+		<TR>     
+          <TD class=report_title colSpan=6>Order Details (<isprint value="${pdict.OrderDetails.id}">) </TD>
+        </TR>
+    
+			<tr >
+				 
+				<td  width="85"  class=report_header1>&nbsp;Quantity</td>
+				<td    class=report_header1 colspan="3">Product Details</td>
+				<td  width="60"  class=report_header1>Total</td>
+			</tr>
+
+			<isloop iterator="${pdict.OrderDetails.shipments.values()}" alias="Group" status="loopstatus">
+		
+
+				<isloop iterator="${Group.items.values()}" alias="productLineItem">
+					<tr class="report_cell">
+						 <td class="report_cell">
+			    			<isprint value="${productLineItem.qty}">
+				    	</td>
+					<td   class="report_cell" colspan="3">
+						<B>Product Name:</B> <a href="${URLUtils.https('Product-Show', 'pid', productLineItem.id)}">
+							<isprint value="${productLineItem.description}">
+						</a>
+					    <Br>
+						<b>Item Number:</b>&nbsp;&nbsp;<isprint value="${productLineItem.id}">
+						<Br>
+
+				<!--- /product promotions --->
+					</td>
+				    <td class="report_cell">
+			            <isprint value="${productLineItem.price}">
+						
+				<!--- /product promotions --->
+				    </td>
+				</tr>
+				
+		
+			</isloop>
+			
+
+		</isloop>
+	</tr>
+	
+			
+			<tr class="report_cell"  onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+				<td  class="report_cell">&nbsp;</td>
+				<td  class="report_cell">&nbsp;</td>
+				<Td class="report_cell" width="360" >&nbsp;</Td>
+				<td class="report_cell">Merchandise Total</td>
+				<td class="report_cell"><isprint value="${pdict.OrderDetails.totals.merchandize}"></td>
+			</tr>
+			
+			<tr class="report_cell" onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+				<td  class="report_cell">&nbsp;</td>
+				<td class="report_cell">&nbsp;</td>
+				<Td class="report_cell">&nbsp;</Td>
+				<td  class="report_cell">Shipping Total</td>
+				<td  class="report_cell">not available</td>
+			</tr>
+
+			<tr class="report_cell" onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+				<td  class="report_cell">&nbsp;</td>
+				<td  class="report_cell">&nbsp;</td>
+				<Td class="report_cell">&nbsp;</Td>
+				<td class="report_cell">Sales Tax Total</td>
+				<td class="report_cell"><isprint value="${pdict.OrderDetails.totals.tax}"></td>
+			</tr>
+
+			<tr class="report_cell" onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+				<td  class="report_cell">&nbsp;</td>
+				<td  class="report_cell">&nbsp;</td>
+				<Td class="report_cell">&nbsp;</Td>
+			    <td  class="report_cell">Order Total</td>
+			    <td  class="report_cell"><isprint value="${pdict.OrderDetails.totals.total}"></td>
+			</tr>
+</table>
+
+</td><Td width="190" valign="top">
+<!---  BILLING ADDRESS --->
+ 
+<isminiaddress_bill p_address = "${pdict.OrderDetails.billing}" p_addressType = "Billing Address">
+
+
+
+<!---  SHIPPING ADDRESS --->
+	
+<isminiaddress_ship p_address = "${pdict.OrderDetails.shippingAddress}" p_addressName = "Shipping Address">
+
+	
+<!--- PAYMENT INFO HERE --->
+    <table >
+       <TR>     
+          <TD class=report_title width="170">Payment Information </TD>
+       </TR>
+
+		<tr><td class="report_cell">
+		<isloop iterator="${pdict.OrderDetails.payments}" alias="PaymentInstrument" status="loopstate">
+			
+			  		
+	   	<Tr><Td class="report_cell">	
+		  		Amount:&nbsp;
+		  		<isprint value="${PaymentInstrument.amount}"><br>
+		  		Type:&nbsp;
+		  		<isprint value="${PaymentInstrument.type}"><br>
+		  		Pan:&nbsp;
+		  		<isprint value="${PaymentInstrument.pan}"><br>
+		  		Method:&nbsp;
+		  		<isprint value="${PaymentInstrument.method}"><br>
+		</td></Tr>
+
+		</isloop>
+	</td></tr></table>
+
+ 
+ </table>
+ 
+  <isif condition="${'enableCloneOrder' in dw.system.Site.current.preferences.custom && dw.system.Site.current.preferences.custom.enableCloneOrder == true}">
+ 	<form method="post" action="${URLUtils.url('CC_PlaceOrder-Clone')}">
+ 		<input type="hidden" name="orderId" value="${pdict.OrderDetails.id}"/>
+ 		<input type="submit" name="btnSubmit" class="submit_button_customerdetails" value="Clone Order" />
+ 	</form>
+  </isif>
+ 
+ </td>

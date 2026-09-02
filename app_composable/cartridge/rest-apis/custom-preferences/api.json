@@ -1,0 +1,5 @@
+{
+    "endpoints": [
+      {"endpoint": "customPreferences", "schema": "schema.yaml", "implementation": "script"}
+    ]
+  }

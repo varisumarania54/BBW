@@ -1,0 +1,154 @@
+<iscontent type="text/html" charset="UTF-8" compact="true">
+
+
+<!---
+	Insert static breadcrumbs into the page.
+--->
+<ismodule template="pagecomponents/breadcrumbs.isml"
+	name="breadcrumbs"
+	attribute="bctext1"
+	attribute="bcurl1"
+	attribute="bctext2"
+	attribute="bcurl2"
+>
+
+
+<!---
+	Creates the html code for a single category
+	<div class="category">
+		<ul>
+			<li>...</li>
+		...
+	<div>
+
+used in search/refinements.isml, needed?
+--->
+<ismodule template="category/category.isml"
+	name="category"
+	attribute="category"
+	attribute="currentcategoryuuid"
+>
+
+
+<!---
+	Creates a listing of product with rows and columns.
+
+	products : the product iterator
+	productstoskip : how many products should be skipped before starting
+	productsperrow : how many products per row
+	productrows    : how many rows of productlistings
+--->
+<ismodule template="product/productlisting"
+	name="productlisting"
+	attribute="products"
+	attribute="productstoskip"
+	attribute="productsperrow"
+	attribute="productrows"
+>
+
+
+<!---
+	Displays a certain product of an iterator as featured product.
+
+	products : the product iterator
+	producttodisplay : the product to display as position number
+--->
+<ismodule template="product/featuredproduct"
+	name="featuredproduct"
+	attribute="products"
+	attribute="producttodisplay"
+>
+
+
+<!---
+	Displays the information about the pagable on the page.
+
+	pagingmodel : the name of the model to use for paging
+	sortby: should the sort by section be displayed (true, false)
+--->
+<ismodule template="pagecomponents/paginginformation"
+	name="paginginformation"
+	attribute="pagingmodel"
+	attribute="sortby"
+>
+
+
+<!---
+	Creates a paging bar on the page
+ --->
+<ismodule template = "pagecomponents/paging"
+	name="paging"
+	attribute="pipeline"
+	attribute="pageable"
+	attribute="parametername"
+	attribute="parametervalue"
+	attribute="pagesize"
+>
+
+
+<!---
+	Creates a paging bar on the page
+ --->
+<ismodule template = "callcenter/pagingbar"
+	name="pagingbar"
+	attribute="pageurl"
+	attribute="pagingmodel"
+>
+
+  
+<!---
+	Creates a service header inside a page with links for printing
+	and tellafriend.
+
+	tellafriendurl: url to open when link is clicked
+--->
+<ismodule template="pagecomponents/pageservices"
+	name="pageservices"
+	attribute="tellafriendurl"
+>
+
+
+<!--- define reusable Shipping address view --->
+<!--- The prefix 'p_' avoids clashes with loop or other variables --->
+<ismodule template="callcenter/miniaddress_ship.isml"
+	name="miniaddress_ship"
+	attribute="p_address"
+	attribute="p_addressName" 
+>
+
+<!--- define reusable Billing address view --->
+<!--- The prefix 'p_' avoids clashes with loop or other variables --->
+<ismodule template="callcenter/miniaddress_bill.isml"
+	name="miniaddress_bill"
+	attribute="p_address"
+	attribute="p_addressName" 
+>
+
+
+<!--- define reusable credit card view --->
+<!--- The prefix 'p_' avoids clashes with loop or other variables --->
+<!--- Either of the parameters has to be provided, p_card has precedence. --->
+<ismodule template="callcenter/minicreditcard.isml"
+	name="minicreditcard"
+	attribute="p_card"
+	attribute="p_cc_formfield"
+>
+
+
+<!--- define reusable profile input field --->
+<ismodule template="util/inputfield.isml"
+	name="inputfield"
+	attribute="formfield"
+	attribute="type"
+	attribute="maxlength"
+	attribute="size"
+	attribute="xhtmlclass"
+	attribute="label"
+	attribute="p_dynamic"
+	attribute="attribute1"
+	attribute="value1"
+	attribute="attribute2"
+	attribute="value2"
+	attribute="attribute3"
+	attribute="value3"
+>

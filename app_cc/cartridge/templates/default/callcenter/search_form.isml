@@ -1,0 +1,127 @@
+<isinclude template="callcenter/cc_header.isml">
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Customer Search</P>
+
+<iscomment>This error message is to be displayed if we fail to verify the agents role
+and prevent the redirect to site.</iscomment>
+<isif condition="${!empty(session.custom.errorMessage)}">
+  <p style="color: red;"><isprint value="${session.custom.errorMessage}"/></p>
+  <isscript>delete session.custom.errorMessage;</isscript>
+</isif>
+
+<Br> 
+
+
+  <TABLE class=report_table width="800">
+  <TBODY>
+  <TR> 
+    <TD class=report_title>
+      Customer Search
+    </td>
+  </tr>
+  <Tr>
+    <Td>
+<form method="post" id="custom-search-form" method="post" action="${URLUtils.url('CC_Search-Process')}" STYLE="display: inline;margin: 0px; padding: 0px;">
+   <input type="hidden" name="Login" value="${pdict.CurrentHttpParameterMap.Login.value}">
+<table cellpadding="3" border=0>
+
+<isif condition="${pdict.Status != null && pdict.Status.code != null}">
+  <tr>
+     <td colspan="3" valign="top"><b><p class=PageTitle><isprint value="${ pdict.Status.code }"><Br></p></b></td>
+  </tr>
+<iselseif condition="${!empty(pdict.OrderDetailsError)}" >
+ <tr>
+     <td colspan="3" valign="top"><h2 class=PageTitle><isprint value="${pdict.OrderDetailsError}"></h2></td>
+  </tr>
+</isif>
+  <tr>
+     <td ><p><b>Last Name:</b></p></td>
+     <td><input type="text" name="LastName" class="input" value="" style="width: 200px" /></td>
+     <Td>&nbsp;</Td>
+  </tr>
+  <tr>
+     <td style="width: 130px;"><p><b>First Name:</b></p></td>
+     <td style="width: 120px;"><input type="text" name="FirstName" class="input" value="" style="width: 200px" /></td>
+     <Td style="width: 350px;">&nbsp;</Td>
+  </tr>
+  <tr>
+     <td><p><b>Email Address:</b></p></td>
+     <td><input type="text" name="Email" class="input" value="" style="width: 200px" /></td>
+  </tr>
+  <tr>
+     <td><p><b>Customer #'#'#:</b></p></td>
+     <td><input type="text" name="CustomerNumber" class="input" value="" style="width: 200px" /></td>
+  </tr>
+  <tr>
+     <td><p><b>&nbsp;</b></p></td>
+     <td>
+        <input type="reset" name="btnSubmitSearch" class="submit_button_search" value="Clear Form" />
+        &nbsp;&nbsp;
+        <input type="submit" name="btnSubmitSearch" class="submit_button_search" value="Lookup" />
+     </td>
+  </tr>
+    
+</table>
+</form>
+<script type="text/javascript">
+    var searchForm = {
+        save: function () {
+            if (typeof(Storage) !== 'undefined') {
+                var formData = $('#custom-search-form').serialize();
+                localStorage.setItem('customerSearchForm', formData);
+            }
+        },
+        restore: function () {
+            if (typeof(Storage) !== 'undefined') {
+                var formData = localStorage.getItem('customerSearchForm');
+                if (formData !== null) {
+                    $('#custom-search-form').deserialize(formData);
+                    localStorage.removeItem('customerSearchForm');
+                }
+            }
+        }
+    };
+    
+    $(document).ready(function() {
+        $('#custom-search-form').on('submit', function(){
+            searchForm.save();
+        });
+        searchForm.restore();
+    })
+</script>
+</TD>
+</tr>
+</table>
+
+
+	<form method="post" action="${URLUtils.url('CC_Search-FindOrder')}">
+		  <TABLE class=report_table width="800">
+		  <TBODY>
+		  <TR> 
+		    <TD class=report_title>
+		      Order Search
+		    </td>
+		  </tr>
+		  <Tr>
+		    <Td>
+		    	<table cellpadding="3" border=0>
+		    		<tr>
+		     			<td><p><b>Order Number:</b></p></td>
+		     			<td><input type="text" name="OrderNumber" class="input" value="" style="width: 200px" /></td>
+		  			</tr>
+		    		<tr>
+		    			<td>
+		        			<input type="submit" name="btnSubmitSearch" class="submit_button_search" value="Go" />
+		    		 	</td>
+		    		</tr>
+		    		
+		    	</table>
+		    </Td>
+		  </Tr>
+		  </TBODY>
+		  </TABLE>
+	</form>
+
+
+</DIV>

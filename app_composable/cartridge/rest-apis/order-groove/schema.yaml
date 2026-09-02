@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom order groove API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_OrderGrooveInt_r: Custom order groove API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_OrderGrooveInt_r: Custom order groove API
+paths:
+  /getOGSignature:
+    get:
+      summary: Custom order groove API
+      operationId: getOGSignature
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Order groove signature success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signature:
+                    type: string
+        "403":
+          description: Order groove signature failure
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/request-error",
+                      "message": "Bad Request"
+                    }
+        "500":
+          description: Server issue
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/server-error",
+                      "message": "Server issue"
+                    }
+security:
+  - ShopperToken: ["c_OrderGrooveInt_r"]

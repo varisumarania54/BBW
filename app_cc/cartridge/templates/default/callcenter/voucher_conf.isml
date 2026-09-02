@@ -1,0 +1,52 @@
+
+<isinclude template="callcenter/cc_header.isml">
+
+
+
+
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / e-Voucher</P>
+
+<Br>
+<form method="post"  method="post" action="${URLUtils.url('CC_Customer-Details')}" STYLE="display: inline;margin: 0px; padding: 0px;">
+<input type="hidden" name="Login" value="${pdict.CurrentHttpParameterMap.Login.value}">
+
+<TABLE class=report_table width="800">
+  <TBODY>
+  <TR> 
+    <TD class=report_title>
+      Create and Send e-Voucher
+    </td>
+    </tr>
+  </tr>
+  <Tr>
+    <Td>
+
+<table cellpadding="3">
+
+<isif condition="${pdict.Status != null && pdict.Status.code != null}">
+  <tr>
+     <td colspan="2" valign="top"><b><p class=PageTitle><isprint value="${ pdict.Status.code }"><Br></p></b></td>
+  </tr>
+</isif>
+  <tr>
+     <td colpsnae="2"><Br><p>The e-Voucher <b><isprint value="${pdict.GiftCertificate.ID}"></b> has been sent to <B><isprint value="${pdict.Customer.profile.email}"> </b></p></td>
+     
+  </tr>
+
+  <tr>
+     
+     <td>
+      <Br>  <input type="submit" name="btnSubmitSearch" class="submit_button_customerdetails" value="Customer Details" />
+     <Br><Br>
+     </td>
+  </tr>
+</table>
+</form>
+
+</TD>
+</tr>
+</table>
+</DIV>
+

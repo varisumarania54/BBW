@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "startPCIPalSession",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

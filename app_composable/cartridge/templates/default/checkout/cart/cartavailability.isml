@@ -1,0 +1,85 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<iscomment>Expected parameters are product & quantity.</iscomment>
+
+<isset name="webInventory" value="${lineItem.custom.webInventory}" scope="page" />
+<isset name="levels" value="${product.availabilityModel.getAvailabilityLevels(quantity)}" scope="page"/>
+
+<ul class="product-availability-list">
+<isif condition="${!empty(webInventory)}">
+
+	<isif condition="${levels.inStock.value > webInventory}">
+		<isset name="lowerQty" value="${webInventory}" scope="page" />
+	<iselseif condition="${levels.inStock.value < webInventory}" />
+		<isset name="lowerQty" value="${levels.inStock.value}" scope="page" />
+	<iselse/>
+		<isset name="lowerQty" value="${webInventory}" scope="page" />
+	</isif>
+	<iscomment> Check if Qty was changed in the cart due to LowRadialInventory, remove error status code after check </iscomment>
+	<isif condition="${!empty(pdict.RadialLowInvStatus) && pdict.RadialLowInvStatus.code == 'LowRadialInventory' && lowerQty == webInventory && lowerQty != 0}">
+		<li class="low-radial-inventory"><isprint encoding="off" value="${Resource.msgf('product.error.lowinv.cart','orderConfirmation',null,webInventory)}" /></li>
+	 <iselseif condition=" ${pdict.CurrentSession.custom.isReserveInventoryError && lowerQty > 0 && quantity >= webInventory}">
+		<li class="low-radial-inventory"><isprint encoding="off" value="${Resource.msgf('product.error.lowinventory.cart','orderConfirmation',null,lowerQty)}" /></li>
+	<iselseif condition="${lowerQty >= quantity}">
+		<li class="is-in-stock">
+			${StringUtils.format(Resource.msg('bopis.global.instock','orderConfirmation',null))}
+		</li>
+    <iselseif condition="${lowerQty <= 0}">
+        <li class="not-available">${StringUtils.format(Resource.msg('global.remainingnotavailable','orderConfirmation',null))}</li>
+	</isif>
+<iselse/>
+
+	<isif condition="${product.availabilityModel.inventoryRecord != null && product.availabilityModel.inventoryRecord.inStockDate != null}">
+		<isset name="inStockDate" value="${product.availabilityModel.inventoryRecord.inStockDate.toDateString()}" scope="page"/>
+	<iselse/>
+		<isset name="inStockDate" value="${null}" scope="page"/>
+	</isif>
+
+	<isif condition="${levels.inStock.value > 0}">
+		<isif condition="${levels.inStock.value == quantity}">
+			<li class="is-in-stock">
+				${StringUtils.format(Resource.msg('bopis.global.instock','orderConfirmation',null))}
+			</li>
+		<iselse/>
+			<li class="is-in-stock">${StringUtils.format(Resource.msg('global.quantityinstock','orderConfirmation',null),levels.inStock.value)}</li>
+		</isif>
+	</isif>
+
+	<isif condition="${levels.preorder.value > 0}">
+		<isif condition="${levels.preorder.value == quantity}">
+			<li class="on-order">${StringUtils.format(Resource.msg('global.allpreorder','orderConfirmation',null))}</li>
+		<iselseif condition="${levels.preorder.value == 0}">
+			<li class="on-order">${StringUtils.format(Resource.msg('global.remainingpreorder','orderConfirmation',null))}</li>
+		<iselse/>
+			<li class="on-order">${StringUtils.format(Resource.msg('global.quantitypreorder','orderConfirmation',null),levels.preorder.value)}</li>
+		</isif>
+		<isif condition="${inStockDate != null}">
+			<li class="on-order">
+				${Resource.msgf('global.inStockDate', 'orderConfirmation', null, StringUtils.formatCalendar(new dw.util.Calendar(product.availabilityModel.inventoryRecord.inStockDate), pdict.CurrentRequest.locale, dw.util.Calendar.LONG_DATE_PATTERN))}
+			</li>
+		</isif>
+	</isif>
+
+	<isif condition="${levels.backorder.value > 0}">
+		<isif condition="${levels.backorder.value == quantity}">
+			<li class="on-order">${StringUtils.format(Resource.msg('global.allbackorder','orderConfirmation',null))}</li>
+		<iselseif condition="${levels.notAvailable.value == 0}">
+			<li class="on-order">${StringUtils.format(Resource.msg('global.remainingbackorder','orderConfirmation',null))}</li>
+		<iselse/>
+			<li class="on-order">${StringUtils.format(Resource.msg('global.quantitybackorder','orderConfirmation',null),levels.backorder.value)}</li>
+		</isif>
+		<isif condition="${inStockDate != null}">
+			<li class="on-order">
+				${Resource.msgf('global.inStockDate', 'orderConfirmation', null, StringUtils.formatCalendar(new dw.util.Calendar(product.availabilityModel.inventoryRecord.inStockDate), pdict.CurrentRequest.locale, dw.util.Calendar.LONG_DATE_PATTERN))}
+			</li>
+		</isif>
+	</isif>
+
+	<isif condition="${levels.notAvailable.value > 0}">
+		<isif condition="${levels.notAvailable.value == quantity}">
+			<li class="not-available">${Resource.msg('global.soldout','orderConfirmation',null)}</li>
+		<iselse/>
+			<li class="not-available">${Resource.msg('global.remainingnotavailable','orderConfirmation',null)}</li>
+		</isif>
+	</isif>
+</isif>
+</ul>

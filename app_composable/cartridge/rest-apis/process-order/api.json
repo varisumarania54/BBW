@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "processOrder",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

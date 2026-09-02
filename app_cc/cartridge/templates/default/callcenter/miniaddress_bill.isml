@@ -1,0 +1,34 @@
+   
+    
+<table>
+    <TR>     
+       <TD class=report_title width="170" >Billing Addresses</TD>
+    </TR>
+	<tr>
+	  <td class="report_cell">
+         <isprint value="${pdict.p_address.firstName}">
+         <isprint value="${pdict.p_address.lastName}">
+      </td>
+    </tr>
+    <Tr>
+       <Td class="report_cell">
+         <isprint value="${pdict.p_address.address1}">
+			<isif condition="${!empty(pdict.p_address.address2)}">
+				<isprint value="${pdict.p_address.address2}">
+		    </isif>
+       </td>
+   </tr>
+    <Tr>
+       <Td class="report_cell">
+	        <isif condition="${pdict.p_address.city != null}">
+              <isprint value="${pdict.p_address.city}">,&nbsp;
+            </isif>
+            <isprint value="${pdict.p_address.stateCode}">&nbsp;<isprint value="${pdict.p_address.postalCode}">
+        </td>
+     </tr>
+    <Tr>
+       <Td class="report_cell"> 
+           <isprint value="${pdict.p_address.countryCode}">
+       </td>
+   </tr>
+</table>

@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Gift Card API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: https
+      scheme: bearer
+      flows:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_giftcard_r: Get Gift Card Information
+paths:
+  /balance:
+    post:
+      summary: Get Gift Cert Balance
+      operationId: balance
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+            'application/json':
+             schema:
+              type: object
+              required:
+                - c_giftcard_number
+                - c_giftcard_pin
+              properties:
+               c_giftcard_number:
+                type: string
+                minimum: 1
+               c_giftcard_pin:
+                type: string
+                minimum: 1
+               c_recaptcha_token:
+                type: string
+                minLength: 0
+      responses:
+        "200":
+          description: Get Gift Card Balance Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tier:
+                    type: string
+                  points:
+                    type: integer
+        "404":
+          description: Gift Card Not Found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/gift-card-not-found",
+                    }
+security:
+  - ShopperToken: ["c_giftcard_r"]

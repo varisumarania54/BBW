@@ -1,0 +1,74 @@
+/**
+*
+*  This script filters out the customers that do not have the passed Postcode.
+*
+*  @input  CustomersUnFiltered  :  dw.util.Iterator
+*  @input  PostCodeSearch       :  java.lang.String
+*  @output Customers :  dw.util.Iterator
+*  @output CustomerUnpagedResultCount :  java.lang.Number;
+*  @output Status :  dw.system.Status;
+*
+*/    
+         
+importPackage( dw.system );
+importPackage( dw.value );
+importPackage( dw.util );
+ 
+function execute( pdict : PipelineDictionary ) : Number
+{
+	   
+	var postcodeSearch = pdict.PostCodeSearch; 
+	   
+	   if(empty(postcodeSearch)) {   
+	   
+	      pdict.Status = new Status(Status.OK,"EMPTY");	
+	   }
+	   
+	if(!empty(postcodeSearch)) {      
+	 
+	 	     pdict.Status = new Status(Status.OK,"NOT EMPTY");	
+	       
+	 
+	        var customers = pdict.CustomersUnFiltered;
+	        var hashSet : LinkedHashSet = new LinkedHashSet();    
+    
+        	while( customers.hasNext() )
+	        {
+		
+		       var profile   : Profile = customers.next();
+		       var postcode  : String = "";    
+		       var preferredAddress = null;
+		       var addressBook = null;
+		            
+               addressBook = profile.getAddressBook();             
+               	
+               if(addressBook != null){
+                    preferredAddress  = addressBook.getPreferredAddress();
+                 
+                  if(preferredAddress != null){
+                     postcode  = preferredAddress.postalCode;
+                  }
+               }    	 
+
+               if(postcode != null){
+               	
+                 var compareResult = postcode.toLowerCase().indexOf(postcodeSearch.toLowerCase());
+                  if(compareResult == 0){
+                   
+                      hashSet.add(profile);
+                	
+                 }
+               }
+            }
+                  
+  
+                pdict.Customers = hashSet.iterator(); 
+                pdict.CustomerUnpagedResultCount = hashSet.size();
+    }
+     
+ 
+	      
+	 
+    return PIPELET_NEXT;
+}
+  

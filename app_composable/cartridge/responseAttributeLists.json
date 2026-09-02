@@ -1,0 +1,28 @@
+{
+  "SCAPI": {
+    "Customer-Attributes": {
+      "blockList": [
+        "hashedLogin",
+        "previousLoginTime",
+        "previousVisitTime",
+        "c_anniversaryDate",
+        "c_bondConstruct",
+        "c_bondMarket",
+        "c_bondMemberID",
+        "c_isAutoRefreshSubscribed",
+        "c_isSubsciber",
+        "c_loyaltyExpiryDate",
+        "c_loyaltyExported",
+        "c_emailOptIn",
+        "c_statusChangeDate",
+        "c_filteredOffers",
+        "c_emailHash"
+      ]
+    },
+    "Basket-Attributes":{
+
+    }
+  },
+  "OCAPI": {
+  }
+}

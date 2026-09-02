@@ -1,0 +1,14 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "checkAccount",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        },
+        {
+            "endpoint": "getAccountInfo",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

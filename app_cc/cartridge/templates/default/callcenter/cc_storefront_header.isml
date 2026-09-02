@@ -1,0 +1,30 @@
+
+<isif condition="${pdict.CurrentSession.userAuthenticated}">
+
+<!--  Call Center Header (cartridge : app_cc) -->
+
+<!--  This template must NOT be cached -->
+<!--  This template should be included by header.isml in your storefront cartridge -->
+ 
+<!-- Start: callcenter/cc_storefront_header -->
+
+<div style="
+background: red; 
+color: white;
+position:absolute;
+top:0px; //58px also works nicely to position below logo
+width:500px;
+">
+     <font style="font-size:14px;">Agent: <b><isprint value="${pdict.CurrentSession.userName}"></b> logged in as  
+        <isif condition="${pdict.CurrentSession.customerAuthenticated}">
+              customer: <B><isprint value="${pdict.CurrentUser.profile.firstName}"> <isprint value="${pdict.CurrentUser.profile.lastName}">
+        <iselse>
+            an <B>Unregistered User
+        </isif>
+     </b></font>
+</div>
+
+<!-- End: callcenter/cc_storefront_header -->
+<!--  hr color="black" -->
+
+</isif>

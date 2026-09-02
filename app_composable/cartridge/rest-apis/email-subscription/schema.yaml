@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Email Subscription API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      scheme: bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customSubscription_rw: Post email signup request
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customSubscription_rw: Post email signup request
+paths:
+  /subscription:
+    post:
+      summary: Post email signup request
+      operationId: subscription
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+      responses:
+        200:
+          description: Shows that a subscription was created in SFCC successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  loyaltyOffersLastUpdated:
+                    type: string
+        404:
+          description: Shows that a subscription was not created
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    type: "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/customer-not-found"
+security:
+  - ShopperToken: ["c_customSubscription_rw"]

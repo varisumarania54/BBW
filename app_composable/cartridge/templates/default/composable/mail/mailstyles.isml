@@ -1,0 +1,225 @@
+<isscript>
+/*
+    This file is a collection of styles for email templates.  When you call the printStyles function from the isml file, that function takes the key/value pairs and prints them as a 
+    string into the "style" attr of the DOM element.  
+    
+    If you want to go Math or Logic to the key/value pair make sure to have the value as a number, not a string. 
+        **Example of string
+            'width': '100px'
+        **Example of number
+            'width': 100
+            
+    If value is a string and needs to be in pixels, em's, % then include the unit in the string.  The exception to this is if you will be doing math on this later.
+*/
+
+var container = {
+    'background' : '#F2F2F2',
+    'padding'    : '50px 0'
+};
+
+var containertable = {
+    'background'     : '#ffffff',
+    'width'          : 600,
+    'border-spacing' : 0
+};
+
+var img = {
+    'border':'0',
+    'vertical-align': 'top'
+};
+
+var shopnowlink = {
+    'text-transform'    : 'uppercase',
+    'color'             : '#fff',
+    'text-decoration'   : 'none',
+    'font-weight'       : '700',
+    'border-top'        : '12px',
+    'border-bottom'     : '12px',
+    'border-left'       : '32px',
+    'border-right'      : '32px'
+};
+
+var contentwrapper = {
+    'font-family'    : '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+    'padding'        : '0 32px 15px',
+    'vertical-align' : 'top',
+    'text-align'     : 'left',
+    'color'          : '#333',
+    'font-size'      : '14px',
+    'line-height'    : '1'
+    
+};
+
+var resetpasswordlinktd = {
+    'font-family'       : '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+    'align-items'       : 'center',
+    'text-transform'    : 'uppercase',
+    'background-color'  : '#1A1A1A',
+    'border-color'      : '#000',
+    'color'             : '#333',
+    'min-height'        : '48px',
+    'padding'           : '15px 0px 15px',
+    'vertical-align'    : 'top'
+};
+
+var orderwrapper = {
+    'padding'        : '9px 32px 20px',
+    'vertical-align' : 'top',
+    'text-align'     : 'left',
+    'color'          : '#333',
+    'font-size'      : '14px',
+    'line-height'    : '1'
+};
+
+var test = {
+    'font-family'    : '\'HelveticaNeue-Light\',\'Helvetica Neue Light\,\'Helvetica Neue\',Helvetica,Arial,\'Lucida Grande\',sans-serif'
+}
+
+/* Styles for email header */
+
+var spacer = {
+    'line-height' : '1px',
+    'min-width'   : '600px',
+    'overflow'    : 'hidden'
+};
+
+var spacerimg = {
+    'display'    : 'block',
+    'max-height' : '1px',
+    'min-height' : '1px',
+    'min-width'  : '600px',
+    'width'      : '600px',
+    'opacity'    : '0'
+};
+
+var header = {
+    'padding'        : '35px 115px',
+    'text-align'     : 'center',
+    'vertical-align' : 'top'    
+};
+
+
+/* Styles for email footer */ 
+
+var footerwrapper = {
+    'padding'        : '28px 32px 18px',
+    'vertical-align' : 'top',
+    'text-align'     : 'center',
+    'color'          : '#666',
+    'font-size'      : '14px',
+    'line-height'    : '1',
+    'font-family'    : '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
+};
+
+var footertable = {
+    'width' : '100%'
+};
+
+var footercell = {
+    'font-family'  : '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+    'padding'        : '0',
+    'vertical-align' : 'top'
+};
+
+var shopnowFootercell = {
+    'font-family'  : '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+    'padding'        : '0',
+    'vertical-align' : 'top',
+    'background-color': '#000',
+};
+var footerlink = {
+    'color'            : '#666',
+    'padding'          : '10px 0px',
+    'text-decoration'  : 'none',
+    'font-family'      :' Helvetica, sans-serif',
+    'font-size'        : '18px',
+    'line-height'      : '1',
+    'display'          : 'inline-block',
+    'font-weight'      : 'bold',
+    'font-size'        : '16px',
+    'line-height'      : '16px'
+};
+
+var sociallink = { 
+    'padding'         : '0 11px',
+    'text-decoration' : 'none',
+    'display'         : 'inline-block'
+};
+
+var bottomfooterlink = {
+    'color'            : '#666666',
+    'padding'          : '0 20px',
+    'text-decoration'  : 'none',
+    'font-family'      :'"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+    'font-size'        : '15px',
+    'line-height'      : '1',
+    'display'          : 'inline-block',
+    'text-transform'   : 'uppercase'
+};
+
+/* Styles for Contact US email */ 
+
+var contactuslabel = {
+    'vertical-align' : 'top', 
+    'text-align'     : 'right',
+    'font-size'      : '16px',
+    'padding'        : '7px 8px',
+    'font-weight'    : 'bold',
+    'width'          : '250px'
+};
+
+var briefdescription  = {
+    'vertical-align' : 'top', 
+    'text-align'     : 'left',
+    'font-size'      : '16px',
+    'padding'        : '7px 8px',
+    'font-weight'    : 'bold',
+    'width'          : '250px'
+};
+
+var contactusvalue = {
+    'vertical-align' : 'top',
+    'text-align'     : 'left',
+    'font-size'      : '16px',
+    'padding'        : '7px 8px'
+};
+
+/*
+By default the unit is 'px'.  
+If you would like to have a different unit of measure pass in with printStyle function.  
+NOTE: whatever you pass in will be used.
+cloneStyles is used to clone the email style object so you can reuse certain styles
+*/
+function printStyles(style:JSON, unit:String) {
+    //takes a json object and builds a style rule from it
+    var cssStyle = '';
+    var defaultUnit = 'px';
+    
+    if(!unit){
+        unit = defaultUnit;
+    }
+    
+    for(var key in style)
+    {
+        var value = style[key];         
+
+        if(typeof value === 'number' ){
+            value = value + unit;
+        }
+        cssStyle += key + ':' + value + ';';
+    }
+    
+    return cssStyle;
+
+}
+
+//function for cloning existing styles into a new object
+function cloneStyles(style:JSON) {
+    function c(style) {
+        for (var i in style) {
+            this[i] = style[i];
+        }
+    }
+    return new c(style);
+};
+</isscript>

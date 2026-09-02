@@ -1,0 +1,41 @@
+
+<isinclude template="callcenter/cc_header.isml">
+  
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Email Reminder Confirmation</P>
+
+<Br>
+<form method="post"  method="post" action="${URLUtils.url('CC_Customer-Details')}" STYLE="display: inline;margin: 0px; padding: 0px;">
+<input type="hidden" name="Login" value="${pdict.CurrentHttpParameterMap.Login.value}">
+
+<TABLE class=report_table width="800">
+  <TBODY>
+  <TR> 
+    <TD class=report_title> 
+      Password Reminder Confirmation
+    </td>
+    </tr>
+  </tr>  
+  <Tr>  
+    <Td  >
+
+<table cellpadding="3">
+  <tr>
+     <td colspan="2">
+        <Br><p><B><isprint value="${pdict.Customer.profile.firstName}"> <isprint value="${pdict.Customer.profile.lastName}">'s</b> password has been reset to <B><isprint value="${pdict.Password}"></b> and sent to <b><isprint value="${pdict.Customer.profile.email}"></b></td>
+      </tr>
+  <tr>
+     <td><Br>
+        &nbsp;<input type="submit" name="btnSubmitPass" class="submit_button_passreminder" value="Customer Details" />
+   <Br><Br>
+     </td>
+  </tr>
+</table>
+</form>
+
+</TD>
+</tr>
+</table>
+</DIV>
+

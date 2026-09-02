@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: inapplicable Shipping Methods API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_inapplicableShipping_r: inapplicable Shipping Methods API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_inapplicableShipping_r: inapplicable Shipping Methods API
+paths:
+  /inapplicableShippingMethods:
+    get:
+      summary: inapplicable Shipping Methods API
+      operationId: inapplicableShippingMethods
+      parameters:
+        - in: query
+          name: c_shipment
+          required: false
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: shippingMethods For Shipment Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inapplicableMethodsArray:
+                    type: array
+                    items:
+                      type: object
+
+        '404':
+          description: inapplicable Shipping Methods failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+security:
+  - ShopperToken:
+      - c_inapplicableShipping_r

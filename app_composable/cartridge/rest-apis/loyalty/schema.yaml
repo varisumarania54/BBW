@@ -1,0 +1,208 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Loyalty API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      scheme: bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_loyalty_r: Loyalty API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_loyalty_r: Loyalty API
+paths:
+  /loyalty:
+    post:
+      summary: Loyalty API
+      operationId: loyalty
+      parameters:
+        - in: path
+          name: apiName
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              required:
+                - c_slasjwt
+              properties:
+                c_slasjwt:
+                  type: string
+                  minimum: 1
+                  maximum: 9999
+      responses:
+        200:
+          description: Loyalty Data API was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  loyaltyOffersLastUpdated:
+                    type: string
+        404:
+          description: Shows that customer is not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  loyaltyOffersLastUpdated:
+                    type: string
+  /pointsHistory:
+    get:
+      summary: Points History API
+      operationId: pointsHistory
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_pagenum
+          required: false
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Points History API was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pointsTotal:
+                    type: number
+                    nullable: false
+                  maxPagination:
+                    type: number
+                    nullable: false
+                  totalRecords:
+                    type: number
+                    nullable: false
+                  currentPage:
+                    type: number
+                    nullable: false
+                  itemData:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        bonusPoints:
+                          type: boolean
+                        dateUTC:
+                          type: string
+                          nullable: true
+                        title:
+                          type: string
+                          nullable: false
+                        transaction:
+                          type: string
+                          nullable: true
+                        type:
+                          type: string
+                          nullable: true
+                        transNum:
+                          type: string
+                          nullable: true
+                        transType:
+                          type: string
+                          nullable: true
+                        value:
+                          type: number
+                          nullable: true
+        "404":
+          description: Points History API failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /activateOffer:
+    post:
+      summary: Activate Loyalty Offer
+      operationId: activateOffer
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+            'application/json':
+             schema:
+              type: object
+              required:
+                - c_offer_id
+              properties:
+                c_email_hash:
+                    type: string
+                c_offer_id:
+                    type: string
+                    minLength: 1
+      responses:
+        "200":
+          description: Offer activated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  optinFl:
+                    type: boolean
+        "400":
+          description: Issue with Offer activation
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/request-error",
+                      "message": "Bad Request"
+                    }
+        "500":
+          description: Server issue
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/server-error",
+                      "message": "Server issue"
+                    }
+security:
+  - ShopperToken:
+      - c_loyalty_r

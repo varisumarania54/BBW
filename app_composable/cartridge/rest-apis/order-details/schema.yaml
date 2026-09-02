@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom order details API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_orderDetails_r: Custom order details API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_orderDetails_r: Custom order details API
+paths:
+  /orderDetails:
+    get:
+      summary: Custom order details API
+      operationId: orderDetails
+      parameters:
+        - in: query
+          name: c_orderNo
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_email
+          required: false
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_billingPostalCode
+          required: false
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_recaptcha_token
+          required: false
+          schema:
+            type: string
+            minLength: 0
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Custom guest order lookup
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderDetails:
+                    type: object
+        "400":
+          description: Invalid email or postal code format
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/request-error",
+                      "message": "Bad Request"
+                    }
+        "500":
+          description: Server issue
+          content:
+            application/json:
+              examples:
+                validation_error:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/server-error",
+                      "message": "Server issue"
+                    }
+security:
+  - ShopperToken: ["c_orderDetails_r"]

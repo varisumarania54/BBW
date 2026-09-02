@@ -1,0 +1,70 @@
+/**
+*   @input Basket : dw.order.Basket
+*	@input OrderDetails : Object
+*
+*/
+importPackage( dw.system );
+importPackage( dw.order );
+
+function execute( args : PipelineDictionary ) : Number
+{
+	try{
+		var basketData = args.OrderDetails,
+    		basket : Basket = !empty(args.Basket)?args.Basket:BasketMgr.getCurrentBasket();
+    	/**
+    	 * create shipping address object
+    	 */
+    	var shippingAddress : OrderAddress = basket.defaultShipment.createShippingAddress();
+    		
+    	/**
+    	 * assing values to shipping address
+    	 */ 
+    	shippingAddress.address1 = getStringValue(basketData.shippingAddress.address1);
+    	shippingAddress.address2 = getStringValue(basketData.shippingAddress.address2);
+    	shippingAddress.city = getStringValue(basketData.shippingAddress.city);
+    	shippingAddress.stateCode = getStringValue(basketData.shippingAddress.state);
+    	shippingAddress.postalCode = getStringValue(basketData.shippingAddress.postalCode);
+    	shippingAddress.setCountryCode(getStringValue(basketData.shippingAddress.countryCode));
+    	shippingAddress.phone = getStringValue(basketData.shippingAddress.phone);
+
+    	/**
+    	 * create billing address
+    	 */
+    	var billingAddress : OrderAddress = basket.createBillingAddress();
+    	billingAddress.address1 = getStringValue(basketData.billing.address1);
+    	billingAddress.city = getStringValue(basketData.billing.city);
+    	billingAddress.postalCode = getStringValue(basketData.billing.postalCode);
+    	billingAddress.stateCode = getStringValue(basketData.billing.state);
+    	billingAddress.setCountryCode(getStringValue(basketData.billing.countryCode));
+    	billingAddress.phone = getStringValue(basketData.billing.phone);
+    	
+    	basket.customerName = getStringValue(basketData.billing.customerName);
+    	basket.customerEmail = getStringValue(basketData.billing.email);
+    	
+    	/**
+    	 * set shipping and billing firstname and lastname for registered customer
+    	 */
+    	if(!empty(basket.customer) && basket.customer.anonymous == false && !empty(basket.customer.profile)){
+    		billingAddress.firstName = basket.customer.profile.firstName;
+    		billingAddress.lastName = basket.customer.profile.lastName;
+    		shippingAddress.firstName = basket.customer.profile.firstName;
+    		shippingAddress.lastName = basket.customer.profile.lastName;
+    	}
+    	
+    	dw.system.HookMgr.callHook( "dw.order.calculate", "calculate", basket );
+	}catch(e){
+		var error = e;
+		Logger.error(e);
+	}
+	return PIPELET_NEXT;
+}
+
+function getStringValue(value){
+	if(empty(value)){
+		return '';
+	}
+	if(value == undefined){
+		return '';
+	}
+	return value;
+}

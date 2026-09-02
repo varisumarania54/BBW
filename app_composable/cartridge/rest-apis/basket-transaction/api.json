@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "getbaskettransaction",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

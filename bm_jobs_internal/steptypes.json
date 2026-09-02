@@ -1,0 +1,685 @@
+{
+  "step-types": {
+    "script-module-step": [
+      {
+        "@type-id": "custom.TransferProductCustomAttributes",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Batch job to transfer one custom attribute to another custom attribute via a product feed",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/transferCustomAttributes",
+        "function": "transferProductCustomAttributes",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "FileName",
+              "description": "File name pattern (Default is \".*\")",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "CatalogId",
+              "description": "Catalog ID to import it into",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "SourceCustomAttribute",
+              "description": "Source Custom attribute to copy from",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "SourceCustomAttributeLocaleId",
+              "description": "Source Custom Attribute Locale ID to copy from. Use a - instead of _",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "TargetCustomAttribute",
+              "description": "Target Custom Attribute to set",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "TargetCustomAttributeLocaleId",
+              "description": "Target Attribute Locale ID to paste data. Use a - instead of _",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.GenerateSortByPriceProductFeed",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Batch job to set sort prices in the product data c_sortPrice",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/sortByPriceProductFeed",
+        "function": "setSortByPriceProductFeed",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "FileName",
+              "description": "File name pattern (Default is \".*\")",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.TransferContentCustomAttributes",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Batch job to transfer one custom attribute to another custom attribute via a content feed",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/transferCustomAttributes",
+        "function": "transferContentCustomAttributes",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "FileName",
+              "description": "File name pattern (Default is \".*\")",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "SourceCustomAttribute",
+              "description": "Source Custom attribute to copy from",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "TargetCustomAttribute",
+              "description": "Target Custom Attribute to set",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "TargetCustomAttributeLocaleId",
+              "description": "Target Attribute Locale ID to paste data. Use a - instead of _",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "LibraryId",
+              "description": "libraryid to import content Asset data",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.GeneratePerpetualInventoryFeed",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Batch job to generate a inventory feed for the products tied to the specific category",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/buildInvUpdateFeed",
+        "function": "main",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "batchSize",
+              "description": "The number of items to package in a radial request",
+              "@type": "long",
+              "@required": "false",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.generateContentAndProductXMLforCA",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Batch job to update content assets for CA site to show ingredients on CA site",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/generateContentAndProductXMLforCA",
+        "function": "generateContentAndProductXML",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "FullAssetsUpdate",
+              "@type": "boolean",
+              "@required": "false"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.GenerateBopisOrderLimits",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Generates new Bopis Order Limits file based on day",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/GenerateBopisOrderLimits",
+        "function": "GenerateBopisOrderLimits",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "inputFolderPath",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true",
+              "default-value": "",
+              "description": "path of input file"
+            },
+            {
+              "@name": "inputFileName",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true",
+              "default-value": "",
+              "description": "name of input file used"
+            },
+            {
+              "@name": "outputFolderPath",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true",
+              "default-value": "",
+              "description": "path of output file"
+            },
+            {
+              "@name": "outputFileName",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true",
+              "default-value": "",
+              "description": "name of output file"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.ProcessBopisOrderLimits",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Adds bopis orders count for each store and when threshold is met we no longer accept in store pickup.",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/processBopisOrderLimits",
+        "function": "processBopisOrderLimits",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "mailCc",
+              "description": "",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "mailFrom",
+              "description": "",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "mailToPattern",
+              "description": "Replaces * with the store number, ex: BBW*@bbw.com",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "localeCodes",
+              "description": "Optional comma-separated list of locale codes. Expected format: en_CA,fr_CA",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "UseInventoryListID",
+              "description": "Use Inventory List ID instead of Store Number to replace in email pattern",
+              "@type": "boolean",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "MockEmail",
+              "description": "Email to use while testing Job in mock State",
+              "@type": "string",
+              "@required": "false",
+              "@trim": "true"
+            },
+            {
+              "@name": "EnableMockEmail",
+              "description": "Turn mock State On or Off",
+              "@type": "boolean",
+              "@required": "false",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+    },
+        {
+      "@type-id": "custom.clearBopisOfflineList",
+      "@supports-site-context": "true",
+      "@supports-organization-context": "false",
+      "description": "Clears BopisOrderLimitsDisabledStoreList custom objects store list",
+      "module": "bm_jobs_internal/cartridge/scripts/jobs/clearBopisOfflineList",
+      "function": "clearBopisOfflineList",
+      "parameters": {
+        "parameter": [
+        ]
+      },
+      "transactional": "true",
+      "status-codes": {
+        "status": [
+          {
+            "@code": "ERROR",
+            "description": "Used when an error occurred."
+          },
+          {
+            "@code": "OK",
+            "description": "Used when everything went well."
+          }
+        ]
+      }
+      },
+      {
+        "@type-id": "custom.WriteCustomObjectToDelimitedFile",
+        "@supports-parallel-execution": "false",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "true",
+        "description": "Job step for reading, processing, and writing custom object data to a single delimited file (single threaded)",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/writeCustomObjectToDelimitedFile",
+        "function": "writeCustomObjectToDelimitedFile",
+        "transactional": "false",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "Type",
+              "@type": "string",
+              "@required": "true",
+              "description": "Type of custom object",
+              "default-value": "required"
+            },
+            {
+              "@name": "Group",
+              "@type": "string",
+              "@required": "true",
+              "description": "Only exports attributes found in group",
+              "default-value": "required"
+            },
+            {
+              "@name": "Delimiter",
+              "@type": "string",
+              "@required": "true",
+              "description": "Enter one character to delimit the file data",
+              "default-value": "required"
+            },
+            {
+              "@name": "WritePath",
+              "@type": "string",
+              "@required": "true",
+              "description": "Enter the path in IMPEX with optional timestamp identifier {0} example: /subscribers/subscriber-export-{0}.csv",
+              "default-value": "required"
+            },
+            {
+              "@name": "BatchQueryRangeInMinutes",
+              "@type": "long",
+              "@required": "true",
+              "description": "increment query date for crawling through time",
+              "default-value": "20"
+            },
+            {
+              "@name": "StartQueryDateInDays",
+              "@type": "long",
+              "@required": "true",
+              "description": "Must match the custom objects retention setting",
+              "default-value": "10"
+            },
+            {
+              "@name": "AttributeDateFormat",
+              "@type": "string",
+              "@required": "false",
+              "description": "Transform dates written to file in this format (optional)"
+            }
+          ]
+        },
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occured during execution"
+            },
+            {
+              "@code": "OK",
+              "description": "Used when the execution finished successfully"
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.sendConstructorCSV",
+        "@supports-parallel-execution": "true",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Send the CSV file for constructor upload",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/sendConstructorCSV",
+        "function": "main",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "ConstructorKey",
+              "@type": "string",
+              "@required": "true",
+              "description": "The constructor key for this environment (QA, dev, etc.)"
+            },
+            {
+              "@name": "UserID",
+              "@type": "string",
+              "@required": "true",
+              "description": "Constructor SFTP User ID"
+            },
+            {
+              "@name": "Password",
+              "@type": "string",
+              "@required": "true",
+              "description": "Constructor SFTP Password"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+            {
+        "@type-id": "custom.extractProductIDsConstructor",
+        "@supports-parallel-execution": "true",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Send the CSV file for constructor upload",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/extractIDsConstructorCatalog",
+        "function": "execute",
+        "parameters": {
+          "parameter": [
+          ]
+        },
+        "transactional": "false",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.buildConstructorCSV",
+        "@supports-parallel-execution": "true",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Create the CSV file for constructor upload",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/buildConstructorCSV",
+        "function": "execute",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "StoreIDS",
+              "@type": "string",
+              "@required": "false",
+              "description": "The IDs of the stores whose inventory will be included in the file"
+            },
+            {
+              "@name": "ConstructorKey",
+              "@type": "string",
+              "@required": "true",
+              "description": "The constructor key for this environment (QA, dev, etc.)"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.storeAttributesExport",
+        "@supports-parallel-execution": "false",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Export store attributes from input XML files to a new XML file",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/storeAttributesExport",
+        "function": "storeAttributesExport",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "fileDirectory",
+              "description": "Path relative to IMPEX folder for input and output files",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "filePattern",
+              "description": "Regular expression pattern to match input XML files (e.g., stores.*\\.xml)",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "outputFilePrefix",
+              "description": "Prefix for the output XML file name (date will be appended)",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "true",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.notifyProductsWithoutPrimaryCategories",
+        "@supports-parallel-execution": "false",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Find all products without primary categories and send notification email",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/notifyProductsWithoutPrimaryCategories",
+        "function": "execute",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "senderEmail",
+              "description": "From address for notification email",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+            {
+              "@name": "notificationEmailList",
+              "description": "Comma seperated list of email addresses to notify when the products without categories are found",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            }
+          ]
+        },
+        "transactional": "false",
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      },
+      {
+        "@type-id": "custom.setProductsToForceSoldOut",
+        "@supports-parallel-execution": "false",
+        "@supports-site-context": "true",
+        "@supports-organization-context": "false",
+        "description": "Set products to force sold out right now",
+        "module": "bm_jobs_internal/cartridge/scripts/jobs/setProductsToForceSoldOut",
+        "function": "execute",
+        "transactional": "false",
+        "parameters": {
+          "parameter": [
+            {
+              "@name": "CatalogId",
+              "description": "Catalog ID to import it into",
+              "@type": "string",
+              "@required": "true",
+              "@trim": "true"
+            },
+          ]
+        },
+        "status-codes": {
+          "status": [
+            {
+              "@code": "ERROR",
+              "description": "Used when an error occurred."
+            },
+            {
+              "@code": "OK",
+              "description": "Used when everything went well."
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

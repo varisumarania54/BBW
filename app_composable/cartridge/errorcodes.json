@@ -1,0 +1,502 @@
+{
+  "errors": {
+    "ADDINSTRUMENT-04-001": {
+      "message": "GC in basket",
+      "description": "",
+      "httpCode": 403,
+      "severity": "Low"
+    },
+    "ADDINSTRUMENT-04-002": {
+      "message": "Sorry! Only {0} Gift Cards can be applied per order at this time. Please start a new order to redeem the rest of your Gift Cards.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDINSTRUMENT-04-003": {
+      "message": "Hmm. The Gift Card entered has no balance. Please try another card.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDINSTRUMENT-04-004": {
+      "message": "Oops! Please enter a valid PIN",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDINSTRUMENT-04-005": {
+      "message": "You Got It!",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDINSTRUMENT-04-006": {
+      "message": "You have entered an invalid card number, an invalid PIN, or this gift card may have been deactivated due to a $0 balance.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDINSTRUMENT-04-007": {
+      "message": "internal server error",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDITEM-04-001": {
+      "message": "Invalid product",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDITEM-04-002": {
+      "message": "Store {0} Not Available",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ADDITEM-04-003": {
+      "message": "Limit Reached",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "Category-04-001": {
+      "message": "Invalid parameters",
+      "description": "c_sitenav and c_visualNavigation both cannot be true. Only use one at a time.",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-001": {
+      "message": "Please enter a promo code.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-002": {
+      "message": "Promo code is invalid or expired.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-003": {
+      "message": "One-time use code has already been used.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-004": {
+      "message": "Looks like you've entered a Reward Code. Please use the \"Reward Codes\" section to redeem your reward.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-005": {
+      "message": "Looks like you've entered a Reward Code. Please log in and use the \"Reward Codes\" section to redeem your reward.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-006": {
+      "message": "Looks like you've entered a Reward Code. Please log in and use the \"Reward Codes\" section to redeem your reward.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-007": {
+      "message": "Loyalty Coupons cannot be applied by guest customers",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-008": {
+      "message": "Coupon already exists in cart",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-009": {
+      "message": "Promo code is not on customers loyalty offers",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-010": {
+      "message": "Maximum allowed promo codes applied.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-011": {
+      "message": "Promo code cannot be combined with {0}",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-012": {
+      "message": "Promo codes cannot be used during major sales events and have been removed.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-013": {
+      "message": "Invalid promo code.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-014": {
+      "message": "Promo code can’t be used at this time.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-015": {
+      "message": "Please enter a promo code.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-016": {
+      "message": "Sign in to redeem rewards.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "COUPON-04-017": {
+      "message": "Redeem rewards in the Rewards section.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "CUST-UPDATE-04-001": {
+      "message": "Customer Update - Invalid Credentials",
+      "description": "Invalid credentials",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CUST-UPDATE-04-002": {
+      "message": "Customer Update - Customer password required",
+      "description": "Customer password required",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CUSTOM-OBJECT-02-001": {
+      "message": "Custom Object",
+      "description": "Custom Object type {0} is unavailable",
+      "httpCode": 404,
+      "severity": "High"
+    },
+    "EDITGIFTCARD-04-001": {
+      "message": "Nothing to update",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "GET-SLOTS-01-001": {
+      "message": "multiple slot and category inputs",
+      "description": "More then the one parameter pass in resuest for slot or category id'",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "GET-SLOTS-01-002": {
+      "message": "input limit exceeded",
+      "description": "slot ids input limit exceeded in request object,Max limit {0}",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "GET-SLOTS-01-003": {
+      "message": "No content found",
+      "description": "No active content slot configurations were found for this product",
+      "httpCode": 200,
+      "severity": "Low"
+    },
+    "GET-SLOTS-01-004": {
+      "message": "Invalid parameters",
+      "description": "Invalid parameters were passed. Please ensure that the parameters are valid",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "GET-SLOTS-02-001": {
+      "message": "Internal resource error",
+      "description": "Internal resource call has timed out or failed for another reason.",
+      "httpCode": 500,
+      "severity": "High"
+    },
+    "GIFTCERTIFICATE-04-001": {
+      "message": "Gift Card can only be purchased with a minimum of 5 and maximum of 5000",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "GIFTCERTIFICATE-04-002": {
+      "message": "Missing product id",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "GIFTCERTIFICATE-04-003": {
+      "message": "Invalid productID",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "GIFTCERTIFICATE-04-004": {
+      "message": "Who's the lucky recipient? Put their name here.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "GIFTCERTIFICATE-04-005": {
+      "message": "They'll want to know who to thank! Please fill in this box.",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "GIFTCERTIFICATE-04-006": {
+      "message": "No inventory",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "Login-01-001": {
+      "message": "Login Error",
+      "description": "Must change password",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "Loyalty-01-001": {
+      "message": "Loyalty Error",
+      "description": "Invalid Loyalty Params / Preferences : loyalty.js",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "ONETRUST-DNSR-05-001": {
+      "message": "DNSR request for customer: {0} failed",
+      "description": "Call to onetrust service failed to execute",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "ORDER-HISTORY-04-001": {
+      "message": "Customer is not registered and authenticated",
+      "description": "Guest customer's cannot access my account order history data",
+      "httpCode": 403,
+      "severity": "Low"
+    },
+    "ORDER-HISTORY-04-002": {
+      "message": "Customer OMS history is empty",
+      "description": "OMS failed to find orders or no order have been placed",
+      "httpCode": 200,
+      "severity": "Low"
+    },
+    "ORDER-DETAILS-04-001": {
+      "message": "Unregistered customer email cannot be empty",
+      "description": "Order tracking requires email for guest users validation",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ORDER-DETAILS-04-002": {
+      "message": "Unregistered customer postal code cannot be empty",
+      "description": "Order tracking requires postal code for guest user validation",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "ORDER-DETAILS-04-003": {
+      "message": "Order {0} not found in OMS",
+      "description": "Order {0} not found in OMS",
+      "httpCode": 200,
+      "severity": "Low"
+    },
+    "ORDER-DETAILS-04-004": {
+      "message": "Something went wrong. Try again later.",
+      "description": "Obfuscating guest order tracking OMS validations. See logs for more details.",
+      "httpCode": 200,
+      "severity": "Low"
+    },
+    "ORDER-DETAILS-04-005": {
+      "message": "OMS response does not match request - {0}",
+      "description": "OMS returned incorrect order",
+      "httpCode": 200,
+      "severity": "Low"
+    },
+    "PWD-RESET-04-001": {
+      "message": "Client provided API Key is invalid",
+      "description": "Prevents unauthorized reset password email requests",
+      "httpCode": 403,
+      "severity": "High"
+    },
+    "RESET-SUCCESS-04-001": {
+      "message": "Accepts either 'c_id' or 'c_emailToken'",
+      "description": "Invalid parameter input",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "RESET-SUCCESS-04-002": {
+      "message": "'c_id' or 'c_emailToken' are required",
+      "description": "Invalid parameter input",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "RESET-SUCCESS-04-003": {
+      "message": "Customer not found",
+      "description": "Customer cannot be found because {0} is an invalid parameter.",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "SITE-PREVIEW-01-001": {
+      "message": "Site Preview API - Unauthorized to use this API",
+      "description": "Unauthorized to use this API",
+      "httpCode": 401,
+      "severity": "High"
+    },
+    "SITE-PREVIEW-04-001": {
+      "message": "Site Preview API - No relevant data in request body for this API",
+      "description": "No relevant data in request body for this API",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "SITE-PREVIEW-04-002": {
+      "message": "Site Preview API - Date is in wrong format",
+      "description": "Date is in wrong format",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "SITE-PREVIEW-04-003": {
+      "message": "Site Preview API - Customer Groups needs to be an array",
+      "description": "Customer Groups needs to be an array",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "SITE-PREVIEW-04-004": {
+      "message": "Site Preview API - Source code needs to be a string",
+      "description": "Source code needs to be a string",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "UPDATE-SHIPPING-METHOD-04-001": {
+      "message": "Invalid shipping method",
+      "description": "",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "VALIDATE-FIELD-02-001": {
+      "message": "Resource Not Found",
+      "description": "Unable to fetch the Sife Preference value : fieldRegexValue ",
+      "httpCode": 404,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-002": {
+      "message": "Input Field Validation Error",
+      "description": "Unable to parse the Input field regex value from Site Preference(fieldRegexValue) For : {0}  ",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-003": {
+      "message": "Payload contains invalid update attributes: {0}",
+      "description": "Payload contains invalid update attributes: - {0}",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-004": {
+      "message": "Birthday can not be updated",
+      "description": "customer already has birthday set, trying to change birthday again - {0}",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-005": {
+      "message": "Email and login should be same",
+      "description": "UpdateCustomer- Email and login should be same",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-006": {
+      "message": "Invalid credentials",
+      "description": "UpdateCustomer - Invalid credentials",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-007": {
+      "message": "Missing Password",
+      "description": "UpdateCustomer - Missing Password",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-008": {
+      "message": "Customer is not authenticated",
+      "description": "UpdateCustomer - Customer is not authenticated",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-009": {
+      "message": "Input field invalid format - {0}",
+      "description": "Input field invalid format - {0}",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-010": {
+      "message": "Shopper Context Validation Error",
+      "description": "Unable to parse the Input field client registry site preference: For : {0} ",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-011": {
+      "message": "Client ID not present : {0}",
+      "description": "ShopperContext - Client Id not present in configurstion",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "VALIDATE-FIELD-04-012": {
+      "message": "Client id does not authorized to update following attributes in Shopper Context : {0}",
+      "description": "Client id does not authorized to update following attributes in Shopper Context : {0}",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CIAM-01-001": {
+      "message": "CheckAccount Operation not allowed : CIAM Enabled",
+      "description": "Invalid Request / Operation not allowed : CIAM enabled",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CIAM-01-002": {
+      "message": "CreateCustomer Operation not allowed : CIAM Enabled",
+      "description": "Invalid Request / Create Customer not allowed : CIAM enabled",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CIAM-01-003" : {
+      "message": "Login Customer Operation not allowed : CIAM Enabled",
+      "description": "Invalid Request / Login Customer not allowed : CIAM enabled",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CIAM-01-005" : {
+      "message": "Update customer password not allowed  : CIAM Enabled",
+      "description": "Invalid Request / Update customer password not allowed : CIAM enabled",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CIAM-01-006" : {
+      "message": "Update customer profile attribute not allowed   : CIAM Enabled : {0}",
+      "description": "Invalid Request / Update customer profile attribute not allowed : CIAM enabled : {0}",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "CIAM-01-007" : {
+      "message": "customer profile password reset not allowed   : CIAM Enabled",
+      "description": "Invalid Request / customer profile password reset not allowed : CIAM enabled ",
+      "httpCode": 400,
+      "severity": "High"
+    },
+    "SWITCHALL-01-001": {
+      "message": "Unable to switch items. Please try again.",
+      "description": "Unable to switch items. Please try again.",
+      "httpCode": 400,
+      "severity": "Low"
+    },
+    "SWITCHALL-01-002": {
+      "message": "Unable to switch item. Please try again.",
+      "description": "Unable to switch item. Please try again.",
+      "httpCode": 400,
+      "severity": "Low"
+    }
+  }
+}

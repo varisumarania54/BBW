@@ -1,0 +1,153 @@
+<iscontent type="text/html " charset="UTF-8"/>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<iscomment>
+	The "to" tag contains the email address of the recipient, the "from" tag the email address of the sender.
+	Each tag is to be specified max. once. Multiple email address can be separated by "," (see RFC2822).
+</iscomment>
+<isscript>
+   	var EstimatedShippingHelper = require('app_composable/cartridge/scripts/helpers/util/estimatedShipping.js');
+    var shippingMethodID = pdict.Order.getDefaultShipment().getShippingMethodID();
+    var calendarTime = new dw.util.Calendar(pdict.Order.getCreationDate());
+    calendarTime.setTimeZone(dw.system.System.getInstanceTimeZone());
+   	var estimatedDeliveryDates = EstimatedShippingHelper.calculateDeliveryDates(calendarTime, shippingMethodID, request.locale);
+   	var orderPrefix = dw.system.Site.getCurrent().getCustomPreferenceValue("BBWOrderNumberPrefix");
+   	var OrderNo = (!empty(orderPrefix))? orderPrefix + pdict.Order.orderNo.toString(): pdict.Order.orderNo;
+    pdict.order = pdict.Order;
+    var locale = request.getLocale();
+    var System = require('dw/system/System');
+    var isDevInstance = System.getInstanceType() === System.DEVELOPMENT_SYSTEM;
+    var hostUrl = isDevInstance ? `development.bathandbodyworks.${locale === 'en_US'? 'com' : 'ca'}` : request.getHttpHost();
+
+   	var productsItr = pdict.Order.productLineItems.iterator(),
+		shipNo = 0;
+
+		while( productsItr.hasNext() ){
+			var pli = productsItr.next();
+			shipNo += pli.quantity.value;
+		}
+
+        pdict.Order.giftCertificateLineItems.toArray().forEach(gcli =>  {
+        if(!gcli.custom.isVirtual){
+            shipNo+=1;
+            shipStore = !empty(shipStore)? shipStore : gcli.getShipment().shippingAddress;
+        }
+    });
+	</isscript>
+	<isset name="orderType" value="${pdict.Order.custom.orderType}" scope="page"/>
+	<isset name="isBopisOrder" value="${(!empty(orderType) && orderType.indexOf('BOPIS') > -1)}" scope="page"/>
+
+<iscomment>The "subject" tag contains the mail subject and can contain dynamic information, like the order number.</iscomment>
+<html>
+<head>
+	<title>${Resource.msgf('order.confirm.subject','mail',null, OrderNo)}</title>
+    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=10.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<style type="text/css">
+		body,
+		table,
+		td {
+			font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+		}
+
+		td ul {
+			padding-left: 0;
+		}
+
+		u~div td ul {
+			margin-left: 5px !important;
+		}
+
+		.bmContent span:nth-child(odd) {
+			padding-left: 10px !important;
+		}
+	</style>
+</head>
+<body>
+
+<isinclude template="composable/mail/mailstyles"/>
+<table width="100%" cellpadding="0" cellspacing="0">
+	<tr>
+		<td align="center" style="${printStyles(container)}">
+			<center>
+				<table style="${printStyles(containertable)}">
+
+					<isinclude template="composable/mail/mailheader"/>
+
+					<tr>
+						<td style="${printStyles(orderwrapper)} font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;">
+							<table cellpadding="0" cellspacing="0" style="${printStyles(footertable)}">
+                                <tr>
+                                    <td style="vertical-align: bottom; text-align: left; font-size: 18px;">
+										${Resource.msg('order.confirm.ordernumber','mail',null)}
+                                        <div style="color: #005699; font-weight: bold; font-size: 22px; padding-top: 6px;">
+                                            <a href="https://${hostUrl}${locale === 'fr_CA' ? '/fr' : ''}/customer-care/order-status"
+		                                        title="${OrderNo}"
+		                                        style="text-decoration: none; color: #005699; font-weight: bold; font-size: 22px;">
+		                                        <isprint value="${OrderNo}"/>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td style="vertical-align: bottom; text-align: right; font-size: 18px;">
+                                        ${Resource.msg('order.confirm.orderdate','mail',null)}
+                                        <span style="font-weight: bold;"><isprint value="${pdict.Order.creationDate}" style="DATE_SHORT"/></span>
+                                    </td>
+                                </tr>
+							</table>
+							<h1 style="margin: 35px 0 14px; font-size: 28px; font-weight: normal; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+							    ${Resource.msgf('order.confirm.greeting','mail',null, pdict.Order.billingAddress.firstName)}
+							</h1>
+
+
+							<isset name="order_email_message" value="${dw.content.ContentMgr.getContent('order-acknowledgement-email-intro')}" scope="page"/>
+                            <isif condition="${order_email_message != null}">
+                                <isif condition="${'body' in order_email_message.custom && order_email_message.custom.body != null}">
+                                    <isprint value="${order_email_message.custom.body}" encoding="off"/>
+                                </isif>
+                            </isif>
+
+                            <div style="border: 3px solid #f2f2f2; padding: 36px 0 43px; text-align: center;">
+	                            <isif condition="${!empty(estimatedDeliveryDates) && estimatedDeliveryDates.success === true && !empty(shippingMethodID)}" >
+		                            <p style="font-size: 15px;">
+		                            	${Resource.msg('order.confirm.est.delivery','mail',null)}
+		                            </p>
+		                            <p style="font-size: 18px; color: #333333;">
+										<isif condition="${estimatedDeliveryDates.hasOwnProperty('calendarEndTimeBothDatesEmail') && !empty(estimatedDeliveryDates.calendarEndTimeBothDatesEmail)}" >
+											${estimatedDeliveryDates.calendarEndTimeBothDatesEmail}
+										<iselseif condition="${estimatedDeliveryDates.hasOwnProperty('calendarEndTimeFormatedEmail') && !empty(estimatedDeliveryDates.calendarEndTimeFormatedEmail)}" />
+											${estimatedDeliveryDates.calendarEndTimeFormatedEmail}
+										</isif>
+		                            </p>
+	                            </isif>
+
+								<isset name="order_status" value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-order-status')}" scope="page"/>
+								<isif condition="${order_status != null}">
+									 <isprint value="${order_status.custom.body}" encoding="off"/>
+								</isif>
+
+                            </div>
+                            <p style="margin: 11px 0 32px; font-size: 14px; line-height: 14px; color: #666666; text-align: center; font-family: 'HelveticaNeue-Regular', 'Helvetica Neue Regular', 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+                                ${Resource.msg('order.confirm.cannot.change','mail',null)}
+                            </p>
+                            <isinclude template="components/order/orderdetailsemail_2"/>
+							<isset name="order_email_promo" value="${dw.content.ContentMgr.getContent('order-email-promo')}" scope="page"/>
+                            <isif condition="${order_email_promo != null}">
+								<div style="text-align: center">
+									<isif condition="${'body' in order_email_promo.custom && order_email_promo.custom.body != null}">
+										<isprint value="${order_email_promo.custom.body}" encoding="off"/>
+									</isif>
+								</div>
+                            </isif>
+						</td>
+					</tr>
+
+					<isinclude template="composable/mail/mailfooter"/>
+				</table>
+			</center>
+		</td>
+	</tr>
+</table>
+
+
+</body>
+</html>

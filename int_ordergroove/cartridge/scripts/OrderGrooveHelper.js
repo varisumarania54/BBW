@@ -1,0 +1,131 @@
+'use strict';
+
+importPackage( dw.value );
+importPackage( dw.system );
+importPackage( dw.campaign );
+importPackage( dw.order );
+importPackage( dw.util );
+importPackage( dw.web );
+importPackage( dw.catalog);
+
+/**
+ * leaving order groove helper and logic
+ * we will be incorporating order groove once we 
+ * have front end sending logic
+ */
+
+function runOGPromoLogic(basket){
+    if ('OrderGroovePromoEnable' in Site.current.preferences.custom && !Site.current.preferences.custom.OrderGroovePromoEnable) {
+		return;
+	}
+	var params = request.httpParameterMap;
+	var autoRefreshHelper = require('int_ordergroove/cartridge/scripts/autoRefreshHelper.js');
+	var autoRefreshTotalAmount = 0;
+	
+	var autoRefreshPromoID = ('OrderGroovePromoID' in Site.current.preferences.custom) ? Site.current.preferences.custom.OrderGroovePromoID : '';
+	var prdpromo : Promotion = dw.campaign.PromotionMgr.getPromotion(autoRefreshPromoID);
+	for each(var shipment in basket.shipments){
+			for each(var pli in shipment.productLineItems){
+				// check for BOPIS shipment, remove OG/AR priceadjustments if there is any
+				if ('shippingMethodID' in shipment && shipment.shippingMethodID === 'ISPU') {
+						autoRefreshHelper.removeARPriceAdjustments(pli);
+						pli.custom.orderGrooveFrequency = '';
+						pli.custom.orderGrooveFrequencytime = '';
+						pli.custom.isAutoRefreshSubscribedItem = false;
+				} else {
+					// check if AR is applied for PLI and apply priceadjustment
+					if (autoRefreshHelper.isARLineItem(pli, params)) {
+						var adjustment = pli.getPriceAdjustmentByPromotionID("OG-Promo-" + pli.getUUID());
+						if (adjustment == null) {
+							pli.custom.isAutoRefreshSubscribedItem = true;
+							var frequencyParam = 'og-subscription-frequency-'+ pli.getUUID();
+    						if ( frequencyParam in params && !empty(params[frequencyParam]) && !empty(params[frequencyParam].stringValue))  {
+								var frequencyValues = params[frequencyParam].stringValue.split('_');
+								if (frequencyValues.length > 1) {
+									pli.custom.orderGrooveFrequency = frequencyValues[0];
+									pli.custom.orderGrooveFrequencytime = frequencyValues[1];
+								}
+							}
+
+							autoRefreshHelper.removePLIPriceAdjustments(pli);
+
+							if(prdpromo && prdpromo.promotionClass == 'PRODUCT'){
+								autoRefreshHelper.addARPriceAdjustment(pli, prdpromo);
+							}
+						}
+						// calculate AR PLI amount
+						autoRefreshTotalAmount = autoRefreshTotalAmount + pli.adjustedPrice.value;
+					} else {
+						// remove AR price adjustment for non AR PLIs
+						autoRefreshHelper.removeARPriceAdjustments(pli);
+
+						pli.custom.orderGrooveFrequency = '';
+						pli.custom.orderGrooveFrequencytime = '';
+						pli.custom.isAutoRefreshSubscribedItem = false;
+					}
+				} 
+			}
+	}
+
+	// apply shipping price adjustment
+	var autoRefreshShippingPromoID = ('OrderGrooveShippingPromoID' in Site.current.preferences.custom) ? Site.current.preferences.custom.OrderGrooveShippingPromoID : '';
+	var autoRefreshShippingFreeMinAmount = ('OrderGrooveShippingFreeMinAmount' in Site.current.preferences.custom) ? parseFloat(Site.current.preferences.custom.OrderGrooveShippingFreeMinAmount) : 30;
+	var allowedShippingMethod = Site.current.preferences.custom.OrderGrooveShippingMethod || '';
+	if (autoRefreshTotalAmount >= autoRefreshShippingFreeMinAmount && autoRefreshShippingPromoID) {
+		var shippingPromo : Promotion = dw.campaign.PromotionMgr.getPromotion(autoRefreshShippingPromoID);
+		for each(var shipment in basket.shipments){
+			if(empty(shipment.custom.fromStoreId)){
+				if ('shippingMethodID' in shipment && allowedShippingMethod && shipment.shippingMethodID == allowedShippingMethod) {
+					for each(var lineItem in shipment.getAllLineItems()){
+						if (lineItem instanceof dw.order.ShippingLineItem) {
+							var adjustments = lineItem.getShippingPriceAdjustments(); // adjustments already attached
+							if(shippingPromo != null) {
+								if (shippingPromo.isActive()) { // condition for active promotion
+									var promoAlreadyApplied = false;
+									if (adjustments.size() > 0) { // adjustments applied on lineitem exists
+										for each (var adj in adjustments) {
+											if (adj.promotionID.indexOf('OG-Promo-Shipping') > -1) {
+												promoAlreadyApplied = true;
+											} else if (!empty(adj.promotion) && adj.promotion.basedOnCoupon){
+                                            	basket.removeCouponLineItem(basket.getCouponLineItem(adj.couponLineItem.couponCode)); //remove other shipping price adjustments based on coupon
+											} else {
+												lineItem.removeShippingPriceAdjustment(adj); // remove other shipping price adjustments
+											}
+										}
+									}
+									// apply shipping price adjustment if not already applied
+									if (!promoAlreadyApplied) {
+										var discount = shippingPromo.custom.IOIPercentOff;
+										var priceAdjustment = lineItem.createShippingPriceAdjustment("OG-Promo-Shipping-" + lineItem.getUUID(), new dw.campaign.PercentageDiscount(discount));
+										priceAdjustment.setLineItemText(shippingPromo.calloutMsg);
+									}
+	
+								} else {
+									// remove OG shipping price adjustments if promo is inactive
+									for each (var adj in adjustments) {
+										if (adj.promotionID.indexOf('OG-Promo-Shipping') > -1) {
+											lineItem.removeShippingPriceAdjustment(adj);
+										}
+									}
+								}
+							}
+						}
+					}
+				} else {
+	                for each(var shipmentPriceAdj in basket.allShippingPriceAdjustments){
+	                    if ('promotionID' in shipmentPriceAdj && shipmentPriceAdj.promotionID.indexOf('OG-Promo') > -1) {
+	                        basket.removeShippingPriceAdjustment(shipmentPriceAdj);
+	                    }
+	                }
+	            }
+			}
+		}
+	} else {
+		// remove OG shipping promo price adjustment
+		for each(var shipmentPriceAdj in basket.allShippingPriceAdjustments){
+			if ('promotionID' in shipmentPriceAdj && shipmentPriceAdj.promotionID.indexOf('OG-Promo') > -1) {
+				basket.removeShippingPriceAdjustment(shipmentPriceAdj);
+			}
+		}
+	}
+}

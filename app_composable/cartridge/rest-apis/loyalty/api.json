@@ -1,0 +1,7 @@
+{
+  "endpoints": [
+    {"endpoint": "loyalty", "schema": "schema.yaml", "implementation": "script"},
+    {"endpoint": "pointsHistory", "schema": "schema.yaml", "implementation": "script"},
+    {"endpoint": "activateOffer", "schema": "schema.yaml", "implementation": "script"}
+  ]
+}

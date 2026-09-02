@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom Object API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customObjects_r: Custom Object API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customObjects_r: Custom Object API
+paths:
+  /customObjects:
+    get:
+      summary: Custom Object API
+      operationId: getCustomObjects
+      parameters:
+        - in: query
+          name: c_type
+          required: true
+          schema:
+            type: string
+            minLength: 1  
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1    
+      responses:
+        "200":
+          description: Custom Objects
+          content:
+            'application/json':
+              schema:
+                type: array
+        "404":
+          description: Shows that one or more custom objects are not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/custom-objects-not-found",
+                    }
+security:
+  - ShopperToken: ["c_customObjects_r"]

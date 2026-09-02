@@ -1,0 +1,5 @@
+{
+  "endpoints": [
+    {"endpoint": "iframeToken", "schema": "schema.yaml", "implementation": "script"}
+  ]
+}

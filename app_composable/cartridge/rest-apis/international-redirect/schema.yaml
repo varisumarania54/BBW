@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: International Redirect API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_internationalRedirect_r: Return the international redirect country information
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_internationalRedirect_r: Return the international redirect country information
+paths:
+  /internationalRedirect:
+    get:
+      summary: Get International Redirect Information
+      operationId: internationalRedirect
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Shows International Redirect information
+          content:
+            application/json:
+              schema:
+                type: object
+        "404":
+          description: Shows that the international redirect data is not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/international-redirect-data-not-found",
+                    }
+security:
+  - ShopperToken: ["c_internationalRedirect_r"]

@@ -1,0 +1,75 @@
+/**
+*  This script prepares the search criteria from the call center to allow wildcards.
+*  This script also validates that one field was enterd in the search criteria.
+*  If at least 1 field has not be populated, the script returns with ERROR_Search 
+*  which contains the a string with the associated error message. 
+*
+*
+* @input  FirstNameForm    : java.lang.String
+* @input  LastNameForm     : java.lang.String
+* @input  EmailForm        : java.lang.String
+* @input  CustomerNumberForm : java.lang.String
+* @input  OrderNumber      : java.lang.String
+* @input  ERROR_Search     : java.lang.String
+*
+* @output FirstName        : java.lang.String
+* @output LastName         : java.lang.String
+* @output Email            : java.lang.String
+* @output CustomerNumber   : java.lang.String
+* @output OrderNo          : java.lang.String
+* @output Status           : dw.system.Status
+* @output SortBy1          : java.lang.String
+* @output SortBy1Direction : java.lang.Number
+* @output SortBy2          : java.lang.String
+* @output SortBy2Direction : java.lang.Number
+*
+*/   
+    
+importPackage( dw.system );
+importPackage( dw.value );
+importPackage( dw.util );
+ 
+function execute( pdict : PipelineDictionary ) : Number
+{
+	     
+	var firstName    : String = pdict.FirstNameForm;
+	var lastName     : String = pdict.LastNameForm;
+	var email        : String = pdict.EmailForm;
+	var customerNo   : String = pdict.CustomerNumberForm;
+    var orderNumber  : Number = pdict.OrderNumber;	  
+	    
+	   
+	 if( empty(email) && empty(lastName) && (empty(orderNumber))){
+
+	     pdict.Status = new Status(Status.OK,"Please enter a value for the Last Name, Email Address or Order Number search criteria fields.");	
+	       
+	     return PIPELET_ERROR;
+	} 
+	   
+	//if( (empty(firstName) && empty(lastName) && empty(email) && empty(customerNo) && empty(postalCode) && empty(orderNumber)) || empty(lastName)){
+
+	  //   pdict.Status = new Status(Status.OK,"Please enter a value for at least one search criteria field.");	
+	       
+	 //    return PIPELET_ERROR;
+	//}
+	
+
+	pdict.FirstName = firstName;
+	pdict.LastName = lastName;
+	  
+	pdict.Email = email;  
+	pdict.CustomerNumber = customerNo;
+	 
+	pdict.OrderNo = orderNumber;
+	
+	// Add Sorting Parameters
+	
+	pdict.SortBy1 = "firstName";
+	pdict.SortBy1Direction = 1;
+	
+	pdict.SortBy2 = "lastName";
+	pdict.SortBy2Direction = 1;
+	
+    return PIPELET_NEXT;
+}
+  

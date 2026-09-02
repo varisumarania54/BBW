@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "aurusSession",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

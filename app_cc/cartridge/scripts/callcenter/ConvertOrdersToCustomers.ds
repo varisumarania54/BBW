@@ -1,0 +1,44 @@
+/**
+*
+*  This script takes the order results from the SearchSystemObject pipelet
+*  and creates an creates a new Iterator of the corrisponding customers.
+*
+*  @input Orders     :  dw.util.Iterator
+*  @output Customers :  dw.util.Iterator
+*
+*/    
+         
+importPackage( dw.system );
+importPackage( dw.value );
+importPackage( dw.util );
+ 
+function execute( pdict : PipelineDictionary ) : Number
+{
+	       
+    var orders = pdict.Orders;
+	var map : HashMap = new HashMap();    
+    
+   	while( orders.hasNext() )
+	{
+		
+		var order    : dw.order.Order = orders.next();
+        var customer : dw.customer.Customer = order.getCustomer();
+        
+        if(customer.isAnonymous() == false && !empty(customer.profile)){
+	        var lastName  =  customer.getProfile().lastName;
+	        var firstName =  customer.getProfile().firstName;
+	        var fullName  =  lastName + firstName;
+	        
+	        if(fullName != null){
+	           map.put(fullName, customer.getProfile() );   
+	        } 
+        }
+        
+    }
+     
+    var linkedSet = new LinkedHashSet(map.values()); 
+    pdict.Customers   = linkedSet.iterator();
+    
+    return PIPELET_NEXT;
+}
+  

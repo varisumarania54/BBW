@@ -1,0 +1,47 @@
+<iscontent type="text/html" charset="UTF-8" compact="true">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head><title>e-Voucher for You</title></head>
+
+<body>
+	<div style="font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; font-size: x-small; color: Black;">
+		<isif condition="${empty(pdict.GiftCertificate.recipientName)}">
+			Dear Valued Customer111,
+		<iselse>
+			111Dear&nbsp;<isprint value="${pdict.GiftCertificate.recipientName}">,
+		</isif>
+		
+		<br/><br/>
+		<isif condition="${empty(pdict.GiftCertificate.senderName)}">
+			An e-Voucher has been purchased for you in 
+			the amount of <isprint value="${pdict.GiftCertificate.amount}">.
+		<iselse>
+			<isprint value="${pdict.GiftCertificate.senderName}"> has sent you an e-Voucher 
+			for <isprint value="${pdict.GiftCertificate.amount}">.
+		</isif>
+		<br/>
+		<br/>
+		<isif condition="${!empty(pdict.Notes)}">
+			<isscript>
+				// convert newline characters into breaks.
+				var s : String = pdict.Notes;
+			 	var s1 : String = '';
+			 	if (s != null) {
+			 		var regX : RegExp = new RegExp('[\n\r]+', 'g');
+			 		s1 = s.replace(regX, '<br/>\n');
+			 	}
+			</isscript>
+			<isprint value="${s1}" encoding="off">
+			<br/>
+		    <br/>
+		</isif>
+		
+		You can redeem your e-Voucher at <a href="${URLUtils.https(false, 'Home-Show')}">our online store</a>.
+		<br/><br/>
+		Your eVocuher code is <b><isprint value="${pdict.GiftCertificate.ID}"></b>.
+		<br/><br/>
+		This is an automatically generated E-Mail, please do not reply.
+		<br/>
+	</div>
+</body>
+</html>

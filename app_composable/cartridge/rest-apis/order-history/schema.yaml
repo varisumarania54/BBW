@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom order History API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_orderHistory_r: Custom order history API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_orderHistory_r: Custom order history API
+paths:
+  /orderHistory:
+    get:
+      summary: Custom order history API
+      operationId: orderHistory
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1  
+      responses:
+        "200":
+          description: Custom order history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderHistory:
+                    type: jsonString
+        "404":
+          description: Shows that account not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/order-not-found",
+                    }
+security:
+  - ShopperToken: ["c_orderHistory_r"]

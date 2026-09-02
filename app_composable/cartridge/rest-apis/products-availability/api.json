@@ -1,0 +1,9 @@
+{
+  "endpoints": [
+    {
+      "endpoint": "productsAvailability",
+      "schema": "schema.yaml",
+      "implementation": "script"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom Store Only Products API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_storeAvailability_r: Custom Store Only Products API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_storeAvailability_r: Custom Store Only Products API
+paths:
+  /getStoreAvailability:
+    get:
+      summary: Get Store availability for a given list of products
+      operationId: getStoreAvailability
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_storeId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: c_productIds
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Custom Store Only Products Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productId:
+                    type: string
+                  availableInStore:
+                    type: boolean
+        "404":
+          description: Shows that one or more content products are not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/customer-not-found",
+                    }
+security:
+  - ShopperToken: ["c_storeAvailability_r"]

@@ -1,0 +1,245 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<iscomment>
+	This template is used to render the order totals for a basket or an order.
+
+    Parameters:
+    p_lineitemctnr     : the line item container to render (this could be either an order or a basket as they are both line item containers)
+    p_showshipmentinfo : boolean that controls if individual shipment information is rendered or if aggregate totals are rendered
+    p_shipmenteditable : boolean that controls if the shipment should have an edit link
+    p_totallabel       : label to use for the total at bottom of summary table
+</iscomment>
+
+<iscomment>Create page varibale representing the line item container</iscomment>
+<isset name="LineItemCtnr" value="${pdict.p_lineitemctnr}" scope="page"/>
+
+<isif condition="${!empty(LineItemCtnr)}">
+
+	<isscript>
+        var GiftBoxSKU1 = dw.system.Site.current.getCustomPreferenceValue('GiftBoxSKU');
+        var giftBoxSku1 = LineItemCtnr.productLineItems.toArray().find(item => item && item.productID === GiftBoxSKU1);
+        var cartHasGiftBox1 = !empty(giftBoxSku1);
+        var shippingIsRequired = LineItemCtnr.productLineItems.size() > 0	|| LineItemCtnr.getGiftCertificateLineItems().toArray().some(gcli=>'isVirtual' in gcli.custom && gcli.custom.isVirtual == false);
+	</isscript>
+	<table width="100%" cellpadding="0" cellspacing="0">
+	   <tr>
+	       <td style="vertical-align: top; background: #f2f2f2; padding: 30px 35px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                <tbody>
+					<iscomment>
+						render order subtotal if there are both contained in the cart, products and gift certificates
+						(product line item prices including product level promotions plus gift certificate line items prices)
+					</iscomment>
+                    <tr>
+		                <td colspan="2" style="vertical-align:top; font-size: 26px; line-height: 26px; text-transform: uppercase; border-bottom: 3px solid #e5e5e5; padding-bottom: 18px; text-align: center; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+		                    ${Resource.msg('order.confirm.paymentsummary','mail',null)}
+		                </td>
+					</tr>
+					<tr>
+						<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:23px 0 13px;">${Resource.msg('order.confirm.subtotal','mail',null)}</td>
+		                <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:23px 0 13px; text-align: right;">
+						    <isset name="subtotalPrice" value="${LineItemCtnr.getAdjustedMerchandizeTotalPrice(false).add(LineItemCtnr.giftCertificateTotalPrice)}" scope="page" />
+							<isif condition="${cartHasGiftBox1}" >
+								<isprint value="${subtotalPrice.subtract(giftBoxSku1.getPrice())}"/> ${Resource.msg('summary.orderCurrency','mail',null)}
+							<iselse/>
+								<isprint value="${subtotalPrice}"/> ${Resource.msg('summary.orderCurrency','mail',null)}
+							</isif>
+						</td>
+					</tr>
+
+					<iscomment>calculate order level discounts</iscomment>
+					<isscript>
+						var merchTotalExclOrderDiscounts : dw.value.Money = LineItemCtnr.getAdjustedMerchandizeTotalPrice(false);
+						var merchTotalInclOrderDiscounts : dw.value.Money = LineItemCtnr.getAdjustedMerchandizeTotalPrice(true);
+						var orderDiscount : dw.value.Money = merchTotalExclOrderDiscounts.subtract( merchTotalInclOrderDiscounts );
+					</isscript>
+					<isif condition="${!empty(orderDiscount) && orderDiscount.value > 0.0}">
+						<tr>
+							<td style="font-size:16px;  vertical-align:top; padding:13px 0; color:#cc0000;">${Resource.msg('order.ordersummary.orderdiscount','mail',null)}</td>
+							<td style="font-size:16px; text-transform: uppercase; vertical-align:top; padding:13px 0; text-align: right; color:#cc0000;">- <isprint value="${orderDiscount}"/> ${Resource.msg('summary.orderCurrency','mail',null)}</td>
+						</tr>
+					</isif>
+
+					<iscomment>Show Gift Box in order summary as separate line</iscomment>
+					<isif condition="${cartHasGiftBox1}">
+						<tr class="order-subtotal">
+							<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0;">${Resource.msg('order.ordersummary.giftbox','mail',null)}</td>
+							<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0; text-align: right;"><isprint value="${giftBoxSku1.getPrice()}"/></td>
+						</tr>
+					</isif>
+
+
+					<iscomment>render each single shipment or shipping total</iscomment>
+					<isif condition="${shippingIsRequired}" >
+						<isif condition="${pdict.p_showshipmentinfo}">
+							<iscomment>the url to edit shipping depends on the checkout scenario</iscomment>
+							<isset name="editUrl" value="${URLUtils.https('COShipping-Start')}" scope="page"/>
+							<isloop items="${LineItemCtnr.shipments}" var="Shipment" status="loopstatus">
+								<iscomment>show shipping cost per shipment only if it's a physical shipment containing product line items</iscomment>
+								<isif condition="${Shipment.productLineItems.size() > 0 || Shipment.giftCertificateLineItems.size() > 0}">
+								<tr>
+									<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0;">
+										<isif condition="${pdict.p_shipmenteditable}">
+											<a href="${editUrl}" title="${Resource.msg('order.ordersummary.ordershipping.edit','mail',null)}">${Resource.msg('order.ordersummary.ordershipping.edit','mail',null)}</a>
+										</isif>
+										${Resource.msg('order.confirm.shippingsummary','mail',null)}
+										<!--  SHIPPING NAME --> - <span style="text-transform: none;"><isprint value="${Shipment.shippingMethod.displayName}"/></span>
+									</td>
+									<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0; text-align: right;">
+										<isif condition="${LineItemCtnr.shippingTotalPrice.available}">
+											<isprint value="${Shipment.shippingTotalPrice}"/> ${Resource.msg('summary.orderCurrency','mail',null)}
+										<iselse/>
+											${Resource.msg('global.symbol.dash','mail',null)}
+										</isif>
+									</td>
+								</tr>
+								</isif>
+							</isloop>
+						<iselse/>
+							<tr>
+								<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0;">
+									${Resource.msg('order.confirm.shippingsummary','mail',null)}
+									<!-- Display Shipping Method -->
+									<isset name="Shipment" value="${LineItemCtnr.shipments.iterator().next()}" scope="page"/>
+									<isif condition="${!empty(Shipment) && !empty(Shipment.shippingMethod)}">
+										- <span style="text-transform: none;"><isprint value="${Shipment.shippingMethod.displayName}"/></span>
+									</isif>
+								</td>
+								<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0; text-align: right;">
+									<isif condition="${LineItemCtnr.shippingTotalPrice.available}">
+										<isprint value="${LineItemCtnr.shippingTotalPrice}"/> ${Resource.msg('summary.orderCurrency','mail',null)}
+									<iselse/>
+										${Resource.msg('global.symbol.dash','mail',null)}
+									</isif>
+								</td>
+							</tr>
+						</isif>
+
+						<iscomment>calculate shipping discount</iscomment>
+						<isscript>
+							var shippingExclDiscounts : dw.value.Money = LineItemCtnr.shippingTotalPrice;
+							var shippingInclDiscounts : dw.value.Money = LineItemCtnr.getAdjustedShippingTotalPrice();
+							var shippingDiscount : dw.value.Money = shippingExclDiscounts.subtract( shippingInclDiscounts );
+						</isscript>
+						<isif condition="${!empty(shippingDiscount) && shippingDiscount.value > 0.0}">
+							<isif condition="${pdict.p_showshipmentinfo}">
+								<tr>
+									<td style="font-size:16px; vertical-align:top; padding:13px 0; color:#cc0000;">${Resource.msg('order.ordersummary.ordershippingdiscount','mail',null)}</td>
+									<td style="font-size:16px; vertical-align:top; padding:13px 0; color:#cc0000; text-align: right;">- <isprint value="${shippingDiscount}"/></td>
+								</tr>
+							<iselse/>
+								<tr>
+									<td style="font-size:16px; vertical-align:top; padding:13px 0; color:#cc0000;">${Resource.msg('order.ordersummary.ordershippingdiscount','mail',null)}</td>
+									<td style="font-size:16px; vertical-align:top; padding:13px 0; color:#cc0000; text-align: right;">- <isprint value="${shippingDiscount}"/></td>
+								</tr>
+							</isif>
+						</isif>
+					</isif>
+
+					<iscomment>tax amount - Note: only show this field if taxation policy is net</iscomment>
+					<isif condition="${dw.order.TaxMgr.getTaxationPolicy() == dw.order.TaxMgr.TAX_POLICY_NET}">
+						<isif condition="${'RadialTaxMap' in LineItemCtnr.custom && !empty(LineItemCtnr.custom.RadialTaxMap)}">
+
+                            <isset name="RadialTaxMap" value="${JSON.parse(LineItemCtnr.custom.RadialTaxMap)}" scope="page" />
+
+		                    <iscomment> show separate lines for tax data in cas if we accualy have it, if not - show totaltax in single line</iscomment>
+		                    <isif condition="${(RadialTaxMap.gst + RadialTaxMap.pst + RadialTaxMap.hst + RadialTaxMap.qst + RadialTaxMap.duty + RadialTaxMap.gsthst) != 0}">
+
+                                <isif condition="${RadialTaxMap.duty > 0}">
+                                    <tr class="order-sales-tax">
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('canadatax.duty','mail',null)}</td>
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+                                            <isprint value="${new dw.value.Money(RadialTaxMap.duty, LineItemCtnr.currencyCode)}" />
+                                        </td>
+                                    </tr>
+                                </isif>
+
+                                <isif condition="${RadialTaxMap.gsthst > 0}">
+		                            <tr class="order-sales-tax">
+		                                <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('canadatax.gsthst','mail',null)}</td>
+		                                <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+		                                    <isprint value="${new dw.value.Money(RadialTaxMap.gsthst, LineItemCtnr.currencyCode)}" />
+		                                </td>
+		                            </tr>
+		                        </isif>
+
+		                        <isif condition="${RadialTaxMap.gst > 0}">
+                                    <tr class="order-sales-tax">
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('canadatax.gst','mail',null)}</td>
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+                                            <isprint value="${new dw.value.Money(RadialTaxMap.gst, LineItemCtnr.currencyCode)}" />
+                                        </td>
+                                    </tr>
+                                </isif>
+
+		                        <isif condition="${RadialTaxMap.pst > 0}">
+                                    <tr class="order-sales-tax">
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('canadatax.pst','mail',null)}</td>
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+                                            <isprint value="${new dw.value.Money(RadialTaxMap.pst, LineItemCtnr.currencyCode)}" />
+                                        </td>
+                                    </tr>
+                                </isif>
+
+                                <isif condition="${RadialTaxMap.hst > 0}">
+                                    <tr class="order-sales-tax">
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('canadatax.hst','mail',null)}</td>
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+                                            <isprint value="${new dw.value.Money(RadialTaxMap.hst, LineItemCtnr.currencyCode)}" />
+                                        </td>
+                                    </tr>
+                                </isif>
+
+                                <isif condition="${RadialTaxMap.qst > 0}">
+                                    <tr class="order-sales-tax">
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('canadatax.qst','mail',null)}</td>
+                                        <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+                                            <isprint value="${new dw.value.Money(RadialTaxMap.qst, LineItemCtnr.currencyCode)}" />
+                                        </td>
+                                    </tr>
+                                </isif>
+		                    <iselse/>
+		                      <tr class="order-sales-tax">
+	                                <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('order.confirm.salestax','mail',null)}</td>
+	                                <td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+	                                    <isif condition="${LineItemCtnr.totalTax.available}">
+	                                        <isprint value="${LineItemCtnr.totalTax}"/> ${Resource.msg('summary.orderCurrency','mail',null)}
+	                                    <iselse/>
+	                                        ${Resource.msg('global.symbol.dash','locale',null)}
+	                                    </isif>
+	                                </td>
+	                            </tr>
+		                    </isif>
+
+						<iselse/>
+							<tr class="order-sales-tax">
+								<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px;">${Resource.msg('order.confirm.salestax','mail',null)}</td>
+								<td style="font-size:18px; text-transform: uppercase; vertical-align:top; padding:13px 0 20px; text-align: right;">
+									<isif condition="${LineItemCtnr.totalTax.available}">
+										<isprint value="${LineItemCtnr.totalTax}"/> ${Resource.msg('summary.orderCurrency','mail',null)}
+									<iselse/>
+										${Resource.msg('global.symbol.dash','mail',null)}
+									</isif>
+								</td>
+							</tr>
+						</isif>
+					</isif>
+
+					<iscomment>order total</iscomment>
+					<tr>
+						<isif condition="${LineItemCtnr.totalGrossPrice.available}">
+						 	<isset name="orderTotalValue" value="${LineItemCtnr.totalGrossPrice}" scope="page"/>
+						<iselse/>
+							<isset name="orderTotalValue" value="${LineItemCtnr.getAdjustedMerchandizeTotalPrice(true).add(LineItemCtnr.giftCertificateTotalPrice)}" scope="page"/>
+						</isif>
+
+						<td style="font-size:21px; text-transform: uppercase; vertical-align:top; padding:22px 0 2px; border-top: 3px solid #e5e5e5; font-weight: bold;"><isprint value="${pdict.p_totallabel}"/> ${Resource.msg('summary.orderCurrency.v2','mail',null)}</td>
+						<td style="font-size:21px; text-transform: uppercase; vertical-align:top; padding:22px 0 2px; border-top: 3px solid #e5e5e5; font-weight: bold; text-align: right;"><isprint value="${orderTotalValue}"/></td>
+					</tr>
+
+                </tbody>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</isif>

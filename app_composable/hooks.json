@@ -1,0 +1,348 @@
+{
+    "hooks": [
+        {
+            "name": "dw.ocapi.shop.basket.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/createBasket.js"
+        },
+        {
+          "name": "dw.ocapi.shop.basket.modifyPOSTResponse",
+          "script": "./cartridge/scripts/hooks/shopperBaskets/createBasket.js"
+        },
+        {
+            "name": "dw.ocapi.baskets.actions.afterMerge",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/mergeBasket.js"
+        },
+        {
+            "name": "dw.ocapi.baskets.actions.afterTransfer",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/transferBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.auth.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/loginCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.billing_address.beforePUT",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateBillingAddressForBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.billing_address.modifyPUTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateBillingAddressForBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.coupon.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addCouponToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.coupon.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addCouponToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.coupon.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeCouponFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.coupon.afterDELETE",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeCouponFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.coupon.modifyDELETEResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeCouponFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.coupon.modifyPOSTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addCouponToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.customer.modifyPUTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateCustomerForBasket.js"
+        },
+        {
+          "name": "dw.ocapi.shop.basket.customer.afterPUT",
+          "script": "./cartridge/scripts/hooks/shopperBaskets/updateCustomerForBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.afterDELETE",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeGiftCertificateItemFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addGiftCertificateItemToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/editGiftCard.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addGiftCertificateItemToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.modifyDELETEResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeGiftCertificateItemFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.modifyPATCHResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/editGiftCard.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.gift_certificate_item.modifyPOSTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addGiftCertificateItemToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.item.afterDELETE",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeItemFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.item.afterPATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateItemInBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.item.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateItemInBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.item.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeItemFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.item.modifyDELETEResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/removeItemFromBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.item.modifyPATCHResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateItemInBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.afterPATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateItemsInBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addItemToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateItemsInBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addItemToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.modifyPATCHResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateItemsInBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.modifyPOSTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addItemToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/getBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.modifyPATCHResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.afterPATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.payment_instrument.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addPaymentInstrumentToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.payment_instrument.modifyPOSTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/addPaymentInstrumentToBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_address.beforePUT",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateShippingAddressForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_address.afterPUT",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateShippingAddressForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_address.modifyPUTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateShippingAddressForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_method.afterPUT",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateShippingMethodForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_method.beforePUT",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateShippingMethodForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_method.modifyPUTResponse",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateShippingMethodForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipments.shipping_methods.modifyGETResponse_v2",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/getShippingMethodsForShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.category.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperProducts/getCategories.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.address.afterDELETE",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/customerAddress.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.address.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/customerAddress.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.address.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/customerAddress.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.addresses.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/customerAddress.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.afterPATCH",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/updateCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/createCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/createCustomer.js"
+        },
+        {
+			"name": "dw.ocapi.shop.customer.modifyPOSTResponse",
+			"script": "./cartridge/scripts/hooks/shopperCustomer/createCustomer.js"
+		},
+        {
+            "name": "dw.ocapi.shop.customer.baskets.modifyGETResponse_v2",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/getCustomerBaskets.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/updateCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.password.beforePUT",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/updateCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.modifyPATCHResponse",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/updateCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.password.afterPUT_v2",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/updateCustomer.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.payment_instrument.afterDELETE",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/deleteCustomerPaymentInstrument.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.payment_instrument.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/createCustomerPaymentInstrument.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.payment_instrument.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/deleteCustomerPaymentInstrument.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.payment_instrument.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/createCustomerPaymentInstrument.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.product_list.afterPATCH",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/updateCustomerProductList.js"
+        },
+        {
+            "name": "dw.ocapi.shop.customer.product_lists.modifyGETResponse_v2",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/getCustomerProductLists.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.afterPOST",
+            "script": "./cartridge/scripts/hooks/shopperOrder/createOrder.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperOrder/createOrder.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.modifyPOSTResponse",
+            "script": "./cartridge/scripts/hooks/shopperOrder/createOrder.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperOrder/getOrder.js"
+        },
+        {
+            "name": "dw.ocapi.shop.product.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/product/product.js"
+        },
+        {
+            "name": "dw.ocapi.shop.product_list.beforeGET",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/getPublicProductList.js"
+        },
+        {
+            "name": "dw.ocapi.shop.product_list.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperCustomer/getPublicProductList.js"
+        },
+        {
+            "name": "dw.ocapi.shop.product_search.beforeGET",
+            "script": "./cartridge/scripts/hooks/shopperSearch/getSearchProducts.js"
+        },
+        {
+            "name": "dw.ocapi.shop.product_search.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperSearch/getSearchProducts.js"
+        },
+        {
+            "name": "dw.ocapi.shop.search_suggestion.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperSearch/getSearchSuggestions.js"
+        },
+        {
+            "name": "dw.ocapi.shop.stores.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/shopperStore/storeSearch.js"
+        },
+        {
+            "name": "dw.order.calculate",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/calculate.js"
+        },
+        {
+          "name": "dw.order.createOrderNo",
+          "script": "./cartridge/scripts/hooks/shopperOrder/createOrder.js"
+        },
+        {
+          "name" : "dw.ocapi.shop.basket.shipment.beforePATCH",
+          "script": "./cartridge/scripts/hooks/shopperBaskets/updateShipmentForBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.beforePOST",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/shipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/shipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.beforePOST_v2",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateBasket.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperBaskets/updateBasket.js"
+        },
+        {
+            "name": "dw.shop.shopper_context.beforePATCH",
+            "script": "./cartridge/scripts/hooks/shopperContext/updateShopperContext"
+        },
+        {
+            "name": "dw.shop.shopper_context.beforePUT",
+            "script": "./cartridge/scripts/hooks/shopperContext/createShopperContext"
+        }
+    ]
+}

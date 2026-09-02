@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Site Preview API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      scheme: bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_sitePreview_rw: Change shopper context for use with site preview
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_sitePreview_rw: Change shopper context for use with site preview
+paths:
+  /sitePreview:
+    post:
+      summary: Change shopper context for use with site preview
+      operationId: sitePreview
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+      responses:
+        200:
+          description: Shopper Context was updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  loyaltyOffersLastUpdated:
+                    type: string
+        404:
+          description: Shopper Context was updated unsuccessfully
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    type: "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/customer-not-found"
+security:
+  - ShopperToken: ["c_sitePreview_rw"]

@@ -1,0 +1,5 @@
+{
+    "endpoints": [
+      {"endpoint": "marketingOptin", "schema": "schema.yaml", "implementation": "script"}
+    ]
+}

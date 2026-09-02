@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "applepayVerification",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

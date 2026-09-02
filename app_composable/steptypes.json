@@ -1,0 +1,88 @@
+{
+    "step-types": {
+        "script-module-step": [
+            {
+				"@type-id": "custom.RebuildOrderBatchExport",
+				"@supports-site-context": "true",
+				"@supports-organization-context": "true",
+				"description": "Retries exporting orders to radial",
+				"module": "app_composable/cartridge/scripts/jobs/OrderBatchExport.js",
+				"function": "OrderBatchExport",
+				"parameters": {
+					"parameter": [
+                        {
+							"@name": "maxOrderExportRetries",
+							"@type": "long",
+							"@required": "true",
+                            "default-value": "3",
+							"description": "Number of time to atempt exporting an order"
+						},
+                        {
+							"@name": "includeQuery",
+							"@type": "string",
+							"@required": "false",
+                            "default-value": "",
+							"description": "Comma seperated values"
+						},
+                        {
+							"@name": "excludeQuery",
+							"@type": "string",
+							"@required": "true",
+                            "default-value": "EXPORT_STATUS_EXPORTED,ORDER_STATUS_FAILED,ORDER_STATUS_CREATED",
+							"description": "Comma seperated values, ex: EXPORT_STATUS_EXPORTED,ORDER_STATUS_FAILED,ORDER_STATUS_CREATED"
+						},
+                        {
+							"@name": "includeGhostOrders",
+							"@type": "boolean",
+							"@required": "true",
+                            "default-value": "false",
+							"description": "This will re-run Ghost Orders."
+						},
+                        {
+							"@name": "ghostOrderStatus",
+							"@type": "string",
+							"@required": "true",
+                            "default-value": "ORDER_STATUS_OPEN",
+							"description": "Optional, this will set the order status for Ghost Orders."
+						},
+                        {
+							"@name": "hourOffsetQuery",
+							"@type": "long",
+							"@required": "false",
+                            "default-value": "",
+							"description": "Modifies datetime query"
+						},
+                        {
+							"@name": "orderQueryStart",
+							"@type": "datetime-string",
+							"@required": "false",
+                            "default-value": "",
+							"description": "Scope the query to this start time"
+						},
+                        {
+							"@name": "orderQueryEnd",
+							"@type": "datetime-string",
+							"@required": "false",
+                            "default-value": "",
+							"description": "Scope the query to this end time"
+						}
+
+                    ]
+				},
+				"transactional": "true",
+				"status-codes": {
+					"status": [
+						{
+							"@code": "ERROR",
+							"description": "Used when an error occurred."
+						},
+						{
+							"@code": "OK",
+							"description": "Used when everything went well."
+						}
+					]
+				}
+			}
+        ]
+    }
+}

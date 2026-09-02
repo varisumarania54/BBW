@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "balance",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

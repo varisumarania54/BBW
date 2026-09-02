@@ -1,0 +1,9 @@
+{
+    "endpoints": [
+        {
+            "endpoint": "paypal",
+            "schema": "schema.yaml",
+            "implementation": "script"
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+{
+  "endpoints": [
+    {"endpoint": "inapplicableShippingMethods", "schema": "schema.yaml", "implementation": "script"}
+  ]
+}

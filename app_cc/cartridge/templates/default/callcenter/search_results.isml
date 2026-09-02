@@ -1,0 +1,159 @@
+
+<isinclude template="callcenter/cc_header.isml"> 
+  
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Customer Search Results</P>
+
+<Br>
+
+<TABLE class=report_table >
+  <TBODY>
+  
+  <isif condition="${pdict.CustomerPagingModel.count > 0}">
+          
+  <TR> 
+    <TD class=report_title colSpan=4>
+       Customers <isprint value="${pdict.CustomerPagingModel.start+1}" formatter="#"> - <isprint value="${pdict.CustomerPagingModel.end+1}" formatter="#">
+          of 
+          <isprint value="${pdict.CustomerPagingModel.count}" formatter="#">    
+          <isscript> pdict.pagingmodel = pdict.CustomerPagingModel </isscript>   
+    
+    </td>
+    <Td class=report_title colspan="4" align="right">
+       <span align="right"><ispagingbar pageurl="${URLUtils.url('CC_Search-Process','LastName',pdict.CurrentHttpParameterMap.LastName.value,'FirstName',pdict.CurrentHttpParameterMap.FirstName.value,'Email',pdict.CurrentHttpParameterMap.Email.value,'CustomerNumber',pdict.CurrentHttpParameterMap.CustomerNumber.value,'PostCode',pdict.CurrentHttpParameterMap.PostCode.value)}" pagingmodel="${pdict.CustomerPagingModel}"></span>
+    &nbsp;</TD>
+  </TR>
+  <TR>
+    <TD class=report_header1>&nbsp;Customer #'#'#</TD>
+    <TD class=report_header1>Firstname</TD>
+    <TD class=report_header1>Last Name</TD>
+    <TD class=report_header1>Address</TD>
+    <TD class=report_header1>Email Address</TD>
+    <TD class=report_header1>Select</TD>
+  </TR>
+<iselse>
+          
+  <TR> 
+    <TD class=report_title colSpan=8>&nbsp;No Customers Found</TD>
+  </TR>  
+</isif>
+
+
+
+<isif condition="${pdict.CustomerPagingModel.empty}">
+     
+     <TR onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+        <TD class=report_cell colspan="8"><Br><Br>&nbsp;No Customers have been found with the search criteria entered. 
+        <Br><Br>
+        <Br></TD>
+     </TR>
+	
+<iselse>
+
+<isloop iterator="${pdict.CustomerPagingModel.pageElements}" alias="Customers" status="loopstate">
+ 
+ <isscript>
+    if(Customers.addressBook != null){
+       if(Customers.addressBook.preferredAddress != null){
+    
+          var postalCode   = Customers.addressBook.preferredAddress.postalCode;
+          var address1     = Customers.addressBook.preferredAddress.address1;
+          var address2     = Customers.addressBook.preferredAddress.address2;
+          var city         = Customers.addressBook.preferredAddress.city;
+          var stateCode    = Customers.addressBook.preferredAddress.stateCode;
+          var countryCode  = Customers.addressBook.preferredAddress.countryCode;
+       
+       }
+    }
+ </isscript>
+   
+  <TR onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+    <TD class=report_cell>&nbsp;<a href="${URLUtils.url('CC_Search-SecurityQuestion','Login',Customers.credentials.login,'LastName',pdict.CurrentHttpParameterMap.LastName.value,'FirstName',pdict.CurrentHttpParameterMap.FirstName.value,'Email',pdict.CurrentHttpParameterMap.Email.value,'CustomerNumber',pdict.CurrentHttpParameterMap.CustomerNumber.value,'PostCode',pdict.CurrentHttpParameterMap.PostCode.value,'start',pdict.CustomerPagingModel.start,'sz',pdict.CustomerPagingModel.pageSize,'OrderNumber',pdict.CurrentHttpParameterMap.OrderNumber.value)}">${Customers.customerNo}</A></TD>
+    <TD class=report_cell><isprint value="${Customers.firstName}"></TD>
+    <TD class=report_cell><isprint value="${Customers.lastName}"></TD>
+    <isif condition="${Customers.addressBook.preferredAddress != null}">
+       <TD class=report_cell><isprint value="${address1}"> <isprint value="${address2}"> <isprint value="${city}"> <isprint value="${stateCode}"> <isprint value="${postalCode}"> <isprint value="${countryCode}"></TD>
+    <iselse> 
+       <TD class=report_cell>No Customer Address</TD>
+    </isif>
+    <TD class=report_cell><isprint value="${Customers.email}"></TD>
+    <TD class=report_cell><a href="${URLUtils.url('CC_Search-SecurityQuestion','Login',Customers.credentials.login,'LastName',pdict.CurrentHttpParameterMap.LastName.value,'FirstName',pdict.CurrentHttpParameterMap.FirstName.value,'Email',pdict.CurrentHttpParameterMap.Email.value,'CustomerNumber',pdict.CurrentHttpParameterMap.CustomerNumber.value,'PostCode',pdict.CurrentHttpParameterMap.PostCode.value,'start',pdict.CustomerPagingModel.start,'sz',pdict.CustomerPagingModel.pageSize,'OrderNumber',pdict.CurrentHttpParameterMap.OrderNumber.value)}">Select</a></TD>
+  </TR>
+  
+</isloop>
+
+</isif>
+
+</TBODY>  
+</TABLE>
+
+<Table>
+<Tr><td width="698">
+<Br>
+<form action="${URLUtils.url('CC_Search-Form')}">
+   <input type="submit" name="btnSubmit" class="submit_button_unregistedcustomer" value="New Customer Search" />
+</form>
+</td>
+<td >
+<Br>
+
+<a  class="submit_button_unregistedcustomer" href="${URLUtils.url('CC_PlaceOrder-Unregistered','rnd', Math.random())}">Unregistered customer</a>
+
+</td>
+</Tr></Table>
+
+<isif condition="${pdict.Customer != null}">
+
+<TABLE class=report_table>
+  <TBODY>
+  <TR> 
+     <TD class=report_title colSpan=8>&nbsp;Customer Details</TD></TR>
+  <Tr>
+     <Td class=report_cell width="80" align="left">&nbsp;<B>First Name:</B></td>
+     <Td class=report_cell align="left" width="250"> <isprint value="${pdict.Customer.profile.firstName}"></Td>
+  
+     <Td class=report_cell width="90">&nbsp;<B>Last Name:</B></td>
+     <td class=report_cell align="left" width="400"><isprint value="${pdict.Customer.profile.lastName}"> </Td>
+  </Tr>   
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>Login:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.credentials.login}"></Td>
+  
+     <Td class=report_cell align="left">&nbsp;<B>Email:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.email}"> </Td>
+  </Tr>
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>Phone:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.phoneHome}"></Td>
+  
+     <Td class=report_cell>&nbsp;<B>Date of Birth:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.birthday}" formatter="dd/MM/yyyy"> </Td>
+  </Tr>
+  </TBODY>
+ </TABLE>
+
+<Br>
+
+<TABLE class=report_table width="300">
+  <TBODY>
+  <TR> 
+     <TD class=report_title colSpan=8>&nbsp;Customer Security</TD></TR>
+  <Tr>
+     <Td class=report_cell width="80">&nbsp;<B>Question:</B></td>
+     <Td class=report_cell  align="left"> <isprint value="${pdict.Customer.profile.credentials.passwordQuestion}"></Td>
+  </tr>
+  <tr>   
+     <Td class=report_cell>&nbsp;<B>Answer:</B></td>
+     <td class=report_cell  align="left"><isprint value="${pdict.Customer.profile.credentials.passwordAnswer}"> </Td>
+  </Tr>
+  </TBODY>
+ </TABLE>
+ <Br>
+ <form  method="post" action="${URLUtils.url('CC_Customer-Details')}">
+    <input type="hidden" name="Login" value="<isprint value="${pdict.Customer.profile.credentials.login}">">
+    <input type="submit" name="btnSubmit" class="submit_button_loginascustomer" value="Confirm / Log in as Customer" />
+ </form>
+</isif> 
+</DIV>
+

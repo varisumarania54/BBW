@@ -1,0 +1,19 @@
+<isinclude template="callcenter/cc_header.isml"/>
+
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Customer Details</P>
+
+<Br>
+ <table border="0">
+    <Tr>
+       <Td valign="top" >
+       		<isif condition="${!empty(pdict.OrderDetailsError)}" >
+       			<h2>${pdict.OrderDetailsError}</h2>
+       		<iselse/>
+				<isinclude template="callcenter/customer_orderdetails_lineitems.isml">
+			</isif>
+ 		</Td>
+ 	</Tr>
+ </table>
+
+</div>

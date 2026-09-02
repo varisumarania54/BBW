@@ -1,0 +1,200 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<iscomment>
+	If it is a master product or variation group without a price range, get its pricing from its first variant.
+</iscomment>
+
+<isset name="OrgProduct" value="${pdict.Product}" scope="pdict"/>
+
+<isscript>
+// for variation groups use the master, because all variants are available in detail page
+if ( pdict.Product && pdict.Product.variationGroup )
+{
+	pdict.Product = pdict.Product.masterProduct;
+}
+</isscript>
+
+<isif condition="${pdict.Product.master && !pdict.Product.priceModel.isPriceRange() && pdict.Product.variationModel.variants.size() > 0}"/>
+	<iscomment>Preserve current product instance</iscomment>
+	<isset name="Product" value="${pdict.OrgProduct.variationModel.variants[0]}" scope="pdict"/>
+</isif>
+
+<iscomment>
+	Get the price model for this product.
+</iscomment>
+<isset name="PriceModel" value="${pdict.Product.getPriceModel()}" scope="page"/>
+
+<iscomment>
+	Check whether this product has price in the sale pricebook.  If so, then
+	display two prices:  crossed-out standard price and sales price.
+</iscomment>
+
+<isinclude template="product/components/standardprice_2"/>
+
+<isset name="PriceTable" value="${PriceModel.getPriceTable()}" scope="page"/>
+<isset name="SalesPrice" value="${PriceModel.getPrice()}" scope="page"/>
+<isset name="BasePriceQuantity" value="${PriceModel.getBasePriceQuantity()}" scope="page"/>
+<isset name="ShowStandardPrice" value="${StandardPrice.available && SalesPrice.available && StandardPrice.compareTo(SalesPrice) == 1}" scope="page"/>
+<isset name="currencyCode" value="${session.getCurrency().getCurrencyCode()}" scope="page"/>
+<iscomment>
+	Check whether there are any active customer promotions for this product.  If so, then
+	display two prices:  crossed-out pricebook price and promotional price.
+
+	Note:  we never display two crossed-out prices even if there is both a price-book
+	discount and a promotion.
+</iscomment>
+
+<isif condition="${pdict.OrgProduct.variationGroup}">
+	<isset name="promos" value="${dw.campaign.PromotionMgr.activeCustomerPromotions.getProductPromotions(pdict.OrgProduct)}" scope="page"/>
+<iselse>
+	<isset name="promos" value="${dw.campaign.PromotionMgr.activeCustomerPromotions.getProductPromotions(pdict.Product)}" scope="page"/>
+</isif>
+
+<isset name="PromotionalPrice" value="${dw.value.Money.NOT_AVAILABLE}" scope="page"/>
+<isset name="isPromoPrice" value="${false}" scope="page"/>
+
+<isif condition="${! empty(promos)}">
+	<isloop items="${promos}" var="promo">
+		<isif condition="${!promo.basedOnCoupons}">
+		<isif condition="${promo.getPromotionClass() != null && promo.getPromotionClass().equals(dw.campaign.Promotion.PROMOTION_CLASS_PRODUCT)}">
+			<isif condition="${pdict.Product.optionProduct}">
+				<isif condition="${pdict.CurrentOptionModel != null}">
+					<isset name="PromotionalPrice" value="${promo.getPromotionalPrice(pdict.Product, pdict.CurrentOptionModel)}" scope="page"/>
+				<iselse/>
+					<isset name="PromotionalPrice" value="${promo.getPromotionalPrice(pdict.Product, pdict.Product.getOptionModel())}" scope="page"/>
+				</isif>
+			<iselse/>
+				<isset name="PromotionalPrice" value="${promo.getPromotionalPrice(pdict.Product)}" scope="page"/>
+			</isif>
+		</isif>
+		<isbreak/>
+		</isif>
+	</isloop>
+
+</isif>
+
+	<isscript>
+
+		if(dw.system.Site.getCurrent().getCustomPreferenceValue('enableXccStrikethroughPricing')){
+			if(!ShowStandardPrice && !empty(PromotionalPrice) && PromotionalPrice != dw.value.Money.NOT_AVAILABLE){
+            	var SalesPrice = PromotionalPrice;
+			}
+			ShowStandardPrice = StandardPrice.available && SalesPrice.available && StandardPrice.compareTo(SalesPrice) == 1;
+		}
+
+    </isscript>
+	<div class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+		<isif condition="${pdict.Product.productSet}">
+			<isset name="ProductMinPrice" value="${new dw.value.Money(0, currencyCode)}" scope="pdict" />
+			<isset name="ProductMaxPrice" value="${new dw.value.Money(0, currencyCode)}" scope="pdict" />
+			<isset name="ProductSetStandardPrice" value="${new dw.value.Money(0, currencyCode)}" scope="pdict" />
+			<isset name="ProductSetSalesPrice" value="${new dw.value.Money(0, currencyCode)}" scope="pdict" />
+
+			<isloop items="${pdict.ProductSetList}" var="product" status="loopstatus">
+				<isset name="Product" value="${product}" scope="pdict" />
+				<isinclude template="product/components/setpricing_2" />
+			</isloop>
+
+			<isset name="CurrencyCode" value="${session.getCurrency().getCurrencyCode()}" scope="pdict" />
+			<isif condition="${pdict.ProductMinPrice > 0 && pdict.ProductMaxPrice > 0}">
+				<div class="pricerange"><isprint value="${dw.util.StringUtils.formatMoney(dw.value.Money(pdict.ProductMinPrice, pdict.CurrencyCode))}" /> - <isprint value="${dw.util.StringUtils.formatMoney(dw.value.Money(pdict.ProductMaxPrice, pdict.CurrencyCode))}" /></div>
+			<iselseif condition="${pdict.ProductSetSalesPrice > pdict.ProductSetStandardPrice}">
+				<meta itemprop="priceCurrency" content="USD" />
+				<div class="standardprice" itemprop="price" content="${pdict.ProductSetStandardPrice}"><isprint value="${dw.util.StringUtils.formatMoney(dw.value.Money(pdict.ProductSetStandardPrice, pdict.CurrencyCode))}" /></div>
+			<iselseif condition="${pdict.ProductSetStandardPrice >= pdict.ProductSetSalesPrice}">
+				<meta itemprop="priceCurrency" content="USD" />
+				<div class="salesprice" itemprop="price" content="${pdict.ProductSetSalesPrice}"><isprint value="${dw.util.StringUtils.formatMoney(dw.value.Money(pdict.ProductSetSalesPrice, pdict.CurrencyCode))}" /></div>
+			</isif>
+
+		<iselseif condition="${(pdict.Product.master || pdict.Product.variationGroup) && pdict.Product.priceModel.isPriceRange()}" >
+			<iscomment>Product master price range depending on the variants</iscomment>
+			<div>
+				<isprint value="${pdict.Product.priceModel.minPrice}"/> - <isprint value="${pdict.Product.priceModel.maxPrice}"/>
+			</div>
+		<iselse/>
+			<isif condition="${ShowStandardPrice}">
+				<section class="price-standard" aria-label="Standard Price" tabindex="0">
+					<isif condition="${StandardPrice.valueOrNull != null && StandardPrice.valueOrNull > 0}">
+						<isprint value="${StandardPrice}"/><iselse/>${Resource.msg('product.pricing.noprice','confirmationEmails',null)}
+					</isif>
+				</section>
+                <section class="price-sales" aria-label="Offer Price" tabindex="0" itemprop="price" content="${SalesPrice.value}">
+					<span class="promo-word">${Resource.msg('global.product.pricing.now','confirmationEmails',null)}</span>
+						<isif condition="${(SalesPrice.valueOrNull != null && SalesPrice.valueOrNull > 0) || isPromoPrice}">
+							<isprint value="${SalesPrice}"/>
+						<iselse/>${Resource.msg('product.pricing.noprice','confirmationEmails',null)}
+						</isif>
+				</section>
+				<meta itemprop="priceCurrency" content="USD" />
+			<iselse/>
+                <span class="price-sales" itemprop="price" content="${SalesPrice.value}">
+				<isif condition="${(SalesPrice.valueOrNull != null && SalesPrice.valueOrNull > 0) || isPromoPrice}">
+					<isprint value="${SalesPrice}"/><iselse/>${Resource.msg('product.pricing.noprice','confirmationEmails',null)}
+				</isif>
+				</span>
+            	<meta itemprop="priceCurrency" content="USD" />
+            </isif>
+		</isif>
+		<isscript>
+		if (pdict.Product != null && pdict.Product.availabilityModel != null) {
+			var availabilityModel = pdict.Product.availabilityModel;
+			var availabilityStatus = pdict.Product.availabilityModel.availabilityStatus;
+			var inventoryRecord = pdict.Product.availabilityModel.inventoryRecord;
+		}
+		</isscript>
+		<isif condition="${availabilityStatus == dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK && inventoryRecord != null && (inventoryRecord.stockLevel.available || inventoryRecord.perpetual)}" >
+	 		<link itemprop="availability" href="https://schema.org/InStock" />
+	 	<iselseif condition="${availabilityStatus == dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER}" >
+	 		<link itemprop="availability" href="https://schema.org/PreOrder" />
+	 	<iselse/>
+	 		<link itemprop="availability" href="https://schema.org/OutOfStock" />
+	 	</isif>
+
+		<isset name="displayPrice" value="${(SalesPrice.valueOrNull != null && SalesPrice.valueOrNull > 0) ? SalesPrice : new dw.value.Money(0, currencyCode)}" scope="pdict"/>
+
+	<isif condition="${typeof showTieredPrice !== 'undefined' && showTieredPrice == true}">
+		<iscomment> show price table, avoid display of empty table. Open div and table on demand. </iscomment>
+		<isset name="scaledPriceTagOpened" value="${false}" scope="PAGE"/>
+
+		<isloop iterator="${PriceTable.getQuantities()}" var="Quantity" status="pricingloopstatus">
+			<iscomment> Don't show the price table entry that represents the sales price
+				  for the products minimum order quantity (already shown above) </iscomment>
+			<isif condition="${Quantity.compareTo(BasePriceQuantity) != 0}">
+				<isif condition="${pricingloopstatus.getIndex() == 1}">
+					<isset name="scaledPriceTagOpened" value="${true}" scope="PAGE"/>
+					<div class="price-tiered">
+						<isif condition="${PriceTable.getPercentage(Quantity) > 0}">
+							${Resource.msg('product.pricing.payless','confirmationEmails',null)}
+						<iselse/>
+							${Resource.msg('product.pricing.paymore','confirmationEmails',null)}
+						</isif>
+				</isif>
+
+				<isset name="NextQuantity" value="${PriceTable.getNextQuantity(Quantity)}" scope="PAGE"/>
+			<div class="price-tiered-values">
+					<isif condition="${NextQuantity != null}">
+						<isprint value="${Quantity}" formatter="#"/><isif condition="${Quantity != NextQuantity.getValue()-1}"><span class="divider">${Resource.msg('global.symbol.dash','confirmationEmails',null)}</span><isprint value="${NextQuantity.getValue()-1}" formatter="#"/></isif> ${Resource.msg('product.pricing.items','confirmationEmails',null)}
+					<iselse/>
+						<isprint value="${Quantity}" formatter="#"/> ${Resource.msg('product.pricing.more','confirmationEmails',null)}
+					</isif>
+					<iscomment>
+						show percentages based on shown list price if list price is shown at all,
+					 	otherwise show it based on effective price
+					</iscomment>
+					<isprint value="${PriceTable.getPrice(Quantity)}"/>
+					(<isif condition="${ShowStandardPrice}"><isprint value="${PriceTable.getPrice(Quantity).percentLessThan(StandardPrice)}" formatter="#"/><iselse/><isprint value="${PriceTable.getPercentage(Quantity)}" formatter="#"/></isif>${Resource.msg('product.pricing.off','confirmationEmails',null)})
+				</div>
+			</isif>
+		</isloop>
+		<iscomment> make sure, we close our tags, if opened </iscomment>
+		<isif condition="${scaledPriceTagOpened}">
+			</div>
+		</isif>
+	</isif>
+
+	</div>
+
+<isif condition="${!empty(pdict.OrgProduct)}">
+	<iscomment>Restore current product instance</iscomment>
+	<isset name="Product" value="${pdict.OrgProduct}" scope="pdict"/>
+	<isset name="OrgProduct" value="${null}" scope="pdict"/>
+</isif>

@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  version: 1.0
+  title: Get All Promotions for Customer API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customPromoRanks_r: Read promotions for customer for FE
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customPromoRanks_r: Read promotions for customer for FE
+paths:
+  /rank:
+    get:
+      summary: Return all product promotions for a customer
+      operationId: rank
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Returns list of promotions applicable to the customer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  value:
+                    type: integer
+security:
+  - ShopperToken: ["c_customPromoRanks_r"]

@@ -1,0 +1,5 @@
+{
+  "endpoints": [
+    {"endpoint": "updatePayment", "schema": "schema.yaml", "implementation": "script"}
+  ]
+}

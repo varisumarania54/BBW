@@ -1,0 +1,147 @@
+
+<isinclude template="callcenter/cc_header.isml">
+   
+<DIV class=MainScreen>
+<P class=PageTitle><A href="${URLUtils.url('CC_Search-Form')}">Customer Care</A> / Customer Details</P>
+
+<Br>
+
+<isif condition="${pdict.Customer != null}">
+
+<TABLE class=report_table>
+  <TBODY>
+  <TR> 
+     <TD class=report_title colSpan=8>&nbsp;Customer Details</TD></TR>
+  <Tr>
+     <Td class=report_cell width="80" align="left">&nbsp;<B>First Name:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.firstName}"></Td>
+  
+     <Td class=report_cell width="80">&nbsp;<B>Last Name:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.lastName}"> </Td>
+  </Tr>   
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>Login:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.credentials.login}"></Td>
+  
+     <Td class=report_cell align="left">&nbsp;<B>Email:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.email}"> </Td>
+  </Tr>
+  <Tr>
+     <Td class=report_cell align="left">&nbsp;<B>Phone:</B></td>
+     <Td class=report_cell align="left"> <isprint value="${pdict.Customer.profile.phoneHome}"></Td>
+  
+     <Td class=report_cell>&nbsp;<B>Date of Birth:</B></td>
+     <td class=report_cell align="left"><isprint value="${pdict.Customer.profile.birthday}"> </Td>
+  </Tr>
+  </TBODY>
+ </TABLE>
+
+<Br>
+
+<isscript>
+  
+  importPackage( dw.system );
+  
+  var site = null;
+  var multipleShippingPreference = true;
+  
+  site = Site.getCurrent();
+  
+  if(site != null){
+    if(site.getCustomPreferenceValue("callcenter_multipleshippingaddress_enabled") != null){
+       multipleShippingPreference = site.getCustomPreferenceValue("callcenter_multipleshippingaddress_enabled");
+    }
+  
+  }
+  
+</isscript>
+ 
+
+<TABLE class=report_table >
+  <TBODY>
+  
+  <isif condition="${pdict.OrderPagingModel.count > 0}">
+          
+  <TR> 
+    <TD class=report_title colSpan=4>
+       Orders <isprint value="${pdict.OrderPagingModel.start+1}" formatter="#"> - <isprint value="${pdict.OrderPagingModel.end+1}" formatter="#">
+          of 
+          <isprint value="${pdict.OrderPagingModel.count}" formatter="#">    
+          <isscript> pdict.pagingmodel = pdict.OrderPagingModel </isscript>   
+    
+    </td>
+    <Td class=report_title colspan="4" align="right">
+       <span align="right"><ispagingbar pageurl="${URLUtils.url('CC_Customer-Orders','Login',pdict.Customer.profile.credentials.login)}" pagingmodel="${pdict.OrderPagingModel}"></span>
+    &nbsp;</TD>
+  </TR>
+  <TR>
+    <TD class=report_header1>&nbsp;Order #'#'#</TD>
+    <TD class=report_header1>Order Date</TD>
+    <TD class=report_header1>Amount</TD>
+    <TD class=report_header1>Status</TD>
+    <TD class=report_header1 width="60">Select</TD>
+  </TR>
+<iselse>
+          
+  <TR> 
+    <TD class=report_title colSpan=8>&nbsp;No Orders Found</TD>
+  </TR>  
+</isif>
+
+
+
+<isif condition="${pdict.OrderPagingModel.empty}">
+     
+     <TR onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+        <TD class=report_cell colspan="8"><Br><Br>&nbsp;No Orders have been found for this customer. 
+        <Br><Br>
+        <Br></TD>
+     </TR>
+	
+<iselse>
+
+<isloop iterator="${pdict.OrderPagingModel.pageElements}" alias="Orders" status="loopstate">
+   
+  <TR onmouseover="this.style.backgroundColor='#FFFFE1';" onmouseout="this.style.backgroundColor='White';">
+    <TD class=report_cell>&nbsp;<a href="${URLUtils.url('CC_Customer-OrderDetail','OrderNumber',Orders.orderNo, 'Login', pdict.Customer.profile.credentials.login)}">${Orders.orderNo}</A></TD>
+    <TD class=report_cell><isprint value="${Orders.creationDate}" formatter="dd/MM/yyyy"></TD>
+    <TD class=report_cell><isprint value="${Orders.totalGrossPrice}"></TD>
+    <isif condition="${Orders.status != ""}">
+       <TD class=report_cell><isprint value="${Orders.status}"></TD>
+    <iselse> 
+       <TD class=report_cell>No Order Address</TD>
+    </isif>
+    <TD class=report_cell><a href="${URLUtils.url('CC_Customer-OrderDetail','OrderNumber',Orders.orderNo, 'Login', pdict.Customer.profile.credentials.login)}">Select</a></TD>
+  </TR>
+  
+</isloop>
+
+</isif>
+
+</TBODY>  
+</TABLE>
+ 
+    
+ 
+ <!-- ORder Bottom Main Table -->
+ <table border="0">
+    <Tr>
+       <Td valign="top" >
+           <isinclude template="callcenter/customer_orderdetails_lineitems.isml">
+  
+ </Td></Tr></table>
+ <table>
+    <Tr>
+      <Td>
+       <form method="post"  method="post" action="${URLUtils.url('CC_Customer-Details')}">
+          <input type="hidden" name="Login" value="<isprint value="${pdict.Customer.profile.credentials.login}">">
+          <input type="submit" name="btnSubmit" class="submit_button_customerdetails" value="Customer Details" />
+          &nbsp;&nbsp;
+       </form>
+      </Td>
+    </Tr>
+     </isif>
+</DIV>
+
+
+

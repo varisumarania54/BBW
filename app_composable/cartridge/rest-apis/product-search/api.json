@@ -1,0 +1,9 @@
+{
+  "endpoints": [
+    {
+      "endpoint": "productSearch",
+      "schema": "schema.yaml",
+      "implementation": "script"
+    }
+  ]
+}

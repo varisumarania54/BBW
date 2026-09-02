@@ -1,0 +1,5 @@
+{
+    "endpoints": [
+      {"endpoint": "getCustomObjects", "schema": "schema.yaml", "implementation": "script"}
+    ]
+  }

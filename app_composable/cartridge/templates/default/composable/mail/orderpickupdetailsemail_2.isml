@@ -1,0 +1,390 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<iscomment>
+    Displays order details, such as order number, creation date, payment information,
+    order totals and information for each contained shipment.
+    This template module can be used in order confirmation pages as well as in the
+    order history to render the details of a given order. Depending on the context
+    being used in, one might omit rendering certain information.
+
+    Parameters:
+
+    order       : the order whose details to render
+    orderstatus : if set to true, the order status will be rendered
+    if set to false or not existing, the order status will not be rendered
+</iscomment>
+<isset name="Order" value="${pdict.Order}" scope="page"/>
+<isset name="orderType" value="${pdict.Order.custom.orderType}" scope="page"/>
+<isset name="isBopisOrder" value="${(!empty(orderType) && orderType.indexOf('BOPIS') > -1)}" scope="page"/>
+
+<iscomment>render a box for each shipment</iscomment>
+<div style="font-size: 26px; border-bottom: 1px solid #333; text-transform: uppercase; margin: 0; padding-bottom: 13px; margin-bottom: 5px; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+    ${Resource.msg('order.confirm.youritems','mail',null)}
+</div>
+
+<isscript>
+    const GiftBoxSKU = dw.system.Site.current.getCustomPreferenceValue('GiftBoxSKU');
+    const CartHelper = require('app_composable/cartridge/scripts/helpers/isml/Cart.js');
+    var shippingIsRequired = Order.productLineItems.size() > 0	|| Order.getGiftCertificateLineItems().toArray().some(gcli=>'isVirtual' in gcli.custom && (empty(gcli.custom.isVirtual) || !gcli.custom.isVirtual));
+    var orderShipments = ( Order.shipments.length > 1 && Order.shipments[0].shippingMethodID == 'ISPU' ) ? Order.shipments.toArray().reverse() : Order.shipments.toArray();
+    const bagFeeSkus = dw.system.Site.current.getCustomPreferenceValue('bagFeeSkus');
+</isscript>
+<isset name="orderShipments" value="${orderShipments}" scope="page"/>
+<isloop items="${orderShipments}" var="shipment" status="shipmentloopstate">
+	<isif condition="${shipment.productLineItems.size() > 0}">
+        <iscomment>BOPIS/MixedBag items table</iscomment>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse; margin-top: 35px;">
+        <iscomment> SHIPPING HEADER </iscomment>
+            <isif condition="${shipment.shippingMethodID != 'ISPU'}">
+    			<tr>
+      				<td align="left" valign="middle" width="27" style="padding-right: 7px; text-align: left;">
+      					<img src="${URLUtils.httpStatic('/images/mail/Icon_shipping@2x.png')}" width="33" height="17" alt="icon">
+      				</td>
+      				<td align="left" valign="top" class="textresizeto14" style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:18px; text-decoration:none; color:#005699; font-weight: bold;">${Resource.msg('order.confirm.shipping', 'mail', null)}<span style="color: #000000;">: <isprint value="${(shipNo).toFixed()}"/></span> <span style="color: #000000;">${Resource.msg('order.confirm.items', 'mail', null)}</span>
+      			 	</td>
+      			 </tr>
+      			 <tr>
+      			 	<td colspan="2" align="left">
+      			 		<p style="text-align: left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size: 18px; line-height:24px; text-transform: uppercase; padding-top: 6px">${shipment.shippingMethod.displayName}</p>
+      			 	</td>
+    			</tr>
+    		</isif>
+            <iscomment> PICKING UP HEADER </iscomment>
+        	<isif condition="${shipment.shippingMethodID == 'ISPU'}">
+        		<tr>
+      				<td align="center" valign="middle" width="27" style="padding-right: 7px; line-height:24px; text-align: center;">
+      					<img src="${URLUtils.httpStatic('/images/mail/Icon_heartlocal@2x.png')}" width="18" height="23" alt="icon">
+      				</td>
+      				<td align="left" valign="top" class="textresizeto14" style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:18px;  line-height:24px; text-decoration:none; color:#005699; font-weight: bold;">${Resource.msg('order.bopis.pickup', 'mail', null)} <span style="color: #000000;">${Resource.msg('order.bopis.at', 'mail', null)}</span>
+                      <span style="color: #000000;">${toTitleCase(pickupStore.name)}</span>: <span style="color: #000000;"><isprint value="${(pickupNo).toFixed()}"/> ${Resource.msg('order.confirm.items', 'mail', null)} </span>
+      			 	</td>
+    			</tr>
+    		</isif>
+        </table>
+		<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+			<isloop items="${shipment.productLineItems}" var="productLineItem" status="pliloopstate">
+			<isset name="discountedProductsQty" value="${CartHelper.getDiscountedItemsCount(productLineItem)}" scope="page" />
+				<isif condition="${GiftBoxSKU == productLineItem.productID}">
+					<iscontinue/>
+				</isif>
+                <isif condition="${bagFeeSkus.indexOf(productLineItem.productID) > -1}">
+				   	<iscontinue/>
+				</isif>
+				<isif condition="${productLineItem.quantity.value-discountedProductsQty > 0}">
+				<tr>
+                    <td width="119" style="vertical-align:top; padding: 20px 0 40px; width:119px; text-align: center;">
+                        <isscript>
+                            pdict.p_productli = productLineItem;
+                            pdict.p_size = "hires";
+                            pdict.p_email = true;
+                        </isscript>
+                        <isinclude template="components/displayproductimage_2.isml" />
+                    </td>
+
+                    <td style="padding:20px 0 40px 20px;vertical-align:top;">
+                        <iscomment>Display product line and product using module</iscomment>
+                        <isscript>
+                            pdict.p_hidepromo = "true";
+                            pdict.p_productli = productLineItem;
+                            pdict.p_editable = false;
+                        </isscript>
+                        <isinclude template="components/displayemailliproduct_2.isml" />
+                    </td>
+
+					 <td style="font-size:16px; color: #333; padding:20px 20px 40px 10px;vertical-align:top; text-align: center;">
+                        ${Resource.msg('order.confirm.qty','mail',null)}&nbsp;&nbsp;<isprint value="${(productLineItem.quantity-discountedProductsQty).toFixed()}"/>
+                    </td>
+
+                    <td style="font-size:16px;padding:20px 0 40px;vertical-align:top; text-align: right;">
+                        <iscomment>Render quantity. If it is a bonus product render word 'Bonus'</iscomment>
+                        <isif condition="${productLineItem.bonusProductLineItem}">
+                            <isset name="bonusProductPrice" value="${productLineItem.getAdjustedPrice()}" scope="page"/>
+                            <isinclude template="checkout/components/displaybonusproductprice_2" />
+                            <isprint value="${bonusProductPriceValue}" />
+                        <iselse/>
+                            <isif condition="${productLineItem.getAdjustedPrice().value > 0}">
+								<isif condition="${discountedProductsQty > 0}">
+                                     <isset name="pa" value="${productLineItem.priceAdjustments.size() > 0?productLineItem.priceAdjustments.iterator().next():null}" scope="page" />
+                                     <isif condition="${!empty(pa) && [dw.campaign.Discount.TYPE_FIXED_PRICE, dw.campaign.Discount.TYPE_PERCENTAGE].indexOf(pa.appliedDiscount.type) != -1 && CartHelper.getItemPriceTotal(productLineItem, pa, discountedProductsQty).value > 0}">
+                                        <isset name="lineItemTotalPrice" value="${CartHelper.getItemPriceTotal(productLineItem, pa, discountedProductsQty)}" scope="page" />
+                                     <iselseif condition="${CartHelper.getDiscountedPrice(productLineItem) > 0}" />
+                                        <isset name="lineItemTotalPrice" value="${CartHelper.getDiscountedPrice(productLineItem)}" scope="page" />
+                                     <iselse/>
+                                     	<isset name="lineItemTotalPrice" value="${productLineItem.getAdjustedPrice()}" scope="page" />
+                                     </isif>
+                                 <iselse/>
+                                     <isset name="lineItemTotalPrice" value="${productLineItem.getAdjustedPrice()}" scope="page" />
+                                 </isif>
+
+                                 <isprint value="${lineItemTotalPrice}" />
+							<iselse/>
+								${Resource.msg('global.free','confirmationEmails',null)}
+							</isif>
+                            <isif condition="${productLineItem.optionProductLineItems.size() > 0}">
+                                <isloop items="${productLineItem.optionProductLineItems}" var="optionLI">
+                                    <p style="color:#990000;">+ <isprint value="${optionLI.adjustedPrice}"/></p>
+                                </isloop>
+                            </isif>
+                        </isif>
+                    </td>
+                </tr>
+                </isif>
+                <isif condition="${productLineItem.priceAdjustments.length > 0 && discountedProductsQty > 0}">
+					<isloop	items="${productLineItem.priceAdjustments}" var="pa" status="prAdloopstatus">
+						<isif condition="${CartHelper.isLineItem(pa,productLineItem)}">
+							<tr>
+			                    <td width="119" style="vertical-align:top; padding: 20px 0; width:119px; text-align: center;">
+                                    <isscript>
+                                        pdict.p_productli = productLineItem;
+                                        pdict.p_size = "hires";
+                                        pdict.p_email = true;
+                                    </isscript>
+                                    <isinclude template="components/displayproductimage_2.isml" />
+			                    </td>
+			                    <td style="padding:20px 0 20px 20px;vertical-align:top;">
+			                        <iscomment>Display product line and product using module</iscomment>
+                                    <isscript>
+                                        pdict.p_hidepromo = "true";
+                                        pdict.p_productli = productLineItem;
+                                        pdict.p_editable = false;
+                                    </isscript>
+                                    <isinclude template="components/displayemailliproduct_2.isml" />
+			                    </td>
+								<iscomment>Get the price model for this	product.</iscomment>
+								<isset name="PriceModel" value="${productLineItem.product.getPriceModel()}" scope="page" />
+								<iscomment>Get StandardPrice from list price book.</iscomment>
+								<isinclude template="product/components/standardprice_2" />
+								<iscomment>Get SalesPrice from line item itself.</iscomment>
+								<isset name="SalesPrice" value="${productLineItem.basePrice}" scope="page" />
+								<isif condition="${StandardPrice.available && StandardPrice > SalesPrice}">
+									<isset name="lineItemFinalPrice" value="${StandardPrice}" scope="page" />
+								<iselse/>
+								    <isset name="lineItemFinalPrice" value="${SalesPrice}" scope="page" />
+								</isif>
+								<isif condition="${pa.getAppliedDiscount().type == dw.campaign.Discount.TYPE_PERCENTAGE && SalesPrice.subtractPercent(pa.getAppliedDiscount().getPercentage()).value > 0}">
+									<isset name="lineItemFinalPrice" value="${SalesPrice.subtractPercent(pa.getAppliedDiscount().getPercentage())}" scope="page" />
+								<iselseif condition="${pa.getAppliedDiscount().type == dw.campaign.Discount.TYPE_FIXED_PRICE}" />
+									<isif condition="${pa.getAppliedDiscount().fixedPrice == '0.0'}">
+									<iselse/>
+										<isset name="lineItemFinalPrice" value="${pa.getAppliedDiscount().fixedPrice}" scope="page" />
+									</isif>
+								<iselse/>
+								</isif>
+								<isset name="totalPliFreeItems" value="${CartHelper.getFreeItemsCountInPli(productLineItem,lineItemFinalPrice)}" scope="page" />
+								<isset name="lineItemTotalPrice" value="${CartHelper.getItemPriceTotal(productLineItem, pa, discountedProductsQty)}" scope="page" />
+								<isset name="isFreeTotalPrice" value="${CartHelper.isFreeTotalPrice(pa, productLineItem, lineItemTotalPrice)}" scope="page" />
+								<td style="font-size:16px; color: #333; padding:20px 20px 40px 10px;vertical-align:top; text-align: center;">
+			                        ${Resource.msg('order.confirm.qty','mail',null)}&nbsp;&nbsp;
+			                        <isif condition="${isFreeTotalPrice}" >
+										<isprint value="${pa.quantity.toFixed()}" />
+									<iselse/>
+										<isprint value="${new Number(discountedProductsQty-totalPliFreeItems).toFixed()}" />
+									</isif>
+			                    </td>
+
+			                    <td style="font-size:16px;padding:20px 0 20px;vertical-align:top; text-align: right;">
+			                        <iscomment>Render quantity. If it is a bonus product render word 'Bonus'</iscomment>
+			                        <isif condition="${productLineItem.bonusProductLineItem}">
+			                            <isset name="bonusProductPrice" value="${productLineItem.getAdjustedPrice()}" scope="page"/>
+			                            <isinclude template="checkout/components/displaybonusproductprice_2" />
+			                            <isprint value="${bonusProductPriceValue}" />
+			                        <iselse/>
+			                        	<isif condition="${isFreeTotalPrice}" >
+			                        		${Resource.msg('global.free','confirmationEmails',null)}
+			                        	<iselseif condition="${[dw.campaign.Discount.TYPE_FIXED_PRICE,dw.campaign.Discount.TYPE_PERCENTAGE].indexOf(pa.getAppliedDiscount().type) !=-1 && CartHelper.getDiscountedLinePrice(productLineItem, pa) > 0}" />
+	                                        <isprint value="${CartHelper.getDiscountedLinePrice(productLineItem, pa)}" />
+			                        	<iselse/>
+			                        		<isprint value="${((productLineItem.quantity-totalPliFreeItems)*lineItemFinalPrice)}" />
+			                        	</isif>
+
+			                            <isif condition="${productLineItem.optionProductLineItems.size() > 0}">
+			                                <isloop items="${productLineItem.optionProductLineItems}" var="optionLI">
+			                                    <p style="color:#990000;">+ <isprint value="${optionLI.adjustedPrice}"/></p>
+			                                </isloop>
+			                            </isif>
+			                        </isif>
+			                    </td>
+			                </tr>
+		                </isif>
+					</isloop>
+				</isif>
+
+            </isloop>
+        </table>
+        </isif>
+        <isif condition="${shipment.giftCertificateLineItems.size() > 0}">
+            <iscomment>Shipment Gift Certificate</iscomment>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                <isloop items="${shipment.giftCertificateLineItems}" var="giftCertificateLineItem" status="gcliloopstate">
+                    <tr>
+                        <td width="119" style="vertical-align:top; padding: 20px 0; width:119px; text-align: center;">
+                            <isif condition="${'productImage' in giftCertificateLineItem.custom && !empty(giftCertificateLineItem.custom.productImage)}">
+                                <img src="${giftCertificateLineItem.custom.productImage}" alt="${giftCertificateLineItem.lineItemText}" style="border:0; vertical-align: top;" width="119"/>
+                                <iselse/>
+                                <img src="${URLUtils.httpStatic('/images/egift_cert.png')}" alt="${giftCertificateLineItem.lineItemText}" style="border:0; vertical-align: top;"/>
+                            </isif>
+                        </td>
+
+                        <td style="padding:20px 0 20px 20px;vertical-align:top;">
+                            <div style="width: 245px;">
+                                <div style="text-transform: uppercase; font-size: 16px; color: #333; margin-bottom: 15px; line-height: 23px;">
+                                    <isprint value="${giftCertificateLineItem.lineItemText}" />
+                                </div>
+                                <div style="color: #666; font-size: 14px; line-height: 18px;">
+                                    <isif condition="${'isVirtual' in giftCertificateLineItem.custom && giftCertificateLineItem.custom.isVirtual}">
+                                        ${Resource.msg('cart.giftcertdelivery','confirmationEmails',null)}
+                                        <iselse/>
+                                            ${Resource.msg('global.giftcard','confirmationEmails',null)}
+                                    </isif>
+                                </div>
+                                <div style="color: #666; font-size: 14px; line-height: 18px;">
+                                    ${Resource.msg('global.amt','confirmationEmails',null)}:
+                                    <isprint value="${giftCertificateLineItem.basePrice}" />
+                                </div>
+                                <div style="color: #666; font-size: 14px; line-height: 18px;">
+                                    <isif condition="${giftCertificateLineItem.recipientName!=null}">
+                                        ${Resource.msg('global.to','confirmationEmails',null)}:
+                                        <isprint value="${giftCertificateLineItem.recipientName}" />
+                                        <isif condition="${'isVirtual' in giftCertificateLineItem.custom && giftCertificateLineItem.custom.isVirtual}">
+                                            <a style="text-decoration: none; color: #666;" href="mailto:giftCertificateLineItem.recipientEmail">
+                                                <isprint value="${giftCertificateLineItem.recipientEmail}" />
+                                            </a>
+                                        </isif>
+                                    </isif>
+                                </div>
+                                <div style="color: #666; font-size: 14px; line-height: 18px;">
+                                    <isif condition="${giftCertificateLineItem.senderName!=null}">
+                                        ${Resource.msg('global.from','confirmationEmails',null)}:
+                                        <a style="text-decoration: none; color: #666;" href="mailto:${giftCertificateLineItem.senderName}">
+                                            <isprint value="${giftCertificateLineItem.senderName}" />
+                                        </a>
+                                    </isif>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="font-size:16px; color: #333; padding:20px 20px 40px 10px;vertical-align:top; text-align: center;">
+                            ${Resource.msg('order.confirm.qty','mail',null)}&nbsp;&nbsp;
+                        </td>
+
+                        <td style="font-size:16px;padding:20px 0 20px;vertical-align:top; text-align: right;">
+                            <isprint value="${giftCertificateLineItem.price}"/>
+                        </td>
+                    </tr>
+                </isloop>
+            </table>
+        </isif>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+            <tr>
+                <td style="border-top: 1px solid #e5e5e5; height: 0; width:100%"></td>
+            </tr>
+        </table>
+</isloop>
+
+<isif condition="${isBopisOrder}">
+    <isset name="bopis_order_status_text" value="${dw.content.ContentMgr.getContent('bopis_order_status_text')}" scope="page"/>
+    <isprint value="${bopis_order_status_text.custom.body}" encoding="off"/>
+</isif>
+
+<isset name="shipping_instructions" value="${dw.content.ContentMgr.getContent('email_ack_shipping_info')}" scope="page"/>
+<isif condition="${shipping_instructions != null && mixedBag}">
+    <table class="bmContent" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+        <tr>
+            <td style="font-size: 26px; border-bottom: 1px solid #333; text-transform: uppercase; padding: 30px 0 10px; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+                ${Resource.msg('order.bopis.orderconfirm.shippinginfo','mail',null)}
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 22px; line-height: 28px; color:#333; padding-top:15px;">
+                <isprint value="${shipping_instructions.custom.body}" encoding="off"/>
+            </td>
+        </tr>
+    </table>
+</isif>
+
+<isset name="bopis_pickup_instructions" value="${dw.content.ContentMgr.getContent('bopis_ack_email_pickup')}" scope="page"/>
+<isif condition="${bopis_pickup_instructions != null}">
+    <table class="bmContent" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+        <tr>
+            <td style="font-size: 26px; border-bottom: 1px solid #333; text-transform: uppercase; padding: 30px 0 10px; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+                ${Resource.msg('order.bopis.orderconfirm.pickupinfo','mail',null)}
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 22px; line-height: 28px; color:#333; padding-top:15px;">
+                <isprint value="${bopis_pickup_instructions.custom.body}" encoding="off"/>
+            </td>
+        </tr>
+    </table>
+</isif>
+
+<isif condition="${!empty(Order.defaultShipment.giftMessage)}">
+    <div style="border: 1px solid #e5e5e5; margin: 30px 0 0; padding: 20px 20px 15px;">
+        <div style="text-transform: uppercase; font-size: 18px; margin-bottom: 15px;">
+            <img src="${URLUtils.httpStatic('/images/gift-box-icon.png')}" alt="${Resource.msg('summary.giftmessage','confirmationEmails',null)}"
+                 style="vertical-align: top; border: 0; float: left; margin-right: 10px;"/>
+            ${Resource.msg('summary.giftmessage','confirmationEmails',null)}
+        </div>
+        <div style="color: #666666; font-size: 16px; line-height: 25px;">
+            <isprint value="${Order.defaultShipment.giftMessage}"/>
+        </div>
+    </div>
+</isif>
+
+<div style="font-size: 26px; border-bottom: 1px solid #333; text-transform: uppercase; margin: 30px 0 0 0; padding-bottom: 13px; margin-bottom: 16px; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+    ${Resource.msg('order.confirm.billing','mail',null)}
+</div>
+
+<div style="border: 1px solid #f2f2f2; margin-bottom: 30px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="table-layout: fixed;">
+        <tr>
+            <td style="vertical-align: top; padding: 21px 12px 33px 24px; color: #666666; font-size: 16px; line-height: 24px;">
+                <div style="color: #333; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                    ${Resource.msg('order.confirm.billto','mail',null)}
+                </div>
+                <isset name="billTo" value="${Order.billingAddress}" scope="page" />
+                <div><isprint value="${billTo.firstName}"/> <isprint value="${billTo.lastName}"/></div>
+                <div><isprint value="${billTo.address1}"/></div>
+                <isif condition="${!empty(billTo.address2)}">
+                    <div><isprint value="${billTo.address2}"/></div>
+                </isif>
+                <div>
+                    <isif condition="${billTo.city != null}">
+                        <isprint value="${billTo.city}"/>,
+                    </isif>
+                    <isprint value="${billTo.stateCode}"/>
+                    <isprint value="${billTo.postalCode}"/>
+                </div>
+                <div>
+                    <isprint value="${Resource.msg(('country.' + billTo.countryCode), 'confirmationEmails', null)}"/>
+                </div>
+            </td>
+            <td style="vertical-align: top; padding: 21px 0 33px 12px; color: #666666; font-size: 16px; line-height: 24px;">
+                <div style="color: #333; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                    <isif condition="${Order.paymentInstruments.length == 1}">
+                        ${Resource.msg('order.confirm.paymentmethod','mail',null)}
+                        <iselse/>
+                        ${Resource.msg('order.confirm.paymentmethods','mail',null)}
+                    </isif>
+                </div>
+                <iscomment>Render All Payment Instruments</iscomment>
+                <isloop items="${Order.getPaymentInstruments()}" var="paymentInstr" status="piloopstate">
+                    <div><isprint value="${dw.order.PaymentMgr.getPaymentMethod(paymentInstr.paymentMethod).name}" /></div>
+                    <isif condition="${dw.order.PaymentInstrument.METHOD_GIFT_CERTIFICATE.equals(paymentInstr.paymentMethod)}">
+                        <isprint value="${paymentInstr.maskedGiftCertificateCode}"/><br />
+                    </isif>
+                    <div>
+                        <isprint value="${paymentInstr.paymentTransaction.amount}"/>
+                    </div><!-- END: payment-amount -->
+                </isloop>
+            </td>
+        </tr>
+    </table>
+</div>
+    <isscript>
+        pdict.p_lineitemctnr = Order;
+        pdict.p_shipmenteditable = false;
+        pdict.p_totallabel = Resource.msg('order.confirm.estimatedtotal','mail',null);
+        pdict.p_showshipmentinfo=shippingIsRequired
+    </isscript>
+
+    <isinclude template="components/order/ordertotalspickupemail" />

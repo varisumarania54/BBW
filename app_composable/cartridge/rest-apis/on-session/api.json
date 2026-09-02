@@ -1,0 +1,5 @@
+{
+    "endpoints": [
+      {"endpoint": "onSession", "schema": "schema.yaml", "implementation": "script"}
+    ]
+  }

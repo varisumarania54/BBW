@@ -1,0 +1,113 @@
+<iscache type="relative" hour="0">
+ 
+<isinclude template="callcenter/modules"> 
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+   <HEAD>
+      <TITLE>Customer Care</TITLE>
+      <META http-equiv=Content-Type content="text/html; charset=utf-8">
+      <LINK href="${URLUtils.staticURL('callcenter/css/default.css')}" type=text/css rel=stylesheet>
+  
+      <script language="javascript">
+      
+         /*  
+          *  The code below is used to keep the agents session alive for a set amount of time past 
+          *  the default Demandware timeout.
+          *  An AJAX request is made to a blank pipeline / template "CC_Login-KeepSessionAlive"
+          *
+         */
+           
+         var xmlhttp
+        
+         function loadXMLDoc(url){
+		    xmlhttp=null
+		   // code for Mozilla, etc.
+		   if (window.XMLHttpRequest)
+  		   {
+  			  xmlhttp=new XMLHttpRequest()
+  		   }
+		   // code for IE
+		   else if (window.ActiveXObject)
+  		   {
+  		      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP")
+  		   }
+		   if (xmlhttp!=null)
+  		   {
+  		      xmlhttp.onreadystatechange=state_Change
+ 		      xmlhttp.open("GET",url,true)
+  		      xmlhttp.send(null)
+  		   }
+		   else
+  		   {
+  		      alert("Your browser does not support XMLHTTP.")
+  		   }
+		}
+		
+		function state_Change()
+		{
+		   // if xmlhttp shows "loaded"
+		   if (xmlhttp.readyState==4)
+  		   {
+  		   // if "OK"
+  		   if (xmlhttp.status==200)
+    	   {
+    	      //alert(xmlhttp.responseText)
+    	   }
+  		   else
+    	   {
+    	      alert("Problem retrieving XML data")
+       	   }
+        }
+      } 
+		
+  
+         var dynURL = '<isprint value="${URLUtils.url('CC_Login-KeepSessionAlive')}">';
+         
+         var timeoutMinutes = 29;
+         var timeoutMilliseconds = timeoutMinutes * 1000 * 60;
+         
+         setTimeout ( "loadXMLDoc(dynURL)", timeoutMilliseconds ); 
+ 
+      </script>
+      
+		<script src="${URLUtils.staticURL('/lib/jquery/jquery-2.1.1.min.js')}" type="text/javascript"></script>
+		<script src="${URLUtils.staticURL('/lib/jquery.deserialize.js')}"></script>
+   
+   </HEAD>
+
+<BODY>
+
+
+<TABLE class=MenuHeader cellSpacing=0 cellPadding=0 width=100%>
+  <TBODY>
+  <TR>
+    <TD style="WIDTH: 650px"><IMG alt="Demandware Logo" 
+      src="${URLUtils.staticURL('/callcenter/images/logo_header.gif')}">
+    </TD>
+    <TD style="WIDTH: 200px"  class=report_title align="right" valign="bottom">
+         Agent: <isprint value="${ pdict.CurrentSession.userName}">
+    </TD> 
+    
+    <TD  style="ALIGN:right;VERTICAL-ALIGN: bottom; WIDTH: 70px; TEXT-ALIGN: right">
+    
+    <A href="${URLUtils.url('CC_Search-Form')}"><IMG 
+      style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+      alt=Home src="${URLUtils.staticURL('/callcenter/images/options_home.jpg')}"></A></TD>
+    
+  
+    <TD style="VERTICAL-ALIGN: bottom; WIDTH: 48px; TEXT-ALIGN: right">
+      <A href="${URLUtils.url('CC_Login-Help')}"><IMG 
+      style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+      alt=Help src="${URLUtils.staticURL('/callcenter/images/options_help.jpg')}"></A></TD>
+      
+    <TD style="VERTICAL-ALIGN: bottom; WIDTH: 57px; TEXT-ALIGN: right">
+      <A href="${URLUtils.url('CC_Login-Logout')}"><IMG 
+      style="BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px" 
+      alt="Log Off" src="${URLUtils.staticURL('/callcenter/images/options_logoff.jpg')}"></A></TD>
+  
+  	</TR>
+   </TBODY>
+ </TABLE>
+ 

@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom Preferences API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customPreference_r: Read Custom preferences for FE
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customPreference_r: Read Custom preferences for FE
+paths:
+  /customPreferences:
+    get:
+      summary: Read Custom preferences for FE
+      operationId: customPreferences
+      parameters:
+        - in: query
+          name: c_ids
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Shows that all the custom site preferences are found and the value is returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  value:
+                    type: integer
+        "404":
+          description: Shows that no custom site preferences are found or custom object is not found
+          content:
+            application/json:
+              examples:
+                not_found:
+                  value:
+                    {
+                      "type": "https://api.commercecloud.salesforce.com/documentation/error/v1/custom-errors/custom-preference-not-found",
+                    }
+security:
+  - ShopperToken: ["c_customPreference_r"]

@@ -1,0 +1,48 @@
+{
+  "caches": [
+    {
+      "id": "storeAvailabilitySCAPI",
+      "expireAfterSeconds": 900
+    },
+     {
+      "id": "storeLevelAvailability",
+      "expireAfterSeconds": 900
+    },
+    {
+      "id": "categoryMaxOrderable",
+      "expireAfterSeconds": 86400
+    },
+    {
+      "id": "productAttributeCache",
+      "expireAfterSeconds": 43200
+    },
+    {
+      "id": "productWebAvailabilityCache",
+      "expireAfterSeconds": 900
+    },
+    {
+      "id": "storeAttributeCache",
+      "expireAfterSeconds": 43200
+    },
+    {
+      "id": "ocapiDataOAuthToken",
+      "expireAfterSeconds": 1739
+    },
+    {
+      "id": "shippingSurchargeComp",
+      "expireAfterSeconds": 43200
+    },
+    {
+      "id": "disabledBopisStoreIDs",
+      "expireAfterSeconds": 120
+    },
+    {
+      "id": "estimatedDelivery",
+      "expireAfterSeconds": 300
+    },
+    {
+      "id": "productQualifyingButNotDiscounted",
+      "expireAfterSeconds": 43200
+    }
+  ]
+}

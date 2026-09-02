@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  version: 1.0.1
+  title: Custom On Session API
+components:
+  securitySchemes:
+    ShopperToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/authorize
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customOnSession_r: On Session API
+        clientCredentials:
+          tokenUrl: https://my-shortcode.api.commercecloud.salesforce.com/shopper/auth/v1/organizations/my-org-id/oauth2/token
+          scopes:
+            c_customOnSession_r: On Session API
+paths:
+  /onSession:
+    post:
+      summary: On Session API
+      operationId: onSession
+      parameters:
+        - in: query
+          name: siteId
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+      responses:
+        200:
+          description: On Session Data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  geoLocation:
+                    type: object
+                    properties:
+                      ipAddress:
+                        type: string
+                      countryCode:
+                        type: string
+                      country:
+                        type: string
+                      city:
+                        type: string
+                      postalCode:
+                        type: string
+                      metroCode:
+                        type: string
+                      region:
+                        type: string
+                      regionCode:
+                        type: string
+                      latitude:
+                        type: string
+                      longitude:
+                        type: string
+                  adobe:
+                    type: object
+                    properties:
+                      mcmid:
+                        type: string
+                      mboxes:
+                        type: string
+                      targetcg:
+                        type: string
+                      featuretoggles:
+                        type: string
+                      targetflags:
+                        type: string
+                      targetAnalyticsData:
+                        type: string
+                  bopis:
+                    type: object
+                    properties:
+                      sessionStore:
+                        type: string
+                      isPreferredStore:
+                        type: boolean
+security:
+  - ShopperToken: ["c_customOnSession_r"]

@@ -1,0 +1,10 @@
+<tr>
+    <td cellpadding="0" cellspacing="0" border="0" height="1"; style="${printStyles(spacer)}"></td>
+</tr>
+
+<tr>
+    <isset name="bbw_email_header_image" value="${dw.content.ContentMgr.getContent('bbw-email-rebuild-header-image')}" scope="page"/>
+    <isif condition="${bbw_email_header_image != null}">
+        <isprint value="${bbw_email_header_image.custom.body}" encoding="off"/>
+    </isif>
+</tr>

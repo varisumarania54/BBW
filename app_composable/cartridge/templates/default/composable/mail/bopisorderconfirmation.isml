@@ -1,0 +1,332 @@
+<iscontent type="text/html " charset="UTF-8" />
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<isscript>
+   	var orderPrefix = dw.system.Site.getCurrent().getCustomPreferenceValue("BBWOrderNumberPrefix"),
+		OrderNo = (!empty(orderPrefix))? orderPrefix + pdict.Order.orderNo.toString(): pdict.Order.orderNo;
+    var locale = request.getLocale();
+    var System = require('dw/system/System');
+    var isDevInstance = System.getInstanceType() === System.DEVELOPMENT_SYSTEM;
+    var hostUrl = isDevInstance ? `development.bathandbodyworks.${locale === 'en_US'? 'com' : 'ca'}` : request.getHttpHost();
+
+   	var StoreMgr = require('dw/catalog/StoreMgr'),
+	   	mixedBag = (pdict.Order.getShipments().length > 1)? true : false,
+	   	productsItr = pdict.Order.productLineItems.iterator(),
+   		pickupNo = 0,
+   		pickupStore = '',
+   		pickupPerson = pdict.Order.customerName,
+   		storeID = '',
+		shipStore = '',
+		shipNo = 0;
+    pdict.order = pdict.Order;
+   	while( productsItr.hasNext() ){
+   		var pli = productsItr.next();
+   		if(pli.getShipment().shippingMethodID == 'ISPU'){
+   			storeID = pli.getShipment().getCustom().fromStoreId; //"BBW0"+pli.productInventoryList.ID;//
+   			pickupPerson = (empty(pli.getShipment().getCustom().pickupPersonFirstName))? pickupPerson : pli.getShipment().getCustom().pickupPersonFirstName + ' ' + pli.getShipment().getCustom().pickupPersonLastName;
+
+   			pickupNo += pli.quantity.value;
+   			if(empty(pickupStore)){
+   				pickupStore = StoreMgr.getStore(storeID);//"BBW0"+thisProduct.productInventoryList.ID
+   			}
+   		}else{
+			   shipStore = pli.getShipment().shippingAddress;
+			   shipNo += pli.quantity.value;
+		   }
+	}
+    pdict.Order.giftCertificateLineItems.toArray().forEach(gcli =>  {
+        if(!gcli.custom.isVirtual){
+            shipNo+=1;
+            shipStore = !empty(shipStore)? shipStore : gcli.getShipment().shippingAddress;
+        }
+    });
+
+	if(!empty(pickupStore) && pickupStore.storeHours !== null){
+		var storeHours = pickupStore.storeHours.toString(),
+			days = Resource.msg('order.bopis.days', 'mail', null).split(','),
+			d = new Date(),
+			n = d.getDay(),
+			todayHours = [],
+			hoursFlag = false;
+		storeHours = storeHours.substr(0,storeHours.length-4).split("<br>");
+		for(i in storeHours){
+			dailyHours = storeHours[i].split(': ');
+			if(days[n] == dailyHours[0]){
+				todayHours = dailyHours[1].split('-');
+			}
+		}
+
+		if ((todayHours[0] || '').indexOf('AM') !== -1 && (todayHours[1] || '').indexOf('PM') !== -1) {
+			hoursFlag = true;
+		}
+	}
+
+	function toTitleCase(str) {
+  		return str.replace(
+    		/\w\S*/g,
+    		function(txt) {
+      		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    		}
+ 	 	);
+	}
+
+	//set the subject line
+	var subjectline = Resource.msg('order.bopis.confirm.subject', 'mail', null),
+		subject_bopis_only = dw.content.ContentMgr.getContent('bopis_email_subject'),
+		subject_bopis_mixed = dw.content.ContentMgr.getContent('bopis_ship_mix_email_subject');
+	if (mixedBag && subject_bopis_mixed != null) {
+		subjectline = subject_bopis_mixed.custom.body;
+	} else if (subject_bopis_only != null) {
+		subjectline = subject_bopis_only.custom.body;
+	}
+</isscript>
+
+<isset name="pickupNo" value="${pickupNo}" scope="page" />
+<isset name="pickupStore" value="${pickupStore}" scope="page" />
+<isset name="todayHours" value="${todayHours}" scope="page" />
+<isset name="mixedBag" value="${mixedBag}" scope="page" />
+<isset name="hoursFlag" value="${hoursFlag}" scope="page" />
+<html>
+
+<head>
+	<title>${subjectline}</title>
+	<meta name="x-apple-disable-message-reformatting"> <!-- Disable auto-scale in iOS 10 Mail entirely -->
+	<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=10.0;">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<style type="text/css">
+		body,
+		table,
+		td {
+			font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+		}
+
+		td ul {
+			padding-left: 0;
+		}
+
+		u~div td ul {
+			margin-left: 5px !important;
+		}
+
+		.bmContent span:nth-child(odd) {
+			padding-left: 10px !important;
+		}
+	</style>
+</head>
+
+<body>
+	<isinclude template="composable/mail/mailstyles" />
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td align="center" style="${printStyles(container)}">
+				<center>
+					<table style="${printStyles(containertable)}">
+						<isinclude template="composable/mail/mailheader" />
+						<tr>
+							<td
+								style="${printStyles(orderwrapper)} font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;">
+								<table cellpadding="0" cellspacing="0" style="${printStyles(footertable)}">
+									<tr>
+										<td style="vertical-align: bottom; text-align: left; font-size: 18px;">
+											${Resource.msg('order.confirm.ordernumber', 'mail', null)}
+											<span
+												style="color: #005699; font-weight: bold; font-size: 22px; padding-top: 6px;">
+												<a href="https://${hostUrl}${locale === 'fr_CA' ? '/fr' : ''}/customer-care/order-status" title="${OrderNo}"
+													style="text-decoration: none; color: #005699; font-weight: bold; font-size: 22px;">
+													<isprint value="${OrderNo}" />
+												</a>
+											</span>
+										</td>
+										<td align="left" valign="top" width="320"
+											style="vertical-align: bottom; text-align: right; font-size: 18px;">
+											${Resource.msg('order.confirm.orderdate', 'mail', null)}
+											<span style="font-weight: bold;">
+												<isprint value="${pdict.Order.creationDate}" style="DATE_SHORT" />
+											</span>
+										</td>
+									</tr>
+								</table>
+								<div>
+									<table width="100%" cellpadding="0" cellspacing="0" border="0">
+										<tr>
+											<td align="left" valign="middle" width="24"
+												style="padding:25px 20px 0 32px;line-height:24px">
+												<img src="${URLUtils.httpStatic('/images/mail/icon_Hig.jpg')}"
+													alt="${Resource.msg('email.order.progress', 'orderConfirmation', null)}"
+													width="41" height="40" border="0" style="${printStyles(img)}" />
+											</td>
+											<td style="padding:25px 20px 0 0; text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:23px; font-weight: normal; line-height:26px; text-decoration:none; color:#005699; font-weight: bold;">
+													${Resource.msg('order.bopis.confirm.thankyou', 'mail', null)}
+											</td>
+										</tr>
+									</table>
+									<table width="100%" cellpadding="0" cellspacing="0" border="0"
+										style="padding: 0px 32px 10px;">
+										<tr>
+											<td>
+												<h1
+													style="margin: 35px 0 14px; font-size: 28px; font-weight: normal; font-family: 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+													${Resource.msgf('order.confirm.greeting', 'mail', null, pdict.Order.billingAddress.firstName)}
+												</h1>
+
+                                                <iscomment> BOPIS-ONLY ORDER </iscomment>
+                                                <isset name="intro_bopis_only" value="${dw.content.ContentMgr.getContent('bopis_email_intro')}" scope="page"/>
+                                                <isif condition="${intro_bopis_only != null && !mixedBag}">
+                                                    <isprint value="${intro_bopis_only.custom.body}" encoding="off"/>
+                                                </isif>
+
+                                                <iscomment> BOPIS MIXED ORDER </iscomment>
+                                                <isset name="intro_bopis_mixed" value="${dw.content.ContentMgr.getContent('bopis_ship_mix_email_intro')}" scope="page"/>
+                                                <isif condition="${intro_bopis_mixed != null && mixedBag}">
+                                                    <isprint value="${intro_bopis_mixed.custom.body}" encoding="off"/>
+                                                </isif>
+
+											</td>
+										</tr>
+										<isif condition="${mixedBag == false}">
+                                            <isset name="bopis_placed_confirmation_image" value="${dw.content.ContentMgr.getContent('bopis_placed_confirmation_image')}" scope="page"/>
+                                                <isif condition="${bopis_placed_confirmation_image != null}">
+                                                    <isprint value="${bopis_placed_confirmation_image.custom.body}" encoding="off"/>
+                                                </isif>
+										</isif>
+										<isif condition="${mixedBag}">
+											<tr>
+												<td>
+													<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 20px;">
+														<tr>
+															<td  style="padding: 20px 25px 20px 25px; border: 2px solid #f2f2f2;">
+   																<table cellpadding="0" cellspacing="0" border="0" role="presentation">
+																	<tr>
+																		<td align="right" valign="top" width="24"
+																			style="padding:3px 5px;">
+																			<img src="${URLUtils.httpStatic('/images/mail/Icon_shipping@2x.png')}"
+																				width="24" height="12" alt="icon">
+																		</td>
+																		<td align="left" valign="top"
+																			style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:16px; line-height:21px; text-decoration:none; color:#005699; font-weight: bold;">
+																			<isprint value="${(shipNo).toFixed()}" /> ${Resource.msg('order.bopis.items.beingshippedto', 'mail', null)}
+																		</td>
+																	</tr>
+																	<tr>
+																		<td align="left" valign="top" width="24">&nbsp;</td>
+																		<td align="left" valign="top"
+																			style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:14px; line-height:21px; text-decoration:none; color: #333; padding-top: 12px;">
+																			<strong>${pdict.Order.customerName}</strong><br>
+																			${shipStore.address1}<br>
+                                                                            <isif condition="${shipStore.address2 && !empty(shipStore.address2)}">
+																			    ${shipStore.address2}<br>
+                                                                            </isif>
+																			${shipStore.city},
+																			${shipStore.stateCode}<br>
+																			${shipStore.postalCode},
+																			${shipStore.countryCode}
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</isif>
+										<tr>
+											<td>
+												<table width="100%" border="0" cellspacing="0" cellpadding="0"
+													style="border: 2px solid #f2f2f2;">
+													<tr>
+														<td style="padding: 20px 25px;">
+															<table cellpadding="0" cellspacing="0" border="0"
+																role="presentation">
+																<tr>
+																	<td align="right" valign="top" width="24"
+																		style="padding:3px 10px 0 0;">
+																		<img src="${URLUtils.httpStatic('/images/mail/Icon_heartlocal@2x.png')}"
+																			width="15" height="17" alt="icon">
+																	</td>
+																	<td align="left" valign="top"
+																		style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:16px; line-height:21px; text-decoration:none; color:#005699; font-weight: bold;">
+																		<isprint value="${(pickupNo).toFixed()}" />
+                                                                        ${Resource.msg('order.bopis.items.beingpickedup', 'mail', null)}
+																	</td>
+																</tr>
+																<tr>
+																	<td align="left" valign="top" width="24">&nbsp;</td>
+																	<td align="left" valign="top"
+																		style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:14px; line-height:21px; text-decoration:none; color: #333; padding-top: 12px;">
+																		<strong>${toTitleCase(pickupStore.name)}</strong><br>
+																		${toTitleCase(pickupStore.address1)}<br>
+                                                                        <isif condition="${pickupStore.address2 && !empty(pickupStore.address2)}">
+                                											${toTitleCase(pickupStore.address2)}<br>
+                                                                        </isif>
+																		${toTitleCase(pickupStore.city)},
+																		${pickupStore.stateCode}<br>
+																		${pickupStore.postalCode},
+																		${pickupStore.countryCode}
+																	</td>
+																</tr>
+																<isif condition="${hoursFlag}">
+																	<tr>
+																		<td align="left" valign="top" width="24">&nbsp;</td>
+																		<td align="left" valign="top" width="320"
+																			style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:14px; line-height:21px;text-decoration:none; color: #333; padding-top: 20px;">
+																			${Resource.msg('order.bopis.todayshours', 'mail', null)}  <span style="text-transform: lowercase;">${todayHours[0]}-${todayHours[1]}</span>
+																		</td>
+																	</tr>
+																</isif>
+																<tr>
+																	<td align="left" valign="top" width="24">&nbsp;</td>
+																	<td align="left" valign="top" width="320"
+																		style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:14px; line-height:21px;text-decoration:none; color: #333; padding-top: 20px; padding-bottom: 20px">
+																		<b>${pickupPerson}</b> ${Resource.msg('order.bopis.pickup.person', 'mail', null)}<br>
+																	</td>
+																</tr>
+																<tr>
+																	<td align="right" valign="top" width="24"
+																		style="padding:3px 10px 0 0;">
+																		<img src="${URLUtils.httpStatic('/images/mail/Icon_giftbox@2x.png')}"
+																			width="13" height="15" alt="icon">
+																	</td>
+																	<td align="left" valign="top" width="320">
+																		<p
+																			style="margin: 0px;text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:16px; line-height:21px; text-decoration:none; color:#005699; font-weight: bold;">
+																			${Resource.msg('order.bopis.isthisagift', 'mail', null)} <br><span
+																				style="text-align:left; font-family:'HelveticaNeue-Light', Helvetica, Arial, sans-serif; font-size:14px; color: #000; text-decoration:none; color: #333; font-weight: normal;">
+																				${Resource.msg('order.bopis.seeanassociate.for.wrap', 'mail', null)}</span>
+																		</p>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+												<p
+													style="margin: 5px 0 32px; font-size: 12px; line-height: 12px; color: #333333; text-align: center; font-family: 'HelveticaNeue-Regular', 'Helvetica Neue Regular', 'HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,sans-serif;">
+													${Resource.msg('order.confirm.cannot.change', 'mail', null)}
+												</p>
+											</td>
+										</tr>
+									</table>
+								</div>
+                                <isinclude template="composable/mail/orderpickupdetailsemail_2" />
+								<isset name="order_email_promo"
+									value="${dw.content.ContentMgr.getContent('order-email-promo')}" scope="page" />
+								<isif condition="${order_email_promo != null}">
+									<div style="text-align: center">
+										<isif
+											condition="${'body' in order_email_promo.custom && order_email_promo.custom.body != null}">
+											<isprint value="${order_email_promo.custom.body}" encoding="off" />
+										</isif>
+									</div>
+								</isif>
+							</td>
+						</tr>
+						<isinclude template="composable/mail/mailfooter" />
+					</table>
+				</center>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+
+</html>
